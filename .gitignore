@@ -57,3 +57,6 @@ doc/**/*.pdf
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# node modules
+node_modules

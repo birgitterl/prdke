@@ -1,0 +1,66 @@
+version: '3'
+
+services:
+  auth_service:
+    build: ./auth_service
+    container_name: "auth-service"
+    ports:
+      - "6000:6000"
+    depends_on:
+      - mongoDB
+    networks:
+        - moody-app
+
+  moody_frontend:
+    build: ./moody
+    container_name: "moody-frontend"
+    stdin_open: true
+    ports:
+      - "3000:3000"
+    networks:
+        - moody-app
+  
+  #search_service:
+   # build: ./search_service
+   # container_name: "search-service"
+   # ports: 
+   #   - "4050:4050"
+   # networks:
+   #     - moody-app
+
+  social_graph_service:
+    build: ./social_graph_service
+    container_name: "social-graph-service"
+    ports:
+      - "5000:5000"
+    depends_on:
+      - graphDB
+    networks:
+        - moody-app
+
+ # todo: add elastic stack
+
+  graphDB:
+    image: neo4j:latest
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    networks:
+        - moody-app
+
+  mongoDB:
+    image: mongo:latest
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: birgit
+      MONGO_INITDB_ROOT_PASSWORD: abc.123_
+    volumes:
+      - './dockervolume/mongodb:/data/db'
+    networks:
+        - moody-app
+
+networks:
+  moody-app:
+    driver: bridge
