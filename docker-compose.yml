@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 services:
   auth_service:
@@ -12,24 +12,26 @@ services:
       - ./auth_service:/src
     command: npm run dev
     networks:
-        - moody-app
+      - moody-app
 
   moody_frontend:
     build: ./moody
     container_name: "moody-frontend"
     stdin_open: true
+    volumes:
+      - ./moody:/src
     ports:
       - "3000:3000"
     networks:
-        - moody-app
-  
+      - moody-app
+
   #search_service:
-   # build: ./search_service
-   # container_name: "search-service"
-   # ports: 
-   #   - "4050:4050"
-   # networks:
-   #     - moody-app
+  # build: ./search_service
+  # container_name: "search-service"
+  # ports:
+  #   - "4050:4050"
+  # networks:
+  #     - moody-app
 
   social_graph_service:
     build: ./social_graph_service
@@ -38,10 +40,13 @@ services:
       - "5000:5000"
     depends_on:
       - graphDB
+    volumes:
+      - ./social_graph_service:/src
+    command: npm run dev
     networks:
-        - moody-app
+      - moody-app
 
- # todo: add elastic stack
+  # todo: add elastic stack
 
   graphDB:
     image: neo4j:latest
@@ -51,7 +56,7 @@ services:
       - "7474:7474"
       - "7687:7687"
     networks:
-        - moody-app
+      - moody-app
 
   mongo:
     image: mongo:latest
@@ -60,9 +65,9 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - './dockervolume/mongo:/data/db'
+      - "./dockervolume/mongo:/data/db"
     networks:
-        - moody-app
+      - moody-app
 
 networks:
   moody-app:

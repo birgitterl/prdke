@@ -1,8 +1,10 @@
 FROM node:latest
 
-COPY . /src
-
 WORKDIR /src 
+
+COPY package*.json ./
+
+COPY . .
 
 RUN npm install
 
