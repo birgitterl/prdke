@@ -1,7 +1,11 @@
 const app = require('./src/app')
+const connectDB = require('./src/config/db');
+
+//Connect to DB
+connectDB();
 
 // Connect to port
-app.listen(6000, () => {
-    console.log('Server started on port 6000...');
+app.listen(8080, () => {
+    console.log('Server started on port 8080...');
 });
 

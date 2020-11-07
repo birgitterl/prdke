@@ -1,4 +1,6 @@
 {
-  "mongoURI": "TBD",
+  "url": "mongodb://mongoDB:27017/moody",
+  "user": "birgit",
+  "password": "abc.123_",
   "jwtSecret": "mysecrettoken"
 }

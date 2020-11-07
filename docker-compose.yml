@@ -7,7 +7,7 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - mongoDB
+      - mongo
     networks:
         - moody-app
 
@@ -50,17 +50,14 @@ services:
     networks:
         - moody-app
 
-  mongoDB:
+  mongo:
     image: mongo:latest
-    container_name: mongoDB
+    container_name: mongo
     restart: always
     ports:
       - "27017:27017"
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: birgit
-      MONGO_INITDB_ROOT_PASSWORD: abc.123_
     volumes:
-      - './dockervolume/mongodb:/data/db'
+      - './dockervolume/mongo:/data/db'
     networks:
         - moody-app
 

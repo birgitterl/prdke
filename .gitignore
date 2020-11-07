@@ -60,3 +60,6 @@ Thumbs.db
 
 # node modules
 node_modules
+
+#dockervolume/mongo
+dockervolume
