@@ -8,6 +8,9 @@ services:
       - "8080:8080"
     depends_on:
       - mongo
+    volumes:
+      - ./auth_service:/src
+    command: npm run dev
     networks:
         - moody-app
 
