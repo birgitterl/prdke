@@ -5,7 +5,7 @@ services:
     build: ./auth_service
     container_name: "auth-service"
     ports:
-      - "6000:6000"
+      - "8080:8080"
     depends_on:
       - mongoDB
     networks:
@@ -42,6 +42,8 @@ services:
 
   graphDB:
     image: neo4j:latest
+    container_name: graphDB
+    restart: always
     ports:
       - "7474:7474"
       - "7687:7687"
@@ -50,6 +52,7 @@ services:
 
   mongoDB:
     image: mongo:latest
+    container_name: mongoDB
     restart: always
     ports:
       - "27017:27017"
