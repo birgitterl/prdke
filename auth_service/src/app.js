@@ -19,7 +19,7 @@ app.use(
 );
 
 app.get("/", (req, res) => {
-  res.send("Hi there auth-service works");
+  res.send("Auth Service up and running");
 });
 
 module.exports = app;

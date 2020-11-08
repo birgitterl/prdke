@@ -6,7 +6,7 @@ const app = express();
 app.use(bodyParser.json());
 
 app.get("/", function (req, res) {
-  res.send("Nicy Nice - Hi there social-graph-service works");
+  res.send("Social-graph-service is up and running...");
 });
 
 module.exports = app;
