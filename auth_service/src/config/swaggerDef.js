@@ -7,11 +7,9 @@ const swaggerDefinition = {
     description: "REST API for the moody auth_service",
   },
   securityDefinitions: {
-    bearerAuth: {
+    authentication: {
       type: "apiKey",
-      name: "x-auth-token",
-      scheme: "bearer",
-      bearerFormat: "JWT",
+      name: "Authorization",
       in: "header",
     },
   },

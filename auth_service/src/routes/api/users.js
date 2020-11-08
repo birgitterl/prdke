@@ -24,6 +24,12 @@ const User = require("../../models/User");
  *      responses:
  *        '201':
  *          description: User created
+ *          schema:
+ *            type: object
+ *            properties:
+ *              token:
+ *                type: string
+ *                example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNWZhODFhMmQxNTY2NjEwMDNiMDg5OWYyIn0sImlhdCI6MTYwNDg1NTgwOSwiZXhwIjoxNjA1MjE1ODA5fQ.XUZZrYGuUxBk4WQis8VII4GGadFESHwg8Il994WPk04
  *        '400':
  *          description: Bad Request
  *        '403':
