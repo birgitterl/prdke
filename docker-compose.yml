@@ -10,6 +10,7 @@ services:
       - mongo
     volumes:
       - ./auth_service:/src
+      - /src/node_modules
     command: npm run dev
     networks:
       - moody-app
@@ -20,6 +21,7 @@ services:
     stdin_open: true
     volumes:
       - ./moody:/src
+      - /src/node_modules
     ports:
       - "3000:3000"
     networks:
@@ -42,6 +44,7 @@ services:
       - graphDB
     volumes:
       - ./social_graph_service:/src
+      - /src/node_modules
     command: npm run dev
     networks:
       - moody-app
