@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const config = require("../../config/default.json");
 const { check, validationResult } = require("express-validator");
 
 const User = require("../../models/User");
@@ -24,11 +23,11 @@ const User = require("../../models/User");
  *            $ref: '#/definitions/User'
  *      responses:
  *        '201':
- *          description: User successfully created
+ *          description: User created
  *        '400':
  *          description: Bad Request
  *        '403':
- *          description: User exists already
+ *          description: Forbidden - User exists already
  *        '500':
  *          description: Internal server error
  */
@@ -102,5 +101,33 @@ router.post(
     }
   }
 );
+
+/**
+ * @swagger
+ * path:
+ *   /api/users:
+ *     delete:
+ *       tags:
+ *         - users
+ *       summary: Delete all registered users (for dev tests only)
+ *       responses:
+ *         "200":
+ *           description: All users removed
+ *           schema:
+ *             $ref: '#/definitions/User'
+ *         "500":
+ *           description: Internal server error
+ */
+router.delete("/", async (req, res) => {
+  try {
+    await User.remove();
+    await res.status(200).json({
+      msg: "All users removed",
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ msg: "Internal server error" });
+  }
+});
 
 module.exports = router;
