@@ -11,16 +11,19 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bcryptjs": "*",
-    "body-parser": "*",
-    "config": "*",
-    "express": "*",
-    "express-validator": "*",
-    "jsonwebtoken": "*",
-    "mongoose": "*"
+    "bcryptjs": "2.4.3",
+    "body-parser": "1.19.0",
+    "config": "3.3.2",
+    "express": "4.17.1",
+    "express-validator": "6.6.1",
+    "jsonwebtoken": "8.5.1",
+    "mongoose": "5.10.7",
+    "swagger-jsdoc": "4.2.0",
+    "swagger-ui-express": "4.1.4",
+    "uuid": "8.3.0"
   },
   "devDependencies": {
-    "nodemon": "*",
-    "prettier": "*"
+    "nodemon": "2.0.4",
+    "prettier": "2.1.2"
   }
 }
