@@ -1,16 +1,43 @@
+import React, { Fragment, useEffect } from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
 import "./components/layout/Navbar";
 import Navbar from "./components/layout/Navbar";
+import LandingPage from "./components/layout/LandingPage";
+import Routes from "./components/routing/Routes";
+import { LOGOUT } from "./actions/types";
+import { Provider } from "react-redux";
+import store from "./store";
+import { loadUser } from "./actions/auth";
+import setAuthToken from "./utils/setAuthToken";
 
-function App() {
+const App = () => {
+  useEffect(() => {
+    // check for token in LS
+    if (localStorage.token) {
+      setAuthToken(localStorage.token);
+    }
+    store.dispatch(loadUser());
+
+    // log user out from all tabs if they log out in one tab
+    window.addEventListener("storage", () => {
+      if (!localStorage.token) store.dispatch({ type: LOGOUT });
+    });
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>Welcome to moody - this is the landing page.</p>
-        <Navbar />
-      </header>
-    </div>
+    <Provider store={store}>
+      <Router>
+        <Fragment>
+          <Navbar />
+          <Switch>
+            <Route exact path="/" component={LandingPage} />
+            <Route component={Routes} />
+          </Switch>
+        </Fragment>
+      </Router>
+    </Provider>
   );
-}
+};
 
 export default App;
