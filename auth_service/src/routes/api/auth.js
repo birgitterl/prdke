@@ -10,7 +10,7 @@ const User = require("../../models/User");
 /**
  * @swagger
  * path:
- *   /api/auth/:
+ *   /api/auth:
  *     get:
  *       tags:
  *         - auth
@@ -50,7 +50,7 @@ router.get("/", auth, async (req, res) => {
 /**
  *@swagger
  * path:
- *  /api/auth/:
+ *  /api/auth:
  *    post:
  *      tags:
  *        - auth

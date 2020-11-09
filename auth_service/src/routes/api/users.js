@@ -9,7 +9,7 @@ const User = require("../../models/User");
 /**
  *@swagger
  * path:
- *  /api/users/:
+ *  /api/users:
  *    post:
  *      tags:
  *        - users
@@ -40,7 +40,6 @@ const User = require("../../models/User");
 router.post(
   "/",
   [
-    check("username", "Username is required").not().isEmpty(),
     check(
       "password",
       "Please enter a password with 6 or more characters"
@@ -63,14 +62,6 @@ router.post(
           .status(400)
           .json({ errors: [{ msg: "User already exists" }] });
       }
-
-      /* Get users gravatar
-      const avatar = gravatar.url(email, {
-        s: "200",
-        r: "pg",
-        d: "mm",
-      });
-      */
 
       user = new User({
         username,
@@ -133,6 +124,41 @@ router.delete("/", async (req, res) => {
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ msg: "Internal server error" });
+  }
+});
+
+/**
+ * @swagger
+ * path:
+ *   /api/users:
+ *     get:
+ *       tags:
+ *         - users
+ *       summary: Get all users
+ *       responses:
+ *         "200":
+ *           description: OK
+ *           schema:
+ *             type: array
+ *             items:
+ *               type: object
+ *               properties:
+ *                 username:
+ *                   type: string
+ *                   example: Julia
+ *         "404":
+ *           description: No users found
+ *         "500":
+ *           description: Internal server error
+ *
+ */
+router.get("/", async (req, res) => {
+  try {
+    const users = await User.find().select("username");
+    res.json(users);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
   }
 });
 
