@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "*",
+    "ejs": "*",
     "express": "*",
     "express-validator": "*",
     "neo4j-driver": "*"
