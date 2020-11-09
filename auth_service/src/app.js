@@ -1,11 +1,13 @@
 const express = require("express");
 const swaggerUi = require("swagger-ui-express");
 const swaggerDoc = require("./config/swaggerDef");
+const cors = require("cors");
 
 const app = express();
 
-// Init body parser middleware
+// Init body parser and cors middleware
 app.use(express.json());
+app.use(cors());
 
 // Define API Routes:
 app.use("/api/users", require("./routes/api/users"));
@@ -19,7 +21,7 @@ app.use(
 );
 
 app.get("/", (req, res) => {
-  res.send("Hi there auth-service works");
+  res.send("Auth Service up and running");
 });
 
 module.exports = app;

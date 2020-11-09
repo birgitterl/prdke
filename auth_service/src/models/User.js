@@ -14,6 +14,7 @@ const mongoose = require("mongoose");
  *         example: Julia
  *       password:
  *         type: string
+ *         example: A12345
  */
 const UserSchema = new mongoose.Schema({
   username: {

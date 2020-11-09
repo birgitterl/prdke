@@ -20,7 +20,8 @@
     "mongoose": "5.10.7",
     "swagger-jsdoc": "4.2.0",
     "swagger-ui-express": "4.1.4",
-    "uuid": "8.3.0"
+    "uuid": "8.3.0",
+    "cors": "*"
   },
   "devDependencies": {
     "nodemon": "2.0.4",

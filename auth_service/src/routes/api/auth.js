@@ -10,18 +10,25 @@ const User = require("../../models/User");
 /**
  * @swagger
  * path:
- *   /api/auth/:
+ *   /api/auth:
  *     get:
  *       tags:
  *         - auth
  *       summary: Get user by token
  *       security:
- *         - bearerAuth: []
+ *         - authentication: []
  *       responses:
  *         "200":
  *           description: OK
  *           schema:
- *             $ref: '#/definitions/User'
+ *             type: object
+ *             properties:
+ *               _id:
+ *                 type: string
+ *                 example: 5fa81a2d156661003b0899f2
+ *               username:
+ *                 type: string
+ *                 example: Julia
  *         "404":
  *           description: User not found by id
  *         "400":
@@ -43,7 +50,7 @@ router.get("/", auth, async (req, res) => {
 /**
  *@swagger
  * path:
- *  /api/auth/:
+ *  /api/auth:
  *    post:
  *      tags:
  *        - auth
@@ -58,6 +65,12 @@ router.get("/", auth, async (req, res) => {
  *      responses:
  *        '200':
  *          description: OK
+ *          schema:
+ *            type: object
+ *            properties:
+ *              token:
+ *                type: string
+ *                example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNWZhODFhMmQxNTY2NjEwMDNiMDg5OWYyIn0sImlhdCI6MTYwNDg1NTgwOSwiZXhwIjoxNjA1MjE1ODA5fQ.XUZZrYGuUxBk4WQis8VII4GGadFESHwg8Il994WPk04
  *        '400':
  *          description: Bad Request
  *        '403':

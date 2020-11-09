@@ -17,6 +17,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 var session = driver.session();
 
 app.get("/", function (req, res) {
+<<<<<<< HEAD
   session
     .run('MATCH(n:Person) RETURN n')
     .then(function (result) {
@@ -73,6 +74,9 @@ app.post('/message/add', function(req, res){
     });
 
   res.redirect('/');
+=======
+  res.send("Social-graph-service is up and running...");
+>>>>>>> 67bf068f3878c1b67872a5e790ea7e4dc667591f
 });
 
 module.exports = app;
