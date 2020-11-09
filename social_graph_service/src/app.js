@@ -1,27 +1,27 @@
 var express = require('express');
 var path = require('path');
 var bodyParser = require('body-parser');
-var ejs = require('ejs');
 var driver = require('./config/db.js').driver;
+require('ejs');
 
 var app = express();
 
 // View Engine
 app.set('views', path.join(__dirname, '/../views'));
-app.set('view engine', ejs);
+app.set('view engine', 'ejs');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-var session = driver.session();
-
 app.get("/", function (req, res) {
+  var session = driver.session();
+
   session
     .run('MATCH(n:Person) RETURN n')
     .then(function (result) {
       var personsArr = [];
-      result.records.forEach(function(record){
+      result.records.forEach(function (record) {
         personsArr.push({
           id: record._fields[0].identity.low,
           email: record._fields[0].properties.email,
@@ -47,28 +47,29 @@ app.get("/", function (req, res) {
             messages: messagesArr
           });
         })
-        .catch(function(err){
+        .catch(function (err) {
           console.log(err);
         });
     })
-    .catch(function (err){
+    .catch(function (err) {
       console.log(err);
     });
 });
 
-app.post('/message/add', function(req, res){
+app.post('/message/add', function (req, res) {
+  var session2 = driver.session();
   var text = req.body.text;
   var author = req.body.author;
   var timestamp = new Date().toString();
 
-  session
+  session2
     .run(
-      'CREATE (n:Message {author: $authorParam, text: $textParam, timestamp: $timestampParam, mentioned: []})', 
-      {authorParam:author, textParam:text, timestampParam:timestamp})
-    .then(function(result){
+      'CREATE (n:Message {author: $authorParam, text: $textParam, timestamp: $timestampParam, mentioned: []})',
+      { authorParam: author, textParam: text, timestampParam: timestamp })
+    .then(function (result) {
       res.redirect('/');
     })
-    .catch(function(err){
+    .catch(function (err) {
       console.log(err);
     });
 
