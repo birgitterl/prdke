@@ -6,9 +6,9 @@ RUN npm install -g nodemon
 
 COPY package*.json ./
 
-COPY . .
-
 RUN npm install
+
+COPY . .
 
 EXPOSE 8080
 
