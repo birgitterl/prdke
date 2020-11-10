@@ -6,6 +6,7 @@ import Alert from "../layout/Alert";
 import Hometimeline from "../hometimeline/Hometimeline";
 import EditProfile from "../profile/EditProfile";
 import Profile from "../profile/Profile";
+import NotFound from "../layout/NotFound";
 
 const Routes = (props) => {
   return (
