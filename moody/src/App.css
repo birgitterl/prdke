@@ -14,7 +14,7 @@
 }
 
 body {
-  font-family: "Raleway", sans-serif;
+  font-family: 'Raleway', sans-serif;
   font-size: 1rem;
   line-height: 1.6;
   background-color: #fff;
@@ -245,10 +245,10 @@ img {
   color: #888;
 }
 
-.form input[type="text"],
-.form input[type="email"],
-.form input[type="password"],
-.form input[type="date"],
+.form input[type='text'],
+.form input[type='email'],
+.form input[type='password'],
+.form input[type='date'],
 .form select,
 .form textarea {
   display: block;
@@ -258,7 +258,7 @@ img {
   border: 1px solid #ccc;
 }
 
-.form input[type="submit"],
+.form input[type='submit'],
 button {
   font: inherit;
 }
@@ -301,7 +301,8 @@ button {
 /* Navbar */
 .navbar {
   display: flex;
-  justify-content: space-between;
+  flex: 1;
+  justify-content: first baseline;
   align-items: center;
   padding: 0.7rem 2rem;
   position: fixed;
@@ -312,14 +313,25 @@ button {
   opacity: 0.9;
 }
 
+.navbar h1 {
+  display: flex;
+  flex: 3;
+  margin: 0 0.25rem;
+  justify-content: left;
+}
+
 .navbar ul {
   display: flex;
+  justify-content: right;
 }
 
 .navbar a {
+  display: flex;
+  flex: 5;
   color: #fff;
   padding: 0.45rem;
   margin: 0 0.25rem;
+  margin-left: 5rem;
 }
 
 .navbar a:hover {
@@ -328,6 +340,33 @@ button {
 
 .navbar .welcome span {
   margin-right: 0.6rem;
+}
+
+.navbar .search-container {
+  display: flex;
+  size: 400px;
+}
+
+.navbar input [type='search'] {
+  display: flex;
+  size: inherit;
+  padding: 0.4rem;
+  font-size: 1.2rem;
+  border: 1px solid #ccc;
+}
+
+.navbar .search-container button {
+  float: right;
+  padding: 0.4rem;
+  font-size: 1.2rem;
+  background: var(--primary-color);
+  color: #fff;
+  font-size: 17px;
+  border: none;
+  cursor: pointer;
+}
+.navbar .search-container button:hover {
+  opacity: 0.8;
 }
 
 /* Landing Page */
@@ -363,10 +402,10 @@ button {
 .profile-grid {
   display: grid;
   grid-template-areas:
-    "top top"
-    "about about"
-    "exp edu"
-    "github github";
+    'top top'
+    'about about'
+    'exp edu'
+    'github github';
   grid-gap: 1rem;
 }
 
@@ -518,11 +557,12 @@ button {
 
   .navbar ul {
     text-align: center;
-    justify-content: center;
+    justify-content: right;
   }
 
   .navbar h1 {
     margin-bottom: 1rem;
+    justify-content: left;
   }
 
   .navbar .welcome {
@@ -549,11 +589,11 @@ button {
 
   .profile-grid {
     grid-template-areas:
-      "top"
-      "about"
-      "exp"
-      "edu"
-      "github";
+      'top'
+      'about'
+      'exp'
+      'edu'
+      'github';
   }
 
   .profile-about .skills {
