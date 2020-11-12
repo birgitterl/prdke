@@ -1,5 +1,5 @@
 const express = require('express');
-const { session } = require('neo4j-driver');
+const driver = require('../../config/db.js').driver;
 const router = express.Router();
 
 /*
@@ -10,7 +10,7 @@ router.put()
 for more information see: https://github.com/bradtraversy/express_crash_course/blob/master/routes/api/members.js
 */
 
-router.post('/message/add', function (req, res) {
+router.post('/add', function (req, res) {
   const session = driver.session();
   const text = req.body.text;
   const author = req.body.author;
@@ -18,7 +18,7 @@ router.post('/message/add', function (req, res) {
 
   session
     .run(
-      'CREATE (n:Message {author: $authorParam, text: $textParam, timestamp: $timestampParam, mentioned: []})',
+      "CREATE (n:Message {author: $authorParam, text: $textParam, timestamp: $timestampParam, mentioned: []}) RETURN n",
       { authorParam: author, textParam: text, timestampParam: timestamp }
     )
     .then(function (result) {
