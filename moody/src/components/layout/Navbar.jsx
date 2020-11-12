@@ -13,7 +13,7 @@ const Navbar = ({ auth: { isAuthenticated }, logout }) => {
         <li>
           <a onClick={logout} href="/">
             <i className="fas fa-sign-out-alt" />{' '}
-            <span className="hide-sm">Logout</span>
+            <span className="hide-sm"> Logout</span>
           </a>
         </li>
       </ul>
@@ -26,7 +26,10 @@ const Navbar = ({ auth: { isAuthenticated }, logout }) => {
         <Link to="/register">Register</Link>
       </li>
       <li>
-        <Link to="/login">Login</Link>
+        <Link to="/login">
+          <i class="fas fa-sign-in-alt" />
+          <span>Login</span>
+        </Link>
       </li>
     </ul>
   );
@@ -34,7 +37,9 @@ const Navbar = ({ auth: { isAuthenticated }, logout }) => {
   return (
     <nav className="navbar bg-dark">
       <h1>
-        <Link to="/">moody</Link>
+        <Link to="/">
+          <span>moody</span>
+        </Link>
       </h1>
       <Fragment>{isAuthenticated ? authLinks : guestLinks}</Fragment>
     </nav>

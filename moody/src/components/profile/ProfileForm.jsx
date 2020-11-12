@@ -82,7 +82,6 @@ const ProfileForm = ({
         </div>
         <div className="form-group">
           <select name="gender" value={gender} onChange={onChange}>
-            <option>* Select your gender</option>
             <option value="female">Female</option>
             <option value="male">Male</option>
             <option value="transgender">transgender</option>
@@ -91,7 +90,6 @@ const ProfileForm = ({
         </div>
         <div className="form-group">
           <select name="privacy" value={privacy} onChange={onChange}>
-            <option>* Select your privacy setting</option>
             <option value="public">Visible for public</option>
             <option value="private">Not visible for public</option>
           </select>
