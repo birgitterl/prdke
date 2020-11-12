@@ -1,10 +1,10 @@
 const express = require('express');
-const path = require('path');
-const driver = require('./config/db.js').driver;
+const bodyParser = require('body-parser');
+
 const app = express();
 
-// Body Parser Middleware
-app.use(express.json());
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
 
 // Homepage at localhost:5000
 app.get('/', (req, res) => {
@@ -12,8 +12,8 @@ app.get('/', (req, res) => {
 });
 
 // Define API Routes
-app.use('/api/messages', require('./routes/api/messages'));
-app.use('/api/profiles', require('./routes/api/profiles'));
-app.use('/api/relations', require('./routes/api/relations'));
+app.use('/messages', require('./routes/api/messages'));
+app.use('/profiles', require('./routes/api/profiles'));
+app.use('/follow', require('./routes/api/follow'));
 
 module.exports = app;

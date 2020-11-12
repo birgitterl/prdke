@@ -2,26 +2,34 @@ const express = require('express');
 const driver = require('../../config/db.js').driver;
 const router = express.Router();
 
-router.post('/add', function (req, res) {
-  const session = driver.session();
-  const text = req.query.text;
-  const author = req.query.author;
+router.post('/add', async function (req, res) {
+  const messageSession = driver.session();
+  const postedSession = driver.session();
+
+  const authorId = req.body.profileId;
+  const text = req.body.text;
   const timestamp = new Date().toString();
 
-  session
+  await messageSession
     .run(
-      "CREATE (n:Message {author: $authorParam, text: $textParam, timestamp: $timestampParam, mentioned: []}) RETURN n",
-      { authorParam: author, textParam: text, timestampParam: timestamp }
+      'CREATE (a:Message {authorId: $authorIdParam, text: $textParam, timestamp: $timestampParam})',
+      { authorIdParam: authorId, textParam: text, timestampParam: timestamp }
     )
-    .then(function (result) {
-      res.redirect('/');
-    })
     .catch(function (err) {
       console.log(err);
     })
-    .then(() => session.close());
+    .finally(() => messageSession.close());
 
-  res.redirect('/');
+  await postedSession
+    .run(
+      'MATCH (a:Message), (b:Profile) WHERE a.authorId = b.userId MERGE (b)-[r:posted]->(a)'
+    )
+    .catch(function (err) {
+      console.log(err);
+    })
+    .finally(() => postedSession.close());
+    
+    res.end();
 });
 
 module.exports = router;
