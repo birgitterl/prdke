@@ -14,6 +14,6 @@ app.get('/', (req, res) => {
 // Define API Routes
 app.use('/api/messages', require('./routes/api/messages'));
 app.use('/api/profiles', require('./routes/api/profiles'));
-app.use('/api/relations', require('./routes/api/relations'));
+app.use('/api/follow', require('./routes/api/follow'));
 
 module.exports = app;
