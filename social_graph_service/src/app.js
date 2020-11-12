@@ -4,18 +4,22 @@ const driver = require('./config/db.js').driver;
 
 const app = express();
 
+/* TODO @Skrolux DELETE when index.ejs is no longer in use
 // View Engine
 app.set('views', path.join(__dirname, '/../views'));
 app.set('view engine', 'ejs');
+*/
 
 // Body Parser Middleware
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
 
-// Homepage Route
-// TODO: Homepage Route doesn' work properly with index-file.
-app.get('/', function (req, res) {
-  res.render('index.ejs');
+/* TODO @Skrolux DELETE when index.ejs is no longer in use
+app.use(express.urlencoded({ extended: false }));
+*/
+
+// Homepage at localhost:5000
+app.get('/', (req, res) => {
+  res.send('Social Graph Service is up and running...');
 });
 
 // Define API Routes
