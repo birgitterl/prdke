@@ -2,18 +2,10 @@ const express = require('express');
 const driver = require('../../config/db.js').driver;
 const router = express.Router();
 
-/*
-router.get()
-router.post()
-router.delete()
-router.put()
-for more information see: https://github.com/bradtraversy/express_crash_course/blob/master/routes/api/members.js
-*/
-
 router.post('/add', function (req, res) {
   const session = driver.session();
-  const text = req.body.text;
-  const author = req.body.author;
+  const text = req.query.text;
+  const author = req.query.author;
   const timestamp = new Date().toString();
 
   session
