@@ -16,8 +16,7 @@
     "redux-thunk": "*",
     "web-vitals": "^0.2.4",
     "axios": "*",
-    "uuid": "*",
-    "botstrap": "*"
+    "uuid": "*"
   },
   "scripts": {
     "start": "react-scripts start",
