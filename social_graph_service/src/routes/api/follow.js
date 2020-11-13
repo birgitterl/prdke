@@ -4,26 +4,22 @@ const router = express.Router();
 
 // TODO: Frontend POST REQUEST: payload USERID A, USERNAME A, USERID B, USERNAME B -> SET EDGE/RELATION between the two profiles + auth?
 
-router.post('/add', function (req, res) {
+router.post('/add', async function (req, res) {
   const session = driver.session();
-  const followsId = req.query.userIdF;
-  const followsName = req.query.userNameF;
-  const user = req.query.userName;
-  const userId = req.query.userId;
-  const timestamp = new Date().toString();
+  const followsId = req.body.userIdF;
+  const followsName = req.body.userNameF;
+  const otherUser = req.body.userName;
+  const otherUserId = req.body.userId;
+  //const timestamp = new Date().toString();
 
-  session
+  await session
     .run(
-      'CREATE (f:Follows {followsId: $followsId, followsName: $followsName, userId: $userId, userName: $userName, timestamp: $timestampParam) RETURN f',
-      {
-        followsId: followsId,
-        followsName: followsName,
-        userId: userId,
-        userName: userName,
-        timestamp: timestampParam
-      }
+      'MATCH (f:Profile), (u:Profile) WHERE f.userId = followsId AND u.userId = otherUserId MERGE (f)-[r:follows]->(u)'
     )
-    .then(() => session.close());
+    .catch(function (err) {
+      console.log(err);
+    })
+    .finally(() => session.close());
 });
 
 module.exports = router;
