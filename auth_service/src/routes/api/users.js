@@ -1,10 +1,10 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const { check, validationResult } = require("express-validator");
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const { check, validationResult } = require('express-validator');
 
-const User = require("../../models/User");
+const User = require('../../models/User');
 
 /**
  *@swagger
@@ -38,12 +38,12 @@ const User = require("../../models/User");
  *          description: Internal server error
  */
 router.post(
-  "/",
+  '/',
   [
     check(
-      "password",
-      "Please enter a password with 6 or more characters"
-    ).isLength({ min: 6 }),
+      'password',
+      'Please enter a password with 6 or more characters'
+    ).isLength({ min: 6 })
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -60,12 +60,12 @@ router.post(
       if (user) {
         return res
           .status(400)
-          .json({ errors: [{ msg: "User already exists" }] });
+          .json({ errors: [{ msg: 'User already exists' }] });
       }
 
       user = new User({
         username,
-        password,
+        password
       });
 
       // Encrypt password with bcrypt
@@ -79,13 +79,13 @@ router.post(
       // Return jsonwebtoken (change expires to 3600)
       const payload = {
         user: {
-          id: user.id,
-        },
+          id: user.id
+        }
       };
 
       jwt.sign(
         payload,
-        "mysecrettoken",
+        'mysecrettoken',
         { expiresIn: 360000 },
         (err, token) => {
           if (err) throw err;
@@ -94,7 +94,7 @@ router.post(
       );
     } catch (err) {
       console.error(err.message);
-      res.status(500).send("Server error");
+      res.status(500).send('Server error');
     }
   }
 );
@@ -110,20 +110,18 @@ router.post(
  *       responses:
  *         "200":
  *           description: All users removed
- *           schema:
- *             $ref: '#/definitions/User'
  *         "500":
  *           description: Internal server error
  */
-router.delete("/", async (req, res) => {
+router.delete('/', async (req, res) => {
   try {
     await User.remove();
     await res.status(200).json({
-      msg: "All users removed",
+      msg: 'All users removed'
     });
   } catch (err) {
     console.error(err.message);
-    res.status(500).json({ msg: "Internal server error" });
+    res.status(500).json({ msg: 'Internal server error' });
   }
 });
 
@@ -152,13 +150,13 @@ router.delete("/", async (req, res) => {
  *           description: Internal server error
  *
  */
-router.get("/", async (req, res) => {
+router.get('/', async (req, res) => {
   try {
-    const users = await User.find().select("username");
+    const users = await User.find().select('username');
     res.json(users);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send("Server Error");
+    res.status(500).send('Server Error');
   }
 });
 

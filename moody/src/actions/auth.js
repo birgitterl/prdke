@@ -1,5 +1,5 @@
-import api from "../utils/api";
-import { setAlert } from "./alert";
+import authService from '../utils/authService';
+import { setAlert } from './alert';
 import {
   REGISTER_SUCCESS,
   REGISTER_FAIL,
@@ -7,21 +7,21 @@ import {
   AUTH_ERROR,
   LOGIN_SUCCESS,
   LOGIN_FAIL,
-  LOGOUT,
-} from "./types";
+  LOGOUT
+} from './types';
 
 // Load User
 export const loadUser = () => async (dispatch) => {
   try {
-    const res = await api.get("/auth");
+    const res = await authService.get('/auth');
 
     dispatch({
       type: USER_LOADED,
-      payload: res.data,
+      payload: res.data
     });
   } catch (err) {
     dispatch({
-      type: AUTH_ERROR,
+      type: AUTH_ERROR
     });
   }
 };
@@ -29,22 +29,22 @@ export const loadUser = () => async (dispatch) => {
 // Register User
 export const register = (formData) => async (dispatch) => {
   try {
-    const res = await api.post("/users", formData);
+    const res = await authService.post('/users', formData);
 
     dispatch({
       type: REGISTER_SUCCESS,
-      payload: res.data,
+      payload: res.data
     });
     dispatch(loadUser());
   } catch (err) {
     const errors = err.response.data.errors;
 
     if (errors) {
-      errors.forEach((error) => dispatch(setAlert(error.msg, "danger")));
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
     }
 
     dispatch({
-      type: REGISTER_FAIL,
+      type: REGISTER_FAIL
     });
   }
 };
@@ -54,11 +54,11 @@ export const login = (username, password) => async (dispatch) => {
   const body = { username, password };
 
   try {
-    const res = await api.post("/auth", body);
+    const res = await authService.post('/auth', body);
 
     dispatch({
       type: LOGIN_SUCCESS,
-      payload: res.data,
+      payload: res.data
     });
 
     dispatch(loadUser());
@@ -66,11 +66,11 @@ export const login = (username, password) => async (dispatch) => {
     const errors = err.response.data.errors;
 
     if (errors) {
-      errors.forEach((error) => dispatch(setAlert(error.msg, "danger")));
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
     }
 
     dispatch({
-      type: LOGIN_FAIL,
+      type: LOGIN_FAIL
     });
   }
 };
