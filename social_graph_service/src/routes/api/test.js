@@ -1,11 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../../middleware/auth');
-const jwt = require('jsonwebtoken');
-
-router.get('/', auth, async (req, res) => {
-  const msg = { text: 'blah blah blah' };
-  res.json(msg);
-});
+const { check, validationResult } = require('express-validator');
+const query = require('../../neo4j/queries');
 
 module.exports = router;
