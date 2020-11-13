@@ -1,5 +1,5 @@
 const express = require('express');
-const driver = require('../../config/db.js').driver;
+const driver = require('../../config/db');
 const router = express.Router();
 
 // TODO: Frontend POST REQUEST: payload USERID A, USERNAME A, USERID B, USERNAME B -> SET EDGE/RELATION between the two profiles + auth?
