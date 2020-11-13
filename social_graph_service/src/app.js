@@ -15,7 +15,7 @@ app.get('/', (req, res) => {
 app.use('/api/test', require('./routes/api/test'));
 app.use('/messages', require('./routes/api/messages'));
 app.use('/api/profiles', require('./routes/api/profiles'));
-app.use('/follow', require('./routes/api/follow'));
-app.use('/viewProfile', require('routes/api/viewProfile'));
+app.use('/api/follow', require('./routes/api/follow'));
+app.use('/viewProfile', require('./routes/api/viewProfile'));
 
 module.exports = app;
