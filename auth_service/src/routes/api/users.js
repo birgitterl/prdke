@@ -6,37 +6,7 @@ const { check, validationResult } = require('express-validator');
 
 const User = require('../../models/User');
 
-/**
- *@swagger
- * path:
- *  /api/users:
- *    post:
- *      tags:
- *        - users
- *      summary: Register a new user
- *      parameters:
- *        - in: body
- *          name: body
- *          description: User object that needs to be registered
- *          required: true
- *          schema:
- *            $ref: '#/definitions/User'
- *      responses:
- *        '201':
- *          description: User created
- *          schema:
- *            type: object
- *            properties:
- *              token:
- *                type: string
- *                example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNWZhODFhMmQxNTY2NjEwMDNiMDg5OWYyIn0sImlhdCI6MTYwNDg1NTgwOSwiZXhwIjoxNjA1MjE1ODA5fQ.XUZZrYGuUxBk4WQis8VII4GGadFESHwg8Il994WPk04
- *        '400':
- *          description: Bad Request
- *        '403':
- *          description: Forbidden - User exists already
- *        '500':
- *          description: Internal server error
- */
+// Register a new user
 router.post(
   '/',
   [
@@ -79,7 +49,8 @@ router.post(
       // Return jsonwebtoken (change expires to 3600)
       const payload = {
         user: {
-          id: user.id
+          id: user.id,
+          username: user.username
         }
       };
 
@@ -99,20 +70,7 @@ router.post(
   }
 );
 
-/**
- * @swagger
- * path:
- *   /api/users:
- *     delete:
- *       tags:
- *         - users
- *       summary: Delete all registered users (for dev tests only)
- *       responses:
- *         "200":
- *           description: All users removed
- *         "500":
- *           description: Internal server error
- */
+// Delete all registered users (DEV --> @TODO delete afterwards)
 router.delete('/', async (req, res) => {
   try {
     await User.remove();
@@ -125,31 +83,7 @@ router.delete('/', async (req, res) => {
   }
 });
 
-/**
- * @swagger
- * path:
- *   /api/users:
- *     get:
- *       tags:
- *         - users
- *       summary: Get all users
- *       responses:
- *         "200":
- *           description: OK
- *           schema:
- *             type: array
- *             items:
- *               type: object
- *               properties:
- *                 username:
- *                   type: string
- *                   example: Julia
- *         "404":
- *           description: No users found
- *         "500":
- *           description: Internal server error
- *
- */
+// Get all users
 router.get('/', async (req, res) => {
   try {
     const users = await User.find().select('username');
