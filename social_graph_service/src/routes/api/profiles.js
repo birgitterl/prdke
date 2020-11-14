@@ -5,77 +5,7 @@ const auth = require('../../middleware/auth');
 const { check, validationResult } = require('express-validator');
 const query = require('../../neo4j/queries.js');
 
-/**
- * @swagger
- * definitions:
- *   Profile:
- *     type: object
- *     required:
- *     - username
- *     - privacy
- *     - notifications
- *     properties:
- *       username:
- *         type: string
- *         example: Julia
- *       gender:
- *         type: string
- *         enum:
- *           - male
- *           - female
- *           - transgender
- *         example: female
- *       birthday:
- *         type: date
- *         example: 1990-01-01
- *       hometown:
- *         type: string
- *         example: Linz
- *       background:
- *         type: string
- *         example: none
- *       privacy:
- *         type: string
- *         enum:
- *           - private
- *           - public
- *         default: public
- *         example: public
- *       notification:
- *         type: boolean
- *         default: false
- *         example: false
- */
-
-/**
- *@swagger
- * path:
- *  /api/profiles:
- *    post:
- *      tags:
- *        - profiles
- *      summary: Create a new profile or update an existing one
- *      parameters:
- *        - in: body
- *          name: body
- *          description: Profile object to be created or updated
- *          required: true
- *          schema:
- *            $ref: '#/definitions/Profile'
- *      responses:
- *        '200':
- *          description: OK
- *          schema:
- *             $ref: '#/definitions/Profile'
- *        '400':
- *          description: Bad Request
- *        '403':
- *          description: Forbidden - User exists already
- *        '404':
- *          description: Not found - Invalid credentials
- *        '500':
- *          description: Internal server error
- */
+// Create a new profile or update existing profile
 router.post(
   '/',
   [
@@ -85,15 +15,17 @@ router.post(
       'Please provide your notification settings'
     ).notEmpty()
   ],
+  auth,
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(403).json({ errors: errors.array() });
     }
+    const user = req.user;
     const profile = req.body;
 
     try {
-      let result = await query.createOrUpdateProfile(profile);
+      let result = await query.createOrUpdateProfile(user, profile);
       if (!result) {
         res.status(400).json({ msg: 'There is no profile for this user' });
       } else {
@@ -107,38 +39,12 @@ router.post(
   }
 );
 
-/**
- * @swagger
- * path:
- *   /api/profiles/me:
- *     get:
- *       tags:
- *         - profiles
- *       summary: Get my profile
- *       parameters:
- *         - in: query
- *           name: username
- *           required: true
- *           type: string
- *           example: Julia
- *       responses:
- *         "200":
- *           description: OK
- *           schema:
- *             $ref: '#/definitions/Profile'
- *         "404":
- *           description: User not found by id
- *         "400":
- *           description: Invalid ID supplied
- *         "500":
- *           description: Internal server error
- *
- */
-router.get('/me', async (req, res) => {
-  const myProfile = { username: req.query.username };
-  console.log(myProfile);
+// Get my profile
+router.get('/me', auth, async (req, res) => {
+  const user = req.user;
+  console.log(user);
   try {
-    const result = await query.findProfile(myProfile);
+    const result = await query.findProfile(user);
 
     if (!result) {
       return res.status(400).json({ msg: 'There is no profile for this user' });
@@ -152,44 +58,7 @@ router.get('/me', async (req, res) => {
   }
 });
 
-router.post('/add', async function (req, res) {
-  const profileSession = driver.session();
-
-  const userId = req.body.userId;
-  const username = req.body.username;
-
-  await profileSession
-    .run(
-      'CREATE (n:Profile {userId: $userIdParam, username: $usernameParam})',
-      { userIdParam: userId, usernameParam: username }
-    )
-    .catch(function (err) {
-      console.log(err);
-    })
-    .finally(() => profileSession.close());
-
-  res.end();
-});
-
-/**
- * @swagger
- * path:
- *   /api/profiles:
- *     get:
- *       tags:
- *         - profiles
- *       summary: Get all profiles
- *       responses:
- *         "200":
- *           description: OK
- *           schema:
- *             $ref: '#/definitions/Profile'
- *         "404":
- *           description: No users found
- *         "500":
- *           description: Internal server error
- *
- */
+// Get all Profiles
 router.get('/', async function (req, res) {
   try {
     let result = await query.getAllProfiles();
@@ -202,22 +71,7 @@ router.get('/', async function (req, res) {
   } catch (error) {}
 });
 
-/**
- * @swagger
- * path:
- *   /api/profiles:
- *     delete:
- *       tags:
- *         - profiles
- *       summary: Delete all registered profiles (for dev tests only)
- *       responses:
- *         "200":
- *           description: All users removed
- *         "404":
- *           description: Something went wrong
- *         "500":
- *           description: Internal server error
- */
+// Delete all Profiles (DEV only --> @TODO: delete)
 router.delete('/', async (req, res) => {
   try {
     let result = await query.deleteAllProfiles();

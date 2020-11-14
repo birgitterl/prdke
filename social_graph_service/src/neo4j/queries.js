@@ -1,10 +1,10 @@
 var driver = require('../config/db');
 
-exports.findProfile = async function (props) {
+exports.findProfile = async function (user) {
   var query =
-    'MATCH (p:Profile) WHERE p.username=$props.username RETURN p AS profile';
+    'MATCH (p:Profile) WHERE p.username=$user.username RETURN p AS profile';
   var session = driver.session();
-  var result = await session.run(query, { props }).catch((err) => {
+  var result = await session.run(query, { user }).catch((err) => {
     if (err) console.log(err);
   });
   session.close();
@@ -13,11 +13,11 @@ exports.findProfile = async function (props) {
   return result.records.map((record) => record.get('profile').properties);
 };
 
-exports.createOrUpdateProfile = async function (props) {
+exports.createOrUpdateProfile = async function (user, props) {
   var query =
-    'MERGE(a:Profile {username:$props.username}) ON CREATE SET a.hometown =$props.hometown, a.gender=$props.gender, a.birthday=$props.birthday, a.privacy=$props.privacy, a.notifications=$props.notifications, a.background=$props.background ON MATCH SET a.hometown =$props.hometown, a.gender=$props.gender, a.birthday=$props.birthday, a.privacy=$props.privacy, a.notifications=$props.notifications, a.background=$props.background RETURN a AS profile';
+    'MERGE(a:Profile {username:$user.username}) ON CREATE SET a.hometown =$props.hometown, a.gender=$props.gender, a.birthday=$props.birthday, a.privacy=$props.privacy, a.notifications=$props.notifications, a.background=$props.background ON MATCH SET a.hometown =$props.hometown, a.gender=$props.gender, a.birthday=$props.birthday, a.privacy=$props.privacy, a.notifications=$props.notifications, a.background=$props.background RETURN a AS profile';
   var session = driver.session();
-  var result = await session.run(query, { props }).catch(function (err) {
+  var result = await session.run(query, { user, props }).catch(function (err) {
     if (err) console.log(err);
   });
   session.close();
