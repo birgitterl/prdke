@@ -1,4 +1,6 @@
 const express = require('express');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDoc = require('./config/swaggerDef');
 const bodyParser = require('body-parser');
 
 const app = express();
@@ -17,5 +19,12 @@ app.use('/api/messages', require('./routes/api/messages'));
 app.use('/api/profiles', require('./routes/api/profiles'));
 app.use('/api/follow', require('./routes/api/follow'));
 //app.use('/viewProfile', require('./routes/api/viewProfile'));
+
+// Swagger documentation setup - available under 'localhost:5000/api-docs':
+app.use(
+  '/api-docs',
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerDoc, { explorer: true })
+);
 
 module.exports = app;

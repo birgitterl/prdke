@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 // Middleware function next is a callback to move on the next piece of middleware
 module.exports = function (req, res, next) {
   // Get the token from the header
-  const token = req.header('authorization');
+  const token = req.header('Authorization');
 
   // Check if no token
   if (!token) {

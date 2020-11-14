@@ -1,49 +1,19 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const { check, validationResult } = require("express-validator");
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const { check, validationResult } = require('express-validator');
 
-const User = require("../../models/User");
+const User = require('../../models/User');
 
-/**
- *@swagger
- * path:
- *  /api/users:
- *    post:
- *      tags:
- *        - users
- *      summary: Register a new user
- *      parameters:
- *        - in: body
- *          name: body
- *          description: User object that needs to be registered
- *          required: true
- *          schema:
- *            $ref: '#/definitions/User'
- *      responses:
- *        '201':
- *          description: User created
- *          schema:
- *            type: object
- *            properties:
- *              token:
- *                type: string
- *                example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNWZhODFhMmQxNTY2NjEwMDNiMDg5OWYyIn0sImlhdCI6MTYwNDg1NTgwOSwiZXhwIjoxNjA1MjE1ODA5fQ.XUZZrYGuUxBk4WQis8VII4GGadFESHwg8Il994WPk04
- *        '400':
- *          description: Bad Request
- *        '403':
- *          description: Forbidden - User exists already
- *        '500':
- *          description: Internal server error
- */
+// Register a new user
 router.post(
-  "/",
+  '/',
   [
     check(
-      "password",
-      "Please enter a password with 6 or more characters"
-    ).isLength({ min: 6 }),
+      'password',
+      'Please enter a password with 6 or more characters'
+    ).isLength({ min: 6 })
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -60,12 +30,12 @@ router.post(
       if (user) {
         return res
           .status(400)
-          .json({ errors: [{ msg: "User already exists" }] });
+          .json({ errors: [{ msg: 'User already exists' }] });
       }
 
       user = new User({
         username,
-        password,
+        password
       });
 
       // Encrypt password with bcrypt
@@ -80,12 +50,13 @@ router.post(
       const payload = {
         user: {
           id: user.id,
-        },
+          username: user.username
+        }
       };
 
       jwt.sign(
         payload,
-        "mysecrettoken",
+        'mysecrettoken',
         { expiresIn: 360000 },
         (err, token) => {
           if (err) throw err;
@@ -94,71 +65,32 @@ router.post(
       );
     } catch (err) {
       console.error(err.message);
-      res.status(500).send("Server error");
+      res.status(500).send('Server error');
     }
   }
 );
 
-/**
- * @swagger
- * path:
- *   /api/users:
- *     delete:
- *       tags:
- *         - users
- *       summary: Delete all registered users (for dev tests only)
- *       responses:
- *         "200":
- *           description: All users removed
- *           schema:
- *             $ref: '#/definitions/User'
- *         "500":
- *           description: Internal server error
- */
-router.delete("/", async (req, res) => {
+// Delete all registered users (DEV --> @TODO delete afterwards)
+router.delete('/', async (req, res) => {
   try {
     await User.remove();
     await res.status(200).json({
-      msg: "All users removed",
+      msg: 'All users removed'
     });
   } catch (err) {
     console.error(err.message);
-    res.status(500).json({ msg: "Internal server error" });
+    res.status(500).json({ msg: 'Internal server error' });
   }
 });
 
-/**
- * @swagger
- * path:
- *   /api/users:
- *     get:
- *       tags:
- *         - users
- *       summary: Get all users
- *       responses:
- *         "200":
- *           description: OK
- *           schema:
- *             type: array
- *             items:
- *               type: object
- *               properties:
- *                 username:
- *                   type: string
- *                   example: Julia
- *         "404":
- *           description: No users found
- *         "500":
- *           description: Internal server error
- *
- */
-router.get("/", async (req, res) => {
+// Get all users
+router.get('/', async (req, res) => {
   try {
-    const users = await User.find().select("username");
+    const users = await User.find().select('username');
     res.json(users);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send("Server Error");
+    res.status(500).send('Server Error');
   }
 });
 
