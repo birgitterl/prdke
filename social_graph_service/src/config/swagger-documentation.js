@@ -60,16 +60,10 @@
  *          schema:
  *            $ref: '#/definitions/Profile'
  *      responses:
- *        '200':
- *          description: OK
+ *        '201':
+ *          description: Profile created / updated
  *          schema:
  *             $ref: '#/definitions/Profile'
- *        '400':
- *          description: Bad Request
- *        '403':
- *          description: Forbidden - User exists already
- *        '404':
- *          description: Not found - Invalid credentials
  *        '500':
  *          description: Internal server error
  */
@@ -94,9 +88,7 @@
  *           schema:
  *             $ref: '#/definitions/Profile'
  *         "404":
- *           description: User not found by id
- *         "400":
- *           description: Invalid ID supplied
+ *           description: No profile found
  *         "500":
  *           description: Internal server error
  *
@@ -114,9 +106,11 @@
  *         "200":
  *           description: OK
  *           schema:
- *             $ref: '#/definitions/Profile'
+ *             type: array
+ *             items:
+ *               $ref: '#/definitions/Profile'
  *         "404":
- *           description: No users found
+ *           description: No profiles found
  *         "500":
  *           description: Internal server error
  *
@@ -133,8 +127,6 @@
  *       responses:
  *         "200":
  *           description: All users removed
- *         "404":
- *           description: Something went wrong
  *         "500":
  *           description: Internal server error
  */

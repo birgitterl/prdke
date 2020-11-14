@@ -1,11 +1,11 @@
 const express = require('express');
-const driver = require('../../config/db');
 const router = express.Router();
 const auth = require('../../middleware/auth');
 const { check, validationResult } = require('express-validator');
 const query = require('../../neo4j/queries.js');
 
 // Create a new profile or update existing profile
+// Private route
 router.post(
   '/',
   [
@@ -27,34 +27,32 @@ router.post(
     try {
       let result = await query.createOrUpdateProfile(user, profile);
       if (!result) {
-        res.status(400).json({ msg: 'There is no profile for this user' });
+        return res.status(500).send('Server Error');
       } else {
-        console.log('POST: Profile created or updated');
-        res.json(result[0]);
+        delete result['username'];
+        return res.status(201).json(result);
       }
     } catch (err) {
-      console.error(err.message);
-      res.status(500).send('Server error');
+      return res.status(500).send('Server Error');
     }
   }
 );
 
 // Get my profile
+// Private route
 router.get('/me', auth, async (req, res) => {
   const user = req.user;
-  console.log(user);
   try {
-    const result = await query.findProfile(user);
+    const profile = await query.findProfile(user);
 
-    if (!result) {
-      return res.status(400).json({ msg: 'There is no profile for this user' });
+    if (!profile) {
+      return res.status(404).send('No profile found');
     } else {
-      console.log('GET: Here is my profile');
-      res.json(result[0]);
+      delete profile['username'];
+      return res.status(200).json(profile);
     }
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
+    return res.status(500).send('Server Error');
   }
 });
 
@@ -62,13 +60,14 @@ router.get('/me', auth, async (req, res) => {
 router.get('/', async function (req, res) {
   try {
     let result = await query.getAllProfiles();
-    if (!result) {
-      res.status(404).send({ msg: 'No profiles found' });
+    if (!result.length) {
+      return res.status(404).send('No profiles found');
     } else {
-      console.log('GET: all profiles');
-      res.json(result);
+      return res.status(200).json(result);
     }
-  } catch (error) {}
+  } catch (err) {
+    return res.status(500).send('Server Error');
+  }
 });
 
 // Delete all Profiles (DEV only --> @TODO: delete)
@@ -76,15 +75,12 @@ router.delete('/', async (req, res) => {
   try {
     let result = await query.deleteAllProfiles();
     if (!result) {
-      res.status(404).send({ msg: 'Something went wrong' });
+      return res.status(500).send('Server Error');
     } else {
-      res.status(200).json({
-        msg: 'All users removed'
-      });
+      return res.status(200).send('All users removed');
     }
   } catch (err) {
-    console.error(err.message);
-    res.status(500).json({ msg: 'Internal server error' });
+    return res.status(500).send('Server Error');
   }
 });
 

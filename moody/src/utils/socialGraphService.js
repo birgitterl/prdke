@@ -1,12 +1,12 @@
-import axios from "axios";
-import store from "../store";
-import { LOGOUT } from "../actions/types";
+import axios from 'axios';
+import store from '../store';
+import { LOGOUT } from '../actions/types';
 
-const api = axios.create({
-  baseURL: "http://localhost:8080/api",
+const socialGraphService = axios.create({
+  baseURL: 'http://localhost:5000/api',
   headers: {
-    "Content-Type": "application/json",
-  },
+    'Content-Type': 'application/json'
+  }
 });
 /**
  intercept any error responses from the api
@@ -16,7 +16,7 @@ const api = axios.create({
  logout the user if the token has expired
 **/
 
-api.interceptors.response.use(
+socialGraphService.interceptors.response.use(
   (res) => res,
   (err) => {
     if (err.response.status === 401) {
@@ -26,4 +26,4 @@ api.interceptors.response.use(
   }
 );
 
-export default api;
+export default socialGraphService;
