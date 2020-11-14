@@ -2,7 +2,7 @@ const express = require('express');
 const driver = require('../../config/db.js').driver;
 const router = express.Router();
 
-router.post('/add', async function (req, res) {
+router.post('/', async function (req, res) {
   const messageSession = driver.session();
   const postedSession = driver.session();
 
