@@ -8,7 +8,6 @@ import {
 
 const initialState = {
   profile: null,
-  profiles: [],
   loading: true,
   error: {}
 };
@@ -22,12 +21,6 @@ const profile = function (state = initialState, action) {
       return {
         ...state,
         profile: payload,
-        loading: false
-      };
-    case GET_PROFILES:
-      return {
-        ...state,
-        profiles: payload,
         loading: false
       };
     case PROFILE_ERROR:

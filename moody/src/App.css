@@ -301,8 +301,7 @@ button {
 /* Navbar */
 .navbar {
   display: flex;
-  flex: 1;
-  justify-content: first baseline;
+  justify-content: space-between;
   align-items: center;
   padding: 0.7rem 2rem;
   position: fixed;
@@ -315,23 +314,18 @@ button {
 
 .navbar h1 {
   display: flex;
-  flex: 3;
   margin: 0 0.25rem;
   justify-content: left;
 }
 
 .navbar ul {
   display: flex;
-  justify-content: right;
 }
 
 .navbar a {
-  display: flex;
-  flex: 5;
   color: #fff;
   padding: 0.45rem;
   margin: 0 0.25rem;
-  margin-left: 5rem;
 }
 
 .navbar a:hover {
@@ -348,15 +342,12 @@ button {
 }
 
 .navbar input [type='search'] {
-  display: flex;
-  size: inherit;
   padding: 0.4rem;
   font-size: 1.2rem;
   border: 1px solid #ccc;
 }
 
 .navbar .search-container button {
-  float: right;
   padding: 0.4rem;
   font-size: 1.2rem;
   background: var(--primary-color);

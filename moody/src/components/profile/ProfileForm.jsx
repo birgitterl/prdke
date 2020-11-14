@@ -53,12 +53,11 @@ const ProfileForm = ({
   return (
     <Fragment>
       <h1 className="large text-primary">Edit Your Profile</h1>
-      <p className="lead">
-        <i className="fas fa-user" /> Add some changes to your profile
-      </p>
-      <small>* = required field</small>
+
+      <medium>* = required field</medium>
       <form className="form" onSubmit={onSubmit}>
         <div className="form-group">
+          <h4>Hometown</h4>
           <input
             type="text"
             placeholder="Hometown"
@@ -71,7 +70,7 @@ const ProfileForm = ({
           </small>
         </div>
         <div className="form-group">
-          <h4>From Date</h4>
+          <h4>Birthday</h4>
           <input
             type="date"
             name="birthday"
@@ -81,6 +80,7 @@ const ProfileForm = ({
           <small className="form-text">When is your birthday?</small>
         </div>
         <div className="form-group">
+          <h4>Gender</h4>
           <select name="gender" value={gender} onChange={onChange}>
             <option value="female">Female</option>
             <option value="male">Male</option>
@@ -89,6 +89,7 @@ const ProfileForm = ({
           <small className="form-text">Let us know your gender</small>
         </div>
         <div className="form-group">
+          <h4>* Privacy Settings</h4>
           <select name="privacy" value={privacy} onChange={onChange}>
             <option value="public">Visible for public</option>
             <option value="private">Not visible for public</option>
@@ -96,20 +97,21 @@ const ProfileForm = ({
           <small className="form-text">Let us know your privacy settings</small>
         </div>
         <div className="form-group">
+          <h4>* Notification Settings</h4>
           <select
             name="notifications"
             value={notifications}
             onChange={onChange}
           >
-            <option>* Select your notification setting</option>
-            <option value="notificationtrue">Notifications enabled</option>
-            <option value="notificationfalse">Notifications disabled</option>
+            <option value="true">Notifications enabled</option>
+            <option value="false">Notifications disabled</option>
           </select>
           <small className="form-text">
             Let us know your notification settings
           </small>
         </div>
         <div className="form-group">
+          <h4>* Select your background</h4>
           <input
             type="text"
             placeholder="background"

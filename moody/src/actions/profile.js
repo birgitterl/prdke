@@ -1,4 +1,4 @@
-import api from '../utils/api';
+import socialGraphService from '../utils/socialGraphService';
 import { setAlert } from './alert';
 
 import {
@@ -12,7 +12,7 @@ import {
 // Get current users profile
 export const getCurrentProfile = () => async (dispatch) => {
   try {
-    const res = await api.get('/profile/me');
+    const res = await socialGraphService.get('/profiles/me');
 
     dispatch({
       type: GET_PROFILE,
@@ -21,7 +21,7 @@ export const getCurrentProfile = () => async (dispatch) => {
   } catch (err) {
     dispatch({
       type: PROFILE_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status }
+      payload: { msg: err.message, status: err.status }
     });
   }
 };
@@ -29,7 +29,7 @@ export const getCurrentProfile = () => async (dispatch) => {
 // Get profile by ID
 export const getProfileById = (userId) => async (dispatch) => {
   try {
-    const res = await api.get(`/profile/user/${userId}`);
+    const res = await socialGraphService.get(`/profiles/${userId}`);
 
     dispatch({
       type: GET_PROFILE,
@@ -38,7 +38,7 @@ export const getProfileById = (userId) => async (dispatch) => {
   } catch (err) {
     dispatch({
       type: PROFILE_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status }
+      payload: { msg: err.message, status: err.status }
     });
   }
 };
@@ -48,20 +48,21 @@ export const createProfile = (formData, history, edit = false) => async (
   dispatch
 ) => {
   try {
-    const res = await api.post('/profile', formData);
+    console.log(formData);
+    const res = await socialGraphService.post('/profiles', formData);
 
     dispatch({
-      type: GET_PROFILE,
+      type: UPDATE_PROFILE,
       payload: res.data
     });
 
     dispatch(setAlert(edit ? 'Profile Updated' : 'Profile Created', 'success'));
 
     if (!edit) {
-      history.push('/dashboard');
+      history.push('/hometimeline');
     }
   } catch (err) {
-    const errors = err.response.data.errors;
+    const errors = err.errors;
 
     if (errors) {
       errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
@@ -69,117 +70,7 @@ export const createProfile = (formData, history, edit = false) => async (
 
     dispatch({
       type: PROFILE_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status }
+      payload: { msg: err.statusText, status: err.status }
     });
-  }
-};
-
-// Add Experience
-export const addExperience = (formData, history) => async (dispatch) => {
-  try {
-    const res = await api.put('/profile/experience', formData);
-
-    dispatch({
-      type: UPDATE_PROFILE,
-      payload: res.data
-    });
-
-    dispatch(setAlert('Experience Added', 'success'));
-
-    history.push('/dashboard');
-  } catch (err) {
-    const errors = err.response.data.errors;
-
-    if (errors) {
-      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
-    }
-
-    dispatch({
-      type: PROFILE_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status }
-    });
-  }
-};
-
-// Add Education
-export const addEducation = (formData, history) => async (dispatch) => {
-  try {
-    const res = await api.put('/profile/education', formData);
-
-    dispatch({
-      type: UPDATE_PROFILE,
-      payload: res.data
-    });
-
-    dispatch(setAlert('Education Added', 'success'));
-
-    history.push('/dashboard');
-  } catch (err) {
-    const errors = err.response.data.errors;
-
-    if (errors) {
-      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
-    }
-
-    dispatch({
-      type: PROFILE_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status }
-    });
-  }
-};
-
-// Delete experience
-export const deleteExperience = (id) => async (dispatch) => {
-  try {
-    const res = await api.delete(`/profile/experience/${id}`);
-
-    dispatch({
-      type: UPDATE_PROFILE,
-      payload: res.data
-    });
-
-    dispatch(setAlert('Experience Removed', 'success'));
-  } catch (err) {
-    dispatch({
-      type: PROFILE_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status }
-    });
-  }
-};
-
-// Delete education
-export const deleteEducation = (id) => async (dispatch) => {
-  try {
-    const res = await api.delete(`/profile/education/${id}`);
-
-    dispatch({
-      type: UPDATE_PROFILE,
-      payload: res.data
-    });
-
-    dispatch(setAlert('Education Removed', 'success'));
-  } catch (err) {
-    dispatch({
-      type: PROFILE_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status }
-    });
-  }
-};
-
-// Delete account & profile
-export const deleteAccount = () => async (dispatch) => {
-  if (window.confirm('Are you sure? This can NOT be undone!')) {
-    try {
-      await api.delete('/profile');
-
-      dispatch({ type: CLEAR_PROFILE });
-
-      dispatch(setAlert('Your account has been permanently deleted'));
-    } catch (err) {
-      dispatch({
-        type: PROFILE_ERROR,
-        payload: { msg: err.response.statusText, status: err.response.status }
-      });
-    }
   }
 };

@@ -27,7 +27,7 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
   };
 
   if (isAuthenticated) {
-    return <Redirect to="/profileform" />;
+    return <Redirect to="/hometimeline" />;
   }
 
   return (

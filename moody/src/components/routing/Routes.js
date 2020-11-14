@@ -17,7 +17,6 @@ const Routes = (props) => {
         <Route exact path="/login" component={Login} />
         <Route exact path="/hometimeline" component={Hometimeline} />
         <Route exact path="/profileform" component={ProfileForm} />
-        <Route exact path="/profileform" component={ProfileForm} />
         <Route exact path="/profile" component={Profile} />
         <Route component={NotFound} />
       </Switch>

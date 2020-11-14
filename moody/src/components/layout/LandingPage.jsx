@@ -1,7 +1,7 @@
-import React from "react";
-import { Link, Redirect } from "react-router-dom";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
+import React from 'react';
+import { Link, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 const Landing = ({ isAuthenticated }) => {
   if (isAuthenticated) {
@@ -14,7 +14,7 @@ const Landing = ({ isAuthenticated }) => {
         <div className="landing-inner">
           <h1 className="x-large">Welcome to moody</h1>
           <p className="lead">
-            Create a profile, share your mood and view your friend's mood
+            Create a profile, share your mood and follow your friends
           </p>
           <div className="buttons">
             <Link to="/register" className="btn btn-primary">
@@ -31,11 +31,11 @@ const Landing = ({ isAuthenticated }) => {
 };
 
 Landing.propTypes = {
-  isAuthenticated: PropTypes.bool,
+  isAuthenticated: PropTypes.bool
 };
 
 const mapStateToProps = (state) => ({
-  isAuthenticated: state.auth.isAuthenticated,
+  isAuthenticated: state.auth.isAuthenticated
 });
 
 export default connect(mapStateToProps)(Landing);
