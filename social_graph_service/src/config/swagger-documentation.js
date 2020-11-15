@@ -130,3 +130,53 @@
  *         "500":
  *           description: Internal server error
  */
+
+// Follow definitions
+
+/**
+ * @swagger
+ * definitions:
+ *   Follow:
+ *     type: object
+ *     required:
+ *     - username1
+ *     - username2
+ *     properties:
+ *          username1:
+ *              type: string
+ *              example: Hugo
+ *          username2:
+ *              type: string
+ *              example: Sepp
+ */
+// Follow API
+
+/**
+ *@swagger
+ * path:
+ *  /api/follow:
+ *    post:
+ *      tags:
+ *        - follow
+ *      summary: Create a new follow relationship between two profiles
+ *      parameters:
+ *        - in: body
+ *          name: body
+ *          description: Relationship follows between two existing profiles
+ *          required: true
+ *          schema:
+ *            $ref: '#/definitions/Follow'
+ *        - in: body
+ *          name: body
+ *          description: Relationship follows between two existing profiles
+ *          required: true
+ *          schema:
+ *            $ref: '#/definitions/Follow'
+ *      responses:
+ *        '201':
+ *          description: Follow relationship created
+ *          schema:
+ *             $ref: '#/definitions/Follow'
+ *        '500':
+ *          description: Internal server error
+ */

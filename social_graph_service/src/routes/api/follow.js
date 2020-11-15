@@ -18,8 +18,10 @@ router.post('/', async function (req, res) {
       console.log(err);
       //res.status().send(err.message); TODO
     })
+
     .finally(() => session.close());
   res.end();
+  res.status(201);
 });
 
 module.exports = router;
