@@ -82,6 +82,7 @@ const ProfileForm = ({
         <div className="form-group">
           <h4>Gender</h4>
           <select name="gender" value={gender} onChange={onChange}>
+            <option>Select your gender</option>
             <option value="female">Female</option>
             <option value="male">Male</option>
             <option value="transgender">transgender</option>
@@ -91,6 +92,7 @@ const ProfileForm = ({
         <div className="form-group">
           <h4>* Privacy Settings</h4>
           <select name="privacy" value={privacy} onChange={onChange}>
+            <option>Change your privacy settings</option>
             <option value="public">Visible for public</option>
             <option value="private">Not visible for public</option>
           </select>
@@ -103,6 +105,7 @@ const ProfileForm = ({
             value={notifications}
             onChange={onChange}
           >
+            <option>Change your notification settings</option>
             <option value="true">Notifications enabled</option>
             <option value="false">Notifications disabled</option>
           </select>
@@ -111,7 +114,7 @@ const ProfileForm = ({
           </small>
         </div>
         <div className="form-group">
-          <h4>* Select your background</h4>
+          <h4>Select your background</h4>
           <input
             type="text"
             placeholder="background"
