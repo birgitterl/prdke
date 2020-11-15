@@ -2,7 +2,7 @@ const swaggerJSDoc = require('swagger-jsdoc');
 
 const swaggerDefinition = {
   info: {
-    title: 'social_graph_service',
+    title: 'moody social_graph_service',
     version: '1.0.0',
     description: 'REST API for the moody social_graph_service'
   },

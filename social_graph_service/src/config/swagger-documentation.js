@@ -36,6 +36,14 @@
  *         type: boolean
  *         default: false
  *         example: false
+ *   Message:
+ *     type: object
+ *     required:
+ *     - text
+ *     properties:
+ *       text:
+ *         type: string
+ *         example: My first message
  */
 
 // Profile API
@@ -48,6 +56,8 @@
  *      tags:
  *        - profiles
  *      summary: Create a new profile or update an existing one
+ *      security:
+ *        - authentication: []
  *      parameters:
  *        - in: body
  *          name: body
@@ -72,12 +82,8 @@
  *       tags:
  *         - profiles
  *       summary: Get my profile
- *       parameters:
- *         - in: query
- *           name: username
- *           required: true
- *           type: string
- *           example: Julia
+ *       security:
+ *         - authentication: []
  *       responses:
  *         "200":
  *           description: OK
@@ -127,24 +133,6 @@
  *           description: Internal server error
  */
 
-// Follow definitions
-
-/**
- * @swagger
- * definitions:
- *   Follow:
- *     type: object
- *     required:
- *     - username1
- *     - username2
- *     properties:
- *          username1:
- *              type: string
- *              example: Hugo
- *          username2:
- *              type: string
- *              example: Sepp
- */
 // Follow API
 
 /**
@@ -155,24 +143,48 @@
  *      tags:
  *        - follow
  *      summary: Create a new follow relationship between two profiles
+ *      security:
+ *         - authentication: []
  *      parameters:
  *        - in: body
- *          name: body
- *          description: Relationship follows between two existing profiles
- *          required: true
+ *          name: text
+ *          description: Profile I want to follow
  *          schema:
- *            $ref: '#/definitions/Follow'
- *        - in: body
- *          name: body
- *          description: Relationship follows between two existing profiles
- *          required: true
- *          schema:
- *            $ref: '#/definitions/Follow'
+ *            type: object
+ *            required:
+ *              - text
+ *            properties:
+ *              username:
+ *                type: string
+ *                example: Sepp
  *      responses:
  *        '201':
  *          description: Follow relationship created
+ *        '500':
+ *          description: Internal server error
+ */
+
+// Message API:
+/**
+ *@swagger
+ * path:
+ *  /api/messages:
+ *    post:
+ *      tags:
+ *        - messages
+ *      summary: Create a new message
+ *      security:
+ *         - authentication: []
+ *      parameters:
+ *        - in: body
+ *          name: body
+ *          description: Message I want to send
+ *          required: true
  *          schema:
- *             $ref: '#/definitions/Follow'
+ *            $ref: '#/definitions/Message'
+ *      responses:
+ *        '201':
+ *          description: Message created
  *        '500':
  *          description: Internal server error
  */

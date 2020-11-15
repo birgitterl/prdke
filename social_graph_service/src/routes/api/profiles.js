@@ -8,14 +8,14 @@ const query = require('../../neo4j/queries.js');
 // Private route
 router.post(
   '/',
+  auth,
   [
-    check('privacy', 'Please provide your privacy settings').notEmpty(),
+    (check('privacy', 'Please provide your privacy settings').notEmpty(),
     check(
       'notifications',
       'Please provide your notification settings'
-    ).notEmpty()
+    ).notEmpty())
   ],
-  auth,
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
