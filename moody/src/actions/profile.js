@@ -48,7 +48,6 @@ export const createProfile = (formData, history, edit = false) => async (
   dispatch
 ) => {
   try {
-    console.log(formData);
     const res = await socialGraphService.post('/profiles', formData);
 
     dispatch({
@@ -62,7 +61,7 @@ export const createProfile = (formData, history, edit = false) => async (
       history.push('/hometimeline');
     }
   } catch (err) {
-    const errors = err.errors;
+    const errors = err.response.data.errors;
 
     if (errors) {
       errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
@@ -70,7 +69,7 @@ export const createProfile = (formData, history, edit = false) => async (
 
     dispatch({
       type: PROFILE_ERROR,
-      payload: { msg: err.statusText, status: err.status }
+      payload: { msg: err.msg, status: err.status }
     });
   }
 };
