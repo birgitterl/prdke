@@ -128,7 +128,7 @@
  *       summary: Delete all registered profiles (for dev tests only)
  *       responses:
  *         "200":
- *           description: All users removed
+ *           description: All profiles removed
  *         "500":
  *           description: Internal server error
  */
