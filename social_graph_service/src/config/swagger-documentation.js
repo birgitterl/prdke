@@ -6,13 +6,9 @@
  *   Profile:
  *     type: object
  *     required:
- *     - username
  *     - privacy
  *     - notifications
  *     properties:
- *       username:
- *         type: string
- *         example: Julia
  *       gender:
  *         type: string
  *         enum:

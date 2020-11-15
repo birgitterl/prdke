@@ -1,25 +1,26 @@
 const express = require('express');
 const driver = require('../../config/db');
+const auth = require('../../middleware/auth');
 const router = express.Router();
 
-router.post('/', async function (req, res) {
+router.post('/', auth, async function (req, res) {
   const session = driver.session();
-  const followsName = req.body.username1;
-  const otherUser = req.body.username2;
+  const followsName = req.user;
+  const otherUser = req.body.username;
 
   await session
     .run(
       'MATCH (f:Profile {username: $followsName})' +
         'MATCH (u:Profile {username: $otherUser})' +
-        'MERGE (f)-[r:follows]->(u)',
-      { followsName: followsName, otherUser: otherUser }
+        'MERGE (f)-[r:follows]->(u) RETURN r as following',
+      { followsName: followsName.username, otherUser: otherUser }
     )
     .catch(function (err) {
       console.log(err);
       //res.status().send(err.message); TODO
-    })
-    .finally(() => session.close());
-  res.end();
+    });
+  session.close();
+  return res.status(201).send('Relation created');
 });
 
 module.exports = router;
