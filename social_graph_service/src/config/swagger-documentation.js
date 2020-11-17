@@ -164,6 +164,35 @@
  *          description: Internal server error
  */
 
+/**
+ *@swagger
+ * path:
+ *  /api/follow:
+ *    delete:
+ *      tags:
+ *        - follow
+ *      summary: Delete a existing follow relationship between two profiles
+ *      security:
+ *         - authentication: []
+ *      parameters:
+ *        - in: body
+ *          name: text
+ *          description: Profile I want to unfollow
+ *          schema:
+ *            type: object
+ *            required:
+ *              - text
+ *            properties:
+ *              username:
+ *                type: string
+ *                example: Sepp
+ *      responses:
+ *        '200':
+ *          description: Follow relationship deleted
+ *        '500':
+ *          description: Internal server error
+ */
+
 // Message API:
 /**
  *@swagger

@@ -77,7 +77,7 @@ router.delete('/', async (req, res) => {
     if (!result) {
       return res.status(500).send('Server Error');
     } else {
-      return res.status(200).send('All users removed');
+      return res.status(200).send('All profiles removed');
     }
   } catch (err) {
     return res.status(500).send('Server Error');
