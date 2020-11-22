@@ -61,5 +61,8 @@ Thumbs.db
 # node modules
 node_modules
 
+#package.lock.json
+package-lock.json
+
 #dockervolume/mongo
 dockervolume
