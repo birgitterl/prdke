@@ -19,7 +19,8 @@
     "swagger-jsdoc": "4.2.0",
     "swagger-ui-express": "4.1.4",
     "jsonwebtoken": "8.5.1",
-    "cors": "*"
+    "cors": "*",
+    "yamljs": "0.3.0"
   },
   "devDependencies": {
     "nodemon": "*",

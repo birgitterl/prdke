@@ -9,8 +9,10 @@ services:
     depends_on:
       - mongo
     volumes:
-      - ./auth_service:/src
-      - /src/node_modules
+      - ./auth_service:/app/src
+      - ./auth_service/package.json:/app/package.json
+      - ./auth_service/package-lock.json:/app/package-lock.json
+      - auth_notused:/app/node_modules
     command: npm run dev
     networks:
       - moody-app
@@ -19,6 +21,10 @@ services:
     build: ./moody
     container_name: "moody-frontend"
     stdin_open: true
+    depends_on:
+      - auth_service
+      - social_graph_service
+      - search_service
     volumes:
       - ./moody:/src
       - /src/node_modules
@@ -27,13 +33,22 @@ services:
     networks:
       - moody-app
 
-  #search_service:
-  # build: ./search_service
-  # container_name: "search-service"
-  # ports:
-  #   - "4050:4050"
-  # networks:
-  #     - moody-app
+  search_service:
+    build: ./search_service
+    container_name: "search-service"
+    ports:
+      - "7050:7050"
+    depends_on:
+      - elasticsearch
+      - rabbitmq
+    volumes:
+      - ./search_service:/app/src
+      - ./search_service/package.json:/app/package.json
+      - ./search_service/package-lock.json:/app/package-lock.json
+      - search_notused:/app/node_modules
+    command: npm run dev
+    networks:
+      - moody-app
 
   social_graph_service:
     build: ./social_graph_service
@@ -42,14 +57,15 @@ services:
       - "5000:5000"
     depends_on:
       - graphDB
+      - rabbitmq
     volumes:
-      - ./social_graph_service:/src
-      - /src/node_modules
+      - ./social_graph_service:/app/src
+      - ./social_graph_service/package.json:/app/package.json
+      - ./social_graph_service/package-lock.json:/app/package-lock.json
+      - social_notused:/app/node_modules
     command: npm run dev
     networks:
       - moody-app
-
-  # todo: add elastic stack
 
   graphDB:
     image: neo4j:latest
@@ -60,6 +76,8 @@ services:
     ports:
       - "7474:7474"
       - "7687:7687"
+    volumes:
+       - ./dockervolume/neo4j:/data
     networks:
       - moody-app
 
@@ -69,9 +87,76 @@ services:
     restart: always
     ports:
       - "27017:27017"
+    volumes:
+      - ./dockervolume/mongo:/data/db
+    networks:
+      - moody-app
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.0
+    container_name: elasticsearch
+    environment:
+      - node.name=elastic
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - bootstrap.memory_lock=true
+    restart: always
+    ports:
+      - "9200:9200"
+    volumes:
+      - ./dockervolume/elastic:/share/elasticsearch/data
+    networks:
+      - moody-app
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.10.0
+    container_name: kibana
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+      ELASTICSEARCH_HOST: http://elasticsearch:9200
+    restart: always
+    depends_on:
+      - elasticsearch
+    ports:
+      - "5601:5601"
+    networks:
+      - moody-app
+
+  rabbitmq:
+    image: rabbitmq:3.8.9-management
+    hostname: rabbitmq
+    container_name: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
+    restart: always
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    volumes:
+      - ./dockervolume/rabbitmq:/var/lib/rabbitmq/mnesia
+    networks:
+      - moody-app
+
+  mongo-express:
+    image: mongo-express:latest
+    container_name: mongo-express
+    restart: always
+    depends_on:
+      - mongo
+    ports:
+      - "8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongo
+      - ME_CONFIG_MONGODB_PORT=27017
     networks:
       - moody-app
 
 networks:
   moody-app:
     driver: bridge
+
+volumes:
+  auth_notused:
+  search_notused:
+  social_notused:
