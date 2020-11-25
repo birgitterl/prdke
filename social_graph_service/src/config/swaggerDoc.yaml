@@ -1,0 +1,201 @@
+swagger: '2.0'
+info:
+  description: This is the REST API documentation for the moody social_graph_service
+  version: 1.0.0
+  title: moody Social Graph Service
+host: 'localhost:5000'
+basePath: /api
+tags:
+  - name: profiles
+    description: Everything about your profiles
+  - name: followRelations
+    description: Follow Relationships between moody profiles
+  - name: messages
+    description: Everything about the posted messages
+securityDefinitions:
+  authentication:
+    type: apiKey
+    name: Authorization
+    in: header
+definitions:
+  Profile:
+    type: object
+    required:
+      - privacy
+      - notifications
+    properties:
+      gender:
+        type: string
+        enum:
+          - male
+          - female
+          - transgender
+        example: female
+      birthday:
+        type: string
+        format: date
+        example: 1990-01-01T00:00:00.000Z
+      hometown:
+        type: string
+        example: Linz
+      background:
+        type: string
+        example: none
+      privacy:
+        type: string
+        enum:
+          - private
+          - public
+        default: public
+        example: public
+      notifications:
+        type: boolean
+        default: false
+        example: false
+  Message:
+    type: object
+    required:
+      - text
+    properties:
+      text:
+        type: string
+        example: My first message
+paths:
+  /profiles:
+    post:
+      tags:
+        - profiles
+      summary: Create a new profile or update an existing one
+      description: >-
+        If the user (provided via the header) does not have a profile yet, a new
+        profile will be created. Else the profile will be updated.
+      security:
+        - authentication: []
+      parameters:
+        - in: body
+          name: body
+          description: Profile object to be created or updated
+          required: true
+          schema:
+            $ref: '#/definitions/Profile'
+      responses:
+        '201':
+          description: Profile created / updated
+          schema:
+            $ref: '#/definitions/Profile'
+        '500':
+          description: Internal server error
+    get:
+      tags:
+        - profiles
+      summary: Get all profiles
+      description: Fetching all exisiting profiles.
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Profile'
+        '404':
+          description: No profiles found
+        '500':
+          description: Internal server error
+    delete:
+      tags:
+        - profiles
+      summary: Delete all registered profiles
+      description: all existing profiles are deleted (for testing purpose only)
+      responses:
+        '200':
+          description: All profiles removed
+        '500':
+          description: Internal server error
+  /profiles/me:
+    get:
+      tags:
+        - profiles
+      summary: Get my profile
+      description: >-
+        through the auth header, the user object will be submitted and the
+        current user's profile will be returned
+      security:
+        - authentication: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Profile'
+        '404':
+          description: No profile found
+        '500':
+          description: Internal server error
+  /api/follow:
+    post:
+      tags:
+        - followRelations
+      summary: Create a new follow relationship between two profiles
+      description: a relationship will be created betweent two existing moody profiles.
+      security:
+        - authentication: []
+      parameters:
+        - in: body
+          name: text
+          description: Profile I want to follow
+          schema:
+            type: object
+            required:
+              - text
+            properties:
+              username:
+                type: string
+                example: Sepp
+      responses:
+        '201':
+          description: Follow relationship created
+        '500':
+          description: Internal server error
+    delete:
+      tags:
+        - followRelations
+      summary: Delete an existing follow relationship between two profiles
+      description: Delete an existing follow relationship between two profiles
+      security:
+        - authentication: []
+      parameters:
+        - in: body
+          name: text
+          description: Profile I want to unfollow
+          schema:
+            type: object
+            required:
+              - text
+            properties:
+              username:
+                type: string
+                example: Sepp
+      responses:
+        '200':
+          description: Follow relationship deleted
+        '500':
+          description: Internal server error
+  /api/messages:
+    post:
+      tags:
+        - messages
+      summary: Create a new message
+      description: A new message is created and linked to a profile.
+      security:
+        - authentication: []
+      parameters:
+        - in: body
+          name: body
+          description: Message I want to send
+          required: true
+          schema:
+            $ref: '#/definitions/Message'
+      responses:
+        '201':
+          description: Message created
+        '500':
+          description: Internal server error

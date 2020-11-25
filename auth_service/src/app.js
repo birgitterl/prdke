@@ -1,6 +1,7 @@
 const express = require('express');
 const swaggerUi = require('swagger-ui-express');
-const swaggerDoc = require('./config/swaggerDef');
+const YAML = require('yamljs');
+const swaggerDoc = YAML.load('./src/config/swaggerDoc.yaml');
 const cors = require('cors');
 
 const app = express();
