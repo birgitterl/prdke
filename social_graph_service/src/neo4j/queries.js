@@ -57,3 +57,22 @@ exports.deleteFollowRelationship = async function (user, otherUser) {
   session.close();
   if (result) return true;
 };
+
+// Message queries for timeline
+exports.getMyMessages = async function (user) {
+  var query =
+    'MATCH(x {username: $user.username})-[r]->(m:Message) RETURN type(r), m AS message ORDER BY m.timestamp DESC LIMIT 25';
+  var session = driver.session();
+  var result = await session.run(query, { user });
+  session.close();
+  return result.records.map((record) => record.get('message').properties);
+};
+
+exports.getMessagesIFollow = async function (user) {
+  var query =
+    'MATCH (p:Profile {username: $user.username})-[:follows]->(p2:Profile)-[:posted]->(m:Message) return p2, m AS message ORDER BY m.timestamp DESC LIMIT 25';
+  var session = driver.session();
+  var result = await session.run(query, { user });
+  session.close();
+  return result.records.map((record) => record.get('message').properties);
+};

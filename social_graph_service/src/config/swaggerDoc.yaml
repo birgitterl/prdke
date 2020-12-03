@@ -179,7 +179,7 @@ paths:
           description: Follow relationship deleted
         '500':
           description: Internal server error
-  /api/messages:
+  /messages:
     post:
       tags:
         - messages
@@ -197,5 +197,44 @@ paths:
       responses:
         '201':
           description: Message created
+        '500':
+          description: Internal server error
+  /messages/my:
+    get:
+      tags:
+        - messages
+      summary: Get my messages
+      description: >-
+        through the auth header, the user object will be submitted and the
+        last 25 messages of the user will be returned
+      security:
+        - authentication: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Message'
+        '404':
+          description: No message found
+        '500':
+          description: Internal server error
+
+  /messages/other:
+    get:
+      tags:
+        - messages
+      summary: Get messages from profiles I follow
+      description: >-
+        through the auth header, the user object will be submitted and the 
+        last 25 messages of profiles the user follows will be returned
+      security:
+        - authentication: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Message'
+        '404':
+          description: No message found
         '500':
           description: Internal server error

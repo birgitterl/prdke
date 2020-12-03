@@ -4,9 +4,7 @@ const auth = require('../../middleware/auth');
 const { check, validationResult } = require('express-validator');
 const query = require('../../neo4j/queries.js');
 
-//const driver = require('../../config/db');
-
-// Add new relationship between two profiles
+// Add a new relationship between two profiles
 // Private Route
 router.post('/', auth, async (req, res) => {
   const errors = validationResult(req);
