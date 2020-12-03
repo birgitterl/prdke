@@ -1,5 +1,6 @@
 var driver = require('../config/db');
 
+// Profile queries
 exports.findProfile = async function (user) {
   var query =
     'MATCH (p:Profile) WHERE p.username=$user.username RETURN p AS profile';
@@ -34,4 +35,25 @@ exports.getAllProfiles = async function () {
   var result = await session.run(query);
   session.close();
   return result.records.map((record) => record.get('profile').properties);
+};
+
+// Follow queries
+exports.createFollowRelationship = async function (user, otherUser) {
+  var query =
+    'MATCH (f:Profile {username: $user.username})' +
+    'MATCH (u:Profile {username: $otherUser})' +
+    'MERGE (f)-[r:follows]->(u) RETURN r as following';
+  var session = driver.session();
+  var result = await session.run(query, { user, otherUser });
+  session.close();
+  return result.records.map((record) => record.get('following').properties);
+};
+
+exports.deleteFollowRelationship = async function (user, otherUser) {
+  var query =
+    'MATCH (f:Profile {username: $user.username}) -[r:follows]-> ({username: $otherUser}) DELETE r';
+  var session = driver.session();
+  var result = await session.run(query, { user, otherUser });
+  session.close();
+  if (result) return true;
 };

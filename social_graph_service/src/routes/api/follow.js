@@ -1,59 +1,45 @@
 const express = require('express');
-const driver = require('../../config/db');
-const auth = require('../../middleware/auth');
 const router = express.Router();
+const auth = require('../../middleware/auth');
+const { check, validationResult } = require('express-validator');
+const query = require('../../neo4j/queries.js');
+
+//const driver = require('../../config/db');
 
 // Add new relationship between two profiles
-// private Route
-router.post('/', auth, async function (req, res) {
-  const session = driver.session();
-  const followsName = req.user;
+// Private Route
+router.post('/', auth, async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(403).json({ errors: errors.array() });
+  }
+  const user = req.user;
   const otherUser = req.body.username;
 
   try {
-    var result = await session
-      .run(
-        'MATCH (f:Profile {username: $followsName})' +
-          'MATCH (u:Profile {username: $otherUser})' +
-          'MERGE (f)-[r:follows]->(u) RETURN r as following',
-        { followsName: followsName.username, otherUser: otherUser }
-      )
-      .catch(function (err) {
-        console.log(err);
-      });
-    session.close();
+    let result = await query.createFollowRelationship(user, otherUser);
     if (!result) {
       return res.status(500).send('Server Error');
     } else {
-      return res.status(201).send('Relation created');
+      return res.status(201).send('Follow relationship created');
     }
-    session.close();
   } catch (err) {
     return res.status(500).send('Server Error');
   }
 });
 
 // Delete a specific relationship
-// private Route
-router.delete('/', auth, async function (req, res) {
-  const session = driver.session();
-  const followsName = req.user;
+// Private Route
+router.delete('/', auth, async (req, res) => {
+  const user = req.user;
   const otherUser = req.body.username;
 
   try {
-    var result = await session
-      .run(
-        'MATCH (f:Profile {username: $followsName}) -[r:follows]-> ({username: $otherUser}) DELETE r',
-        { followsName: followsName.username, otherUser: otherUser }
-      )
-      .catch(function (err) {
-        console.log(err);
-      });
-    session.close();
+    let result = await query.deleteFollowRelationship(user, otherUser);
     if (!result) {
       return res.status(500).send('Server Error');
     } else {
-      return res.status(200).send('Follow relation deleted');
+      return res.status(200).send('Follow relationship deleted');
     }
   } catch (err) {
     return res.status(500).send('Server Error');
