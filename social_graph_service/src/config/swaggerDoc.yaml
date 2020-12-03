@@ -130,7 +130,7 @@ paths:
           description: No profile found
         '500':
           description: Internal server error
-  /api/follow:
+  /follow:
     post:
       tags:
         - followRelations
