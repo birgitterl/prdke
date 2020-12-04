@@ -60,6 +60,12 @@ definitions:
       text:
         type: string
         example: My first message
+      author:
+        type: string
+        example: Sepp
+      timestamp:
+        type: date
+        example: Thu Dec 03 2020 13:23:42 GMT+0000 (Coordinated Universal Time)
 paths:
   /profiles:
     post:
@@ -179,6 +185,30 @@ paths:
           description: Follow relationship deleted
         '500':
           description: Internal server error
+
+  /follow/myFollowers:
+    get:
+      tags:
+        - followRelations
+      summary: Get profiles that follow me
+      description: >-
+        through the auth header, the user object will be submitted and the
+        followers of the user (in ascending order) will be returned
+      security:
+        - authentication: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              type: string
+              example: 'Sepp'
+        '404':
+          description: Nobody is following you
+        '500':
+          description: Internal server error
+
   /messages:
     post:
       tags:

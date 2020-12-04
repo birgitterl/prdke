@@ -44,4 +44,20 @@ router.delete('/', auth, async (req, res) => {
   }
 });
 
+// GET profiles that follow me -> incoming
+// Private Route
+router.get('/myFollowers', auth, async (req, res) => {
+  const user = req.user;
+  try {
+    const followers = await query.getFollowers(user);
+    if (!followers) {
+      return res.status(404).send('Nobody is following you');
+    } else {
+      return res.status(200).json(followers);
+    }
+  } catch (err) {
+    return res.status(500).send('Server Error');
+  }
+});
+
 module.exports = router;
