@@ -64,8 +64,7 @@ router.post(
         }
       );
     } catch (err) {
-      console.error(err.message);
-      res.status(500).send('Server error');
+      res.status(500).json({ errors: [{ msg: 'Internal server error' }] });
     }
   }
 );
@@ -79,7 +78,7 @@ router.delete('/', async (req, res) => {
     });
   } catch (err) {
     console.error(err.message);
-    res.status(500).json({ msg: 'Internal server error' });
+    res.status(500).json({ errors: [{ msg: 'Internal server error' }] });
   }
 });
 

@@ -28,7 +28,7 @@ router.post(
       if (!user) {
         return res
           .status(404)
-          .json({ errors: [{ msg: 'Not found - Invalid Credentials' }] });
+          .json({ errors: [{ msg: 'Not found - Invalid Username' }] });
       }
 
       const isMatch = await bcrypt.compare(password, user.password);
@@ -36,7 +36,7 @@ router.post(
       if (!isMatch) {
         return res
           .status(404)
-          .json({ errors: [{ msg: 'Not found - Invalid Credentials' }] });
+          .json({ errors: [{ msg: 'Not found - Invalid Password' }] });
       }
 
       const payload = {
@@ -52,12 +52,12 @@ router.post(
         { expiresIn: 360000 },
         (err, token) => {
           if (err) throw err;
-          res.json({ token });
+          res.status(200).json({ token });
         }
       );
     } catch (err) {
       console.error(err.message);
-      res.status(500).send('Server error');
+      res.status(500).json({ errors: [{ msg: 'Internal server error' }] });
     }
   }
 );
@@ -69,7 +69,7 @@ router.get('/', auth, async (req, res) => {
     await res.json(user);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server Error');
+    res.status(500).json({ errors: [{ msg: 'Internal server error' }] });
   }
 });
 
