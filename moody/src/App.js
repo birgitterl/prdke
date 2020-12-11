@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import LandingPage from './components/auth/LandingPage';
+import LandingPage from './components/layout/LandingPage';
 import Routes from './components/routing/Routes';
 import { LOGOUT } from './actions/types';
 import store from './store';
