@@ -6,7 +6,8 @@ import {
   //GET_PROFILES,
   PROFILE_ERROR,
   UPDATE_PROFILE,
-  CLEAR_PROFILE
+  CLEAR_PROFILE,
+  EDIT_PROFILE
 } from './types';
 
 // Get current users profile

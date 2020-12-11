@@ -26,8 +26,10 @@ services:
       - social_graph_service
       - search_service
     volumes:
-      - ./moody:/src
-      - /src/node_modules
+      - ./moody:/app/src
+      - ./moody/package.json:/app/package.json
+      - ./moody/package-lock.json:/app/package-lock.json
+      - moody_notused:/app/node_modules
     ports:
       - "3000:3000"
     networks:
@@ -160,3 +162,4 @@ volumes:
   auth_notused:
   search_notused:
   social_notused:
+  moody_notused:

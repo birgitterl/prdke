@@ -1,0 +1,42 @@
+main {
+  min-height: 80vh;
+}
+
+h3 {
+  padding: 1rem 0;
+}
+
+h1 {
+  font-size: 1.8rem;
+  padding: 1rem 0;
+}
+
+h2 {
+  font-size: 1.4rem;
+  padding: 0.5rem 0;
+}
+
+/*Text Styles*/
+.text-large {
+  font-size: 1.5rem;
+}
+
+.text-lead {
+  font-size: 1.3rem;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-red {
+  color: #d9534f !important;
+}
+
+/*Button Styles*/
+.btn-primary-width {
+  width: 25% !important;
+}
+.btn-primary-width-full {
+  width: 100% !important;
+}
