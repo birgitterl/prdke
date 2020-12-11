@@ -1,25 +1,34 @@
-import React, { Fragment, useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createProfile, getCurrentProfile } from '../../actions/profile';
+import FormContainer from '../layout/FormContainer';
+import { Form, Button, ToggleButton, ToggleButtonGroup } from 'react-bootstrap';
+import { Redirect } from 'react-router-dom';
 
 const initialState = {
   birthday: '',
   hometown: '',
   gender: '',
-  privacy: '',
-  notifications: '',
-  background: ''
+  privacy: false,
+  notifications: false
 };
 
 const ProfileForm = ({
+  auth: { isAuthenticated },
   profile: { profile, loading },
   createProfile,
   getCurrentProfile,
   history
 }) => {
-  const [formData, setFormData] = useState(initialState);
+  const [hometown, setHometown] = useState(initialState.hometown);
+  const [birthday, setBirthday] = useState(initialState.birthday);
+  const [gender, setGender] = useState(initialState.gender);
+  const [privacy, setPrivacy] = useState(initialState.privacy);
+  const [background, setBackground] = useState(initialState.background);
+  const [notifications, setNotifications] = useState(
+    initialState.notifications
+  );
 
   useEffect(() => {
     if (!profile) getCurrentProfile();
@@ -28,122 +37,135 @@ const ProfileForm = ({
       for (const key in profile) {
         if (key in profileData) profileData[key] = profile[key];
       }
-      setFormData(profileData);
+      setHometown(profileData.hometown);
+      setBirthday(profileData.birthday);
+      setGender(profileData.gender);
+      setPrivacy(profileData.privacy);
+      setNotifications(profileData.notifications);
+      setBackground(profileData.backgorund);
     }
   }, [loading, getCurrentProfile, profile]);
 
-  const {
-    birthday,
-    hometown,
-    gender,
-    privacy,
-    notifications,
-    background
-  } = formData;
-
-  const onChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  if (!isAuthenticated) {
+    return <Redirect to="/" />;
+  }
+  const formData = {
+    birthday: birthday,
+    hometown: hometown,
+    gender: gender,
+    privacy: privacy,
+    notifications: notifications
+  };
 
   const onSubmit = (e) => {
     e.preventDefault();
     createProfile(formData, history, profile ? true : false);
-    history.push('/hometimeline');
+    history.push('/homesite');
   };
 
   return (
-    <Fragment>
-      <h1 className="large text-primary">Edit Your Profile</h1>
-
-      <medium>* = required field</medium>
-      <form className="form" onSubmit={onSubmit}>
-        <div className="form-group">
-          <h4>Hometown</h4>
-          <input
+    <FormContainer>
+      <h3>Create or Edit Your Profile</h3>
+      <p className="text-red">Required fields are marked with a (*)</p>
+      <p></p>
+      <Form onSubmit={onSubmit}>
+        <Form.Group controlId="name">
+          <Form.Label>Home Town (*)</Form.Label>
+          <Form.Control
             type="text"
-            placeholder="Hometown"
-            name="hometown"
+            placeholder="Enter your home town"
             value={hometown}
-            onChange={onChange}
+            onChange={(e) => setHometown(e.target.value)}
+            required
           />
-          <small className="form-text">
-            Let us know where you currently live.
-          </small>
-        </div>
-        <div className="form-group">
-          <h4>Birthday</h4>
-          <input
+        </Form.Group>
+        <Form.Group controlId="birthday">
+          <Form.Label>Birthday</Form.Label>
+          <Form.Control
             type="date"
-            name="birthday"
+            placeholder="Pick your birthday"
             value={birthday}
-            onChange={onChange}
+            onChange={(e) => setBirthday(e.target.value)}
           />
-          <small className="form-text">When is your birthday?</small>
-        </div>
-        <div className="form-group">
-          <h4>Gender</h4>
-          <select name="gender" value={gender} onChange={onChange}>
-            <option>Select your gender</option>
-            <option value="female">Female</option>
-            <option value="male">Male</option>
-            <option value="transgender">transgender</option>
-          </select>
-          <small className="form-text">Let us know your gender</small>
-        </div>
-        <div className="form-group">
-          <h4>* Privacy Settings</h4>
-          <select name="privacy" value={privacy} onChange={onChange}>
-            <option>Change your privacy settings</option>
-            <option value="public">Visible for public</option>
-            <option value="private">Not visible for public</option>
-          </select>
-          <small className="form-text">Let us know your privacy settings</small>
-        </div>
-        <div className="form-group">
-          <h4>* Notification Settings</h4>
-          <select
-            name="notifications"
-            value={notifications}
-            onChange={onChange}
+        </Form.Group>
+        <Form.Group controlId="gender">
+          <Form.Label>Gender</Form.Label>
+          <br />
+          <ToggleButtonGroup
+            type="radio"
+            name="gender"
+            className="btn-group-center"
           >
-            <option>Change your notification settings</option>
-            <option value="true">Notifications enabled</option>
-            <option value="false">Notifications disabled</option>
-          </select>
-          <small className="form-text">
-            Let us know your notification settings
-          </small>
-        </div>
-        <div className="form-group">
-          <h4>Select your background</h4>
-          <input
-            type="text"
-            placeholder="background"
-            name="background"
-            value={background}
-            onChange={onChange}
-          />
-          <small className="form-text">
-            Let us know where you currently live.
-          </small>
-        </div>
-
-        <input type="submit" className="btn btn-primary my-1" />
-        <Link className="btn btn-light my-1" to="/dashboard">
-          Go Back
-        </Link>
-      </form>
-    </Fragment>
+            <ToggleButton
+              variant="primary"
+              type="radio"
+              name="radio"
+              value="female"
+              checked={gender === 'female'}
+              onChange={(e) => setGender(e.target.value)}
+            >
+              Female
+            </ToggleButton>
+            <ToggleButton
+              variant="primary"
+              type="radio"
+              name="radio"
+              value="male"
+              checked={gender === 'male'}
+              onChange={(e) => setGender(e.target.value)}
+            >
+              Male
+            </ToggleButton>
+            <ToggleButton
+              variant="primary"
+              type="radio"
+              name="radio"
+              value="transgender"
+              checked={gender === 'transgender'}
+              onChange={(e) => setGender(e.target.value)}
+            >
+              Transgender
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>Privacy (*)</Form.Label>
+          <Form.Check
+            id="switch-1"
+            type="switch"
+            label="Want your profile to be visible for public?"
+            checked={privacy}
+            onChange={(e) => setPrivacy(!privacy)}
+          />{' '}
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>Notifications (*)</Form.Label>
+          <Form.Check
+            id="switch-2"
+            type="switch"
+            label="Want to receive notifications if someone mentions you?"
+            checked={notifications}
+            onChange={(e) => setNotifications(!notifications)}
+          />{' '}
+        </Form.Group>
+        <Button type="submit" className="btn-primary-width-full">
+          Save
+        </Button>
+      </Form>
+    </FormContainer>
   );
 };
 
 ProfileForm.propTypes = {
   createProfile: PropTypes.func.isRequired,
   getCurrentProfile: PropTypes.func.isRequired,
-  profile: PropTypes.object.isRequired
+  profile: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired
 };
 
 const mapStateToProps = (state) => ({
-  profile: state.profile
+  profile: state.profile,
+  auth: state.auth
 });
 
 export default connect(mapStateToProps, { createProfile, getCurrentProfile })(

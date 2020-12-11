@@ -1,14 +1,13 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import './App.css';
 import LandingPage from './components/layout/LandingPage';
 import Routes from './components/routing/Routes';
 import { LOGOUT } from './actions/types';
-import { Provider } from 'react-redux';
 import store from './store';
 import { loadUser } from './actions/auth';
 import setAuthToken from './utils/setAuthToken';
-import Navbar from './components/layout/Navbar';
+import Header from './components/layout/Header';
+import { Container } from 'react-bootstrap';
 
 const App = () => {
   useEffect(() => {
@@ -25,17 +24,17 @@ const App = () => {
   }, []);
 
   return (
-    <Provider store={store}>
-      <Router>
-        <Fragment>
-          <Navbar />
+    <Router>
+      <Header />
+      <main className="py-3">
+        <Container>
           <Switch>
             <Route exact path="/" component={LandingPage} />
             <Route component={Routes} />
           </Switch>
-        </Fragment>
-      </Router>
-    </Provider>
+        </Container>
+      </main>
+    </Router>
   );
 };
 

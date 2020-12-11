@@ -1,19 +1,14 @@
-import React, { Fragment, useState } from "react";
-import { Link, Redirect } from "react-router-dom";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
-import { login } from "../../actions/auth";
+import React, { useState } from 'react';
+import { Link, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { login } from '../../actions/auth';
+import FormContainer from '../layout/FormContainer';
+import { Form, Button, Row, Col } from 'react-bootstrap';
 
 const Login = ({ login, isAuthenticated }) => {
-  const [formData, setFormData] = useState({
-    username: "",
-    password: "",
-  });
-
-  const { username, password } = formData;
-
-  const onChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -21,52 +16,53 @@ const Login = ({ login, isAuthenticated }) => {
   };
 
   if (isAuthenticated) {
-    return <Redirect to="/hometimeline" />;
+    return <Redirect to="/homesite" />;
   }
 
   return (
-    <Fragment>
-      <h1 className="large text-primary">Sign In</h1>
-      <p className="lead">
-        <i className="fas fa-user" /> Sign Into Your Account
-      </p>
-      <form className="form" onSubmit={onSubmit}>
-        <div className="form-group">
-          <input
-            type="text"
-            placeholder="Username"
-            name="username"
+    <FormContainer>
+      <h1>Sign In</h1>
+      <Form onSubmit={onSubmit}>
+        <Form.Group controlId="username">
+          <Form.Label>User Name</Form.Label>
+          <Form.Control
+            type="username"
+            placeholder="Enter your username"
             value={username}
-            onChange={onChange}
+            onChange={(e) => setUsername(e.target.value)}
             required
           />
-        </div>
-        <div className="form-group">
-          <input
+        </Form.Group>
+        <Form.Group controlId="password">
+          <Form.Label>Password</Form.Label>
+          <Form.Control
             type="password"
-            placeholder="Password"
-            name="password"
+            placeholder="Enter your Password"
             value={password}
-            onChange={onChange}
+            onChange={(e) => setPassword(e.target.value)}
             minLength="6"
           />
-        </div>
-        <input type="submit" className="btn btn-primary" value="Login" />
-      </form>
-      <p className="my-1">
-        Don't have an account? <Link to="/register">Sign Up</Link>
-      </p>
-    </Fragment>
+        </Form.Group>
+        <Button type="submit" variant="primary">
+          Sign In
+        </Button>
+      </Form>
+      <Row className="py-3">
+        <Col>
+          New Customer? <Link to="/register">Register </Link>
+        </Col>
+      </Row>
+    </FormContainer>
   );
 };
 
 Login.propTypes = {
   login: PropTypes.func.isRequired,
-  isAuthenticated: PropTypes.bool,
+  isAuthenticated: PropTypes.bool
 };
 
 const mapStateToProps = (state) => ({
-  isAuthenticated: state.auth.isAuthenticated,
+  isAuthenticated: state.auth.isAuthenticated
 });
 
 export default connect(mapStateToProps, { login })(Login);

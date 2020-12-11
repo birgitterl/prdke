@@ -35,6 +35,7 @@ export const register = (formData) => async (dispatch) => {
       type: REGISTER_SUCCESS,
       payload: res.data
     });
+    dispatch(setAlert('Registration successful', 'success'));
     dispatch(loadUser());
   } catch (err) {
     const errors = err.response.data.errors;
@@ -60,7 +61,7 @@ export const login = (username, password) => async (dispatch) => {
       type: LOGIN_SUCCESS,
       payload: res.data
     });
-
+    dispatch(setAlert('Login successful', 'success'));
     dispatch(loadUser());
   } catch (err) {
     const errors = err.response.data.errors;
@@ -76,4 +77,9 @@ export const login = (username, password) => async (dispatch) => {
 };
 
 // Logout
-export const logout = () => ({ type: LOGOUT });
+export const logout = () => async (dispatch) => {
+  await dispatch({
+    type: LOGOUT
+  });
+  dispatch(setAlert('Successfully logged out', 'success'));
+};

@@ -1,25 +1,20 @@
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 import { setAlert } from '../../actions/alert';
 import { register } from '../../actions/auth';
 import PropTypes from 'prop-types';
+import FormContainer from '../layout/FormContainer';
+import { Form, Button, Row, Col } from 'react-bootstrap';
 
 const Register = ({ setAlert, register, isAuthenticated }) => {
-  const [formData, setFormData] = useState({
-    username: '',
-    password: '',
-    password2: ''
-  });
-
-  const { username, password, password2 } = formData;
-
-  const onChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    if (password !== password2) {
+    if (password !== confirmPassword) {
       setAlert('Passwords do not match', 'danger');
     } else {
       register({ username, password });
@@ -27,49 +22,53 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
   };
 
   if (isAuthenticated) {
-    return <Redirect to="/hometimeline" />;
+    return <Redirect to="/homesite" />;
   }
 
   return (
-    <Fragment>
-      <h1 className="large text-primary">Sign Up</h1>
-      <p className="lead">
-        <i className="fas fa-user" /> Create Your Account
-      </p>
-      <form className="form" onSubmit={onSubmit}>
-        <div className="form-group">
-          <input
-            type="text"
-            placeholder="Username"
-            name="username"
+    <FormContainer>
+      <h1>Register your account</h1>
+      <Form onSubmit={onSubmit}>
+        <Form.Group controlId="username">
+          <Form.Label>User Name</Form.Label>
+          <Form.Control
+            type="username"
+            placeholder="Enter your username"
             value={username}
-            onChange={onChange}
+            onChange={(e) => setUsername(e.target.value)}
+            required
           />
-        </div>
-        <div className="form-group">
-          <input
+        </Form.Group>
+        <Form.Group controlId="password">
+          <Form.Label>Password</Form.Label>
+          <Form.Control
             type="password"
-            placeholder="Password"
-            name="password"
+            placeholder="Enter your Password"
             value={password}
-            onChange={onChange}
+            onChange={(e) => setPassword(e.target.value)}
+            minLength="6"
           />
-        </div>
-        <div className="form-group">
-          <input
+        </Form.Group>
+        <Form.Group controlId="confirmPassword">
+          <Form.Label>Confirm Password</Form.Label>
+          <Form.Control
             type="password"
-            placeholder="Confirm Password"
-            name="password2"
-            value={password2}
-            onChange={onChange}
+            placeholder="Confirm your Password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            minLength="6"
           />
-        </div>
-        <input type="submit" className="btn btn-primary" value="Register" />
-      </form>
-      <p className="my-1">
-        Already have an account? <Link to="/login">Sign In</Link>
-      </p>
-    </Fragment>
+        </Form.Group>
+        <Button type="submit" variant="primary">
+          Register
+        </Button>
+      </Form>
+      <Row className="py-3">
+        <Col>
+          Already have an account? <Link to="/login">Sign In</Link>
+        </Col>
+      </Row>
+    </FormContainer>
   );
 };
 

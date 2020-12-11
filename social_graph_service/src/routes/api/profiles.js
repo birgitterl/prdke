@@ -27,13 +27,13 @@ router.post(
     try {
       let result = await query.createOrUpdateProfile(user, profile);
       if (!result) {
-        return res.status(500).send('Server Error');
+        res.status(500).json({ errors: [{ msg: 'Internal server error' }] });
       } else {
         delete result['username'];
         return res.status(201).json(result);
       }
     } catch (err) {
-      return res.status(500).send('Server Error');
+      res.status(500).json({ errors: [{ msg: 'Internal server error' }] });
     }
   }
 );
@@ -46,13 +46,13 @@ router.get('/me', auth, async (req, res) => {
     const profile = await query.findProfile(user);
 
     if (!profile) {
-      return res.status(404).send('No profile found');
+      return res.status(404).json({ errors: [{ msg: 'No profile found' }] });
     } else {
       delete profile['username'];
       return res.status(200).json(profile);
     }
   } catch (err) {
-    return res.status(500).send('Server Error');
+    res.status(500).json({ errors: [{ msg: 'Internal server error' }] });
   }
 });
 
@@ -61,12 +61,12 @@ router.get('/', async function (req, res) {
   try {
     let result = await query.getAllProfiles();
     if (!result.length) {
-      return res.status(404).send('No profiles found');
+      return res.status(404).json({ errors: [{ msg: 'No profiles found' }] });
     } else {
       return res.status(200).json(result);
     }
   } catch (err) {
-    return res.status(500).send('Server Error');
+    res.status(500).json({ errors: [{ msg: 'Internal server error' }] });
   }
 });
 
@@ -75,12 +75,14 @@ router.delete('/', async (req, res) => {
   try {
     let result = await query.deleteAllProfiles();
     if (!result) {
-      return res.status(500).send('Server Error');
+      res.status(500).json({ errors: [{ msg: 'Internal server error' }] });
     } else {
-      return res.status(200).send('All profiles removed');
+      return res
+        .status(200)
+        .json({ errors: [{ msg: 'All profiles removed' }] });
     }
   } catch (err) {
-    return res.status(500).send('Server Error');
+    res.status(500).json({ errors: [{ msg: 'Internal server error' }] });
   }
 });
 
