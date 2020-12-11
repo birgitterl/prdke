@@ -33,6 +33,10 @@ h2 {
   color: #d9534f !important;
 }
 
+.dropdown-item {
+  font-size: 1.1rem !important;
+}
+
 /*Button Styles*/
 .btn-primary-width {
   width: 25% !important;

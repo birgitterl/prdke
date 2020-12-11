@@ -5,6 +5,7 @@ import { logout } from '../../actions/auth';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap';
 import logo from '../../img/logo.svg';
+import SearchBox from './SearchBox';
 
 const Header = ({
   auth: { isAuthenticated, user },
@@ -26,6 +27,7 @@ const Header = ({
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
+          <SearchBox />
           <Nav className="ml-auto">
             {isAuthenticated && user != null && profile == null ? (
               <NavDropdown title={user.username} id="username">
