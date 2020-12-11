@@ -1,0 +1,19 @@
+FROM node:latest
+
+WORKDIR /app 
+
+RUN npm install -g nodemon
+
+COPY package.json /app
+COPY package-lock.json /app
+
+RUN npm install && npm cache clean --force
+ENV PATH /app/node_modules/.bin:$PATH
+
+WORKDIR /app/src
+
+COPY . .
+
+EXPOSE 7050
+
+CMD npm start
