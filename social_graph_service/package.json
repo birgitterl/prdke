@@ -11,15 +11,16 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "amqplib": "^0.6.0",
     "body-parser": "*",
+    "cors": "*",
     "ejs": "3.1.5",
     "express": "^4.17.1",
     "express-validator": "*",
+    "jsonwebtoken": "8.5.1",
     "neo4j-driver": "*",
     "swagger-jsdoc": "4.2.0",
     "swagger-ui-express": "4.1.4",
-    "jsonwebtoken": "8.5.1",
-    "cors": "*",
     "yamljs": "0.3.0"
   },
   "devDependencies": {

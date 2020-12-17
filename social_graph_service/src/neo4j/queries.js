@@ -1,11 +1,11 @@
 var driver = require('../config/db');
 
 // Profile queries
-exports.findProfile = async function (user) {
+exports.findProfile = async function (username) {
   var query =
-    'MATCH (p:Profile) WHERE p.username=$user.username RETURN p AS profile';
+    'MATCH (p:Profile) WHERE p.username=$username RETURN p AS profile';
   var session = driver.session();
-  var result = await session.run(query, { user });
+  var result = await session.run(query, { username });
   session.close();
 
   return result.records.map((record) => record.get('profile').properties)[0];
