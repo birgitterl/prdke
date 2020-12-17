@@ -8,7 +8,7 @@ import { Redirect } from 'react-router-dom';
 const SearchItem = ({
   getProfileByUsername,
   inputProfile: { username },
-  search: { profileOfInterestLoading }
+  search: { profileOfInterestLoading, profileOfInterest }
 }) => {
   const onClick = async () => {
     getProfileByUsername(username);
@@ -31,7 +31,9 @@ const SearchItem = ({
           </Card.Body>
         </Card>
       </Col>
-      {!profileOfInterestLoading && <Redirect to="/profile" />}
+      {!profileOfInterestLoading && (
+        <Redirect to={`/profile/${profileOfInterest.username}`} />
+      )}
     </Fragment>
   );
 };
