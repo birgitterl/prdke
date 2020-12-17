@@ -18,7 +18,7 @@ const Routes = (props) => {
         <Route exact path="/login" component={Login} />
         <Route exact path="/homesite" component={Homesite} />
         <Route exact path="/profileform" component={ProfileForm} />
-        <Route exact path="/profile" component={Profile} />
+        <Route exact path="/profile/me" component={Profile} />
         <Route exact path="/searchresult" component={SearchResult} />
         <Route component={NotFound} />
       </Switch>

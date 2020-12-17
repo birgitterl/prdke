@@ -48,7 +48,7 @@ const Header = ({
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="ml-auto">
                 <NavDropdown title={user.username} id="username">
-                  <LinkContainer to="/profile">
+                  <LinkContainer to="/profile/me">
                     <NavDropdown.Item>My Profile</NavDropdown.Item>
                   </LinkContainer>
                   <LinkContainer to="/profileform">
