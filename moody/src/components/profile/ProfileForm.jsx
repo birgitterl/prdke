@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createProfile, getCurrentProfile } from '../../actions/profile';
-import FormContainer from '../layout/FormContainer';
+import { setAlert } from '../../actions/alert';
+import FormContainer from '../layout/FormContainerProfile';
 import { Form, Button, ToggleButton, ToggleButtonGroup } from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
 
@@ -19,7 +20,8 @@ const ProfileForm = ({
   profile: { profile, loading },
   createProfile,
   getCurrentProfile,
-  history
+  history,
+  setAlert
 }) => {
   const [hometown, setHometown] = useState(initialState.hometown);
   const [birthday, setBirthday] = useState(initialState.birthday);
@@ -57,10 +59,15 @@ const ProfileForm = ({
     notifications: notifications
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    createProfile(formData, history, profile ? true : false);
-    history.push('/homesite');
+    if (hometown === '' || gender === '') {
+      if (hometown === '') setAlert('Hometown is required', 'danger');
+      else if (gender === '') setAlert('Gender is required', 'danger');
+    } else {
+      createProfile(formData, history, profile ? true : false);
+      history.push('/homesite');
+    }
   };
 
   return (
@@ -76,7 +83,6 @@ const ProfileForm = ({
             placeholder="Enter your home town"
             value={hometown}
             onChange={(e) => setHometown(e.target.value)}
-            required
           />
         </Form.Group>
         <Form.Group controlId="birthday">
@@ -89,64 +95,47 @@ const ProfileForm = ({
           />
         </Form.Group>
         <Form.Group controlId="gender">
-          <Form.Label>Gender</Form.Label>
+          <Form.Label>Gender (*)</Form.Label>
           <br />
           <ToggleButtonGroup
+            key={gender ? 'loaded' : 'notLoaded'}
             type="radio"
             name="gender"
-            className="btn-group-center"
+            className="btn-group-full-width"
+            defaultValue={gender}
+            value={gender}
+            onChange={(e) => setGender(e)}
           >
-            <ToggleButton
-              variant="primary"
-              type="radio"
-              name="radio"
-              value="female"
-              checked={gender === 'female'}
-              onChange={(e) => setGender(e.target.value)}
-            >
+            <ToggleButton name="gender" variant="primary" value={'female'}>
               Female
             </ToggleButton>
-            <ToggleButton
-              variant="primary"
-              type="radio"
-              name="radio"
-              value="male"
-              checked={gender === 'male'}
-              onChange={(e) => setGender(e.target.value)}
-            >
+            <ToggleButton name="gender" variant="primary" value={'male'}>
               Male
             </ToggleButton>
-            <ToggleButton
-              variant="primary"
-              type="radio"
-              name="radio"
-              value="transgender"
-              checked={gender === 'transgender'}
-              onChange={(e) => setGender(e.target.value)}
-            >
+            <ToggleButton name="gender" variant="primary" value={'transgender'}>
               Transgender
             </ToggleButton>
           </ToggleButtonGroup>
         </Form.Group>
         <Form.Group>
-          <Form.Label>Privacy (*)</Form.Label>
+          <Form.Label>Privacy</Form.Label>
           <Form.Check
             id="switch-1"
             type="switch"
             label="Want your profile to be visible for public?"
             checked={privacy}
             onChange={(e) => setPrivacy(!privacy)}
-          />{' '}
+          />
         </Form.Group>
         <Form.Group>
-          <Form.Label>Notifications (*)</Form.Label>
+          <Form.Label>Notifications</Form.Label>
           <Form.Check
             id="switch-2"
             type="switch"
             label="Want to receive notifications if someone mentions you?"
             checked={notifications}
             onChange={(e) => setNotifications(!notifications)}
-          />{' '}
+          />
         </Form.Group>
         <Button type="submit" className="btn-primary-width-full">
           Save
@@ -157,6 +146,7 @@ const ProfileForm = ({
 };
 
 ProfileForm.propTypes = {
+  setAlert: PropTypes.func.isRequired,
   createProfile: PropTypes.func.isRequired,
   getCurrentProfile: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
@@ -168,6 +158,8 @@ const mapStateToProps = (state) => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps, { createProfile, getCurrentProfile })(
-  ProfileForm
-);
+export default connect(mapStateToProps, {
+  setAlert,
+  createProfile,
+  getCurrentProfile
+})(ProfileForm);

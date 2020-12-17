@@ -44,3 +44,11 @@ h2 {
 .btn-primary-width-full {
   width: 100% !important;
 }
+.btn-group-full-width {
+  width: 100% !important;
+}
+
+/*layout margins*/
+.col-md4-bottom-margin {
+  margin-bottom: 1.25rem !important;
+}

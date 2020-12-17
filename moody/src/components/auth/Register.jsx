@@ -4,7 +4,7 @@ import { Link, Redirect } from 'react-router-dom';
 import { setAlert } from '../../actions/alert';
 import { register } from '../../actions/auth';
 import PropTypes from 'prop-types';
-import FormContainer from '../layout/FormContainer';
+import FormContainer from '../layout/FormContainerAuth';
 import { Form, Button, Row, Col } from 'react-bootstrap';
 
 const Register = ({ setAlert, register, isAuthenticated }) => {
