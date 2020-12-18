@@ -5,7 +5,7 @@ import { logout } from '../../actions/auth';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap';
 import logo from '../../img/logo.svg';
-import SearchBox from './SearchBox';
+import SearchBox from '../search/SearchBox';
 
 const Header = ({
   auth: { isAuthenticated, user },
@@ -26,42 +26,53 @@ const Header = ({
           moody
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <SearchBox />
-          <Nav className="ml-auto">
-            {isAuthenticated && user != null && profile == null ? (
-              <NavDropdown title={user.username} id="username">
-                <LinkContainer to="/profileform">
-                  <NavDropdown.Item>Create Profile</NavDropdown.Item>
-                </LinkContainer>
-                <NavDropdown.Item onClick={logout} href="/">
-                  <i className="fas fa-sign-out-alt"></i>Logout
-                </NavDropdown.Item>
-              </NavDropdown>
-            ) : isAuthenticated && user != null && profile != null ? (
-              <NavDropdown title={user.username} id="username">
-                <LinkContainer to="/profile">
-                  <NavDropdown.Item>My Profile</NavDropdown.Item>
-                </LinkContainer>
-                <LinkContainer to="/profileform">
-                  <NavDropdown.Item>Edit Profile</NavDropdown.Item>
-                </LinkContainer>
-                <NavDropdown.Item onClick={logout} href="/">
-                  <i className="fas fa-sign-out-alt"></i>Logout
-                </NavDropdown.Item>
-              </NavDropdown>
-            ) : (
+        {isAuthenticated && user != null && profile == null ? (
+          <>
+            <SearchBox />
+            <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="ml-auto">
-                <LinkContainer to="/register">
-                  <Nav.Link>Register</Nav.Link>
-                </LinkContainer>
-                <LinkContainer to="/login">
-                  <Nav.Link>Login</Nav.Link>
-                </LinkContainer>
+                <NavDropdown title={user.username} id="username">
+                  <LinkContainer to="/profileform">
+                    <NavDropdown.Item>Create Profile</NavDropdown.Item>
+                  </LinkContainer>
+                  <NavDropdown.Item onClick={logout} href="/">
+                    <i className="fas fa-sign-out-alt"></i>Logout
+                  </NavDropdown.Item>
+                </NavDropdown>
               </Nav>
-            )}
-          </Nav>
-        </Navbar.Collapse>
+            </Navbar.Collapse>
+          </>
+        ) : isAuthenticated && user != null && profile != null ? (
+          <>
+            <SearchBox />
+            <Navbar.Collapse id="basic-navbar-nav">
+              <Nav className="ml-auto">
+                <NavDropdown title={user.username} id="username">
+                  <LinkContainer to="/profile/me">
+                    <NavDropdown.Item>My Profile</NavDropdown.Item>
+                  </LinkContainer>
+                  <LinkContainer to="/profileform">
+                    <NavDropdown.Item>Edit Profile</NavDropdown.Item>
+                  </LinkContainer>
+                  <NavDropdown.Item onClick={logout} href="/">
+                    <i className="fas fa-sign-out-alt"></i>Logout
+                  </NavDropdown.Item>
+                </NavDropdown>
+              </Nav>
+            </Navbar.Collapse>
+          </>
+        ) : (
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="ml-auto">
+              <LinkContainer to="/register">
+                <Nav.Link>Register</Nav.Link>
+              </LinkContainer>
+              <LinkContainer to="/login">
+                <Nav.Link>Login</Nav.Link>
+              </LinkContainer>
+            </Nav>
+          </Navbar.Collapse>
+        )}
       </Container>
     </Navbar>
   );

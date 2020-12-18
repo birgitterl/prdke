@@ -4332,6 +4332,7 @@ input[type='button'].btn-block {
   text-decoration: none;
 }
 .navbar-toggler-icon {
+  float: right;
   display: inline-block;
   width: 1.5em;
   height: 1.5em;

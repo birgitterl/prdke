@@ -1,7 +1,8 @@
 var neo4j = require('neo4j-driver');
 
-var driver = neo4j.driver(
-  'bolt://graphDB:7687',
-  neo4j.auth.basic('neo4j', 'admin')
-);
+const DB_URI = 'bolt://graphDB:7687';
+const username = 'neo4j';
+const pwd = 'admin';
+
+const driver = neo4j.driver(DB_URI, neo4j.auth.basic(username, pwd));
 module.exports = driver;

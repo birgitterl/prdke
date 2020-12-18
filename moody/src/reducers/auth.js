@@ -3,7 +3,8 @@ import {
   USER_LOADED,
   AUTH_ERROR,
   LOGIN_SUCCESS,
-  LOGOUT
+  LOGOUT,
+  GET_USERS
 } from '../actions/types';
 
 const initialState = {

@@ -3,34 +3,16 @@ import { setAlert } from './alert';
 
 import {
   GET_PROFILE,
-  //GET_PROFILES,
+  GET_PROFILES,
   PROFILE_ERROR,
   UPDATE_PROFILE,
-  CLEAR_PROFILE,
-  EDIT_PROFILE
+  GET_PROFILEOFINTEREST
 } from './types';
 
 // Get current users profile
 export const getCurrentProfile = () => async (dispatch) => {
   try {
     const res = await socialGraphService.get('/profiles/me');
-
-    dispatch({
-      type: GET_PROFILE,
-      payload: res.data
-    });
-  } catch (err) {
-    dispatch({
-      type: PROFILE_ERROR,
-      payload: { msg: err.message, status: err.status }
-    });
-  }
-};
-
-// Get profile by ID
-export const getProfileById = (userId) => async (dispatch) => {
-  try {
-    const res = await socialGraphService.get(`/profiles/${userId}`);
 
     dispatch({
       type: GET_PROFILE,
@@ -59,7 +41,7 @@ export const createProfile = (formData, history, edit = false) => async (
     dispatch(setAlert(edit ? 'Profile Updated' : 'Profile Created', 'success'));
 
     if (!edit) {
-      history.push('/hometimeline');
+      history.push('/homesite');
     }
   } catch (err) {
     const errors = err.response.data.errors;
