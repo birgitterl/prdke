@@ -85,3 +85,12 @@ exports.getMessagesIFollow = async function (user) {
   session.close();
   return result.records.map((record) => record.get('message').properties);
 };
+
+exports.getMessagesFromProfileIFollow = async function (user, otherUser) {
+  var query =
+    'MATCH (p:Profile {username: $user.username})-[:follows]->(p2:Profile {username: $otherUser.username})-[:posted]->(m:Message) return p2, m AS message ORDER BY m.timestamp DESC LIMIT 25';
+  var session = driver.session();
+  var result = await session.run(query, { user, otherUser });
+  session.close();
+  return result.records.map((record) => record.get('message').properties);
+};

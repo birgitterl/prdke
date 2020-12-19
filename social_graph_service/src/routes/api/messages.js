@@ -72,4 +72,22 @@ router.get('/other', auth, async (req, res) => {
     return res.status(500).send('Server Error');
   }
 });
+
+// Get messages from a specific Profile I follow
+// Private Route
+router.get('/followedProfile', auth, async (req, res) => {
+  const user = req.user;
+  const otherUser = req.query;
+  try {
+    const message = await query.getMessagesFromProfileIFollow(user, otherUser);
+    if (!message) {
+      return res.status(404).send('No message found');
+    } else {
+      return res.status(200).json(message);
+    }
+  } catch (err) {
+    return res.status(500).send('Server Error');
+  }
+});
+
 module.exports = router;

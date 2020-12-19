@@ -27,6 +27,6 @@ export const SEARCH_ERROR = 'SEARCH_ERROR';
 export const CLEAR_SEARCH = 'CLEAR_SEARCH';
 
 // message
-export const GET_MESSAGES = 'GET_MESSAGES';
+export const GET_OTHER_MESSAGES = 'GET_OTHER_MESSAGES';
 export const GET_MY_MESSAGES = 'GET_MY_MESSAGES';
 export const MESSAGE_ERROR = 'MESSAGE-ERROR';
