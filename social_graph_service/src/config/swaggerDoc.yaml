@@ -66,6 +66,40 @@ definitions:
       timestamp:
         type: date
         example: Thu Dec 03 2020 13:23:42 GMT+0000 (Coordinated Universal Time)
+  AllMyMessages:
+    type: array
+    items:
+      $ref: '#/definitions/Message'
+    example:
+      - text: My second message.
+        author: Sepp
+        timestamp: Thu Dec 03 2020 13:23:42 GMT+0000 (Coordinated Universal Time)
+      - text: My first message.
+        author: Sepp
+        timestamp: Thu Dec 03 2020 13:23:42 GMT+0000 (Coordinated Universal Time)
+  OtherMessages:
+    type: array
+    items:
+      $ref: '#/definitions/Message'
+    example:
+      - text: My first message.
+        author: Hugo
+        timestamp: Thu Dec 03 2020 13:23:42 GMT+0000 (Coordinated Universal Time)
+      - text: My first message.
+        author: Sepp
+        timestamp: Thu Dec 03 2020 13:23:42 GMT+0000 (Coordinated Universal Time)
+  MessagesFollowedProfile:
+    type: array
+    items:
+      $ref: '#/definitions/Message'
+    example:
+      - text: My second message.
+        author: Sepp
+        timestamp: Thu Dec 03 2020 13:23:42 GMT+0000 (Coordinated Universal Time)
+      - text: My first message.
+        author: Sepp
+        timestamp: Thu Dec 03 2020 13:23:42 GMT+0000 (Coordinated Universal Time)
+
 paths:
   /profiles:
     post:
@@ -236,16 +270,16 @@ paths:
       summary: Get my messages
       description: >-
         through the auth header, the user object will be submitted and the
-        last 25 messages of the user will be returned
+        last 25 messages of the user will be returned in descending order
       security:
         - authentication: []
       responses:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/Message'
+            $ref: '#/definitions/AllMyMessages'
         '404':
-          description: No message found
+          description: No messages found
         '500':
           description: Internal server error
 
@@ -263,7 +297,7 @@ paths:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/Message'
+            $ref: '#/definitions/OtherMessages'
         '404':
           description: No message found
         '500':
@@ -290,7 +324,7 @@ paths:
         '200':
           description: A list of messages
           schema:
-            $ref: '#/definitions/Message'
+            $ref: '#/definitions/MessagesFollowedProfile'
         '404':
           description: No message found
         '500':

@@ -48,7 +48,7 @@ router.get('/my', auth, async (req, res) => {
   try {
     const message = await query.getMyMessages(user);
     if (!message) {
-      return res.status(404).send('No message found');
+      return res.status(404).send('No messages found');
     } else {
       return res.status(200).json(message);
     }
