@@ -3,7 +3,7 @@ import alert from './alert';
 import auth from './auth';
 import profile from './profile';
 import search from './search';
-import message from './usertimeline';
+import message from './timelines';
 
 export default combineReducers({
   alert,
@@ -11,5 +11,5 @@ export default combineReducers({
   profile,
   search,
   // key: value
-  myposts: message
+  posts: message
 });

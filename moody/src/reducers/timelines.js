@@ -1,4 +1,8 @@
-import { GET_MY_MESSAGES, MESSAGE_ERROR } from '../actions/types';
+import {
+  GET_MY_MESSAGES,
+  GET_OTHER_MESSAGES,
+  MESSAGE_ERROR
+} from '../actions/types';
 
 const initialState = {
   //property = props
@@ -27,6 +31,12 @@ const message = (state = initialState, action) => {
         loading: false,
         error: payload,
         messages: null
+      };
+    case GET_OTHER_MESSAGES:
+      return {
+        ...state,
+        loading: false,
+        messages: payload
       };
     default:
       return state;

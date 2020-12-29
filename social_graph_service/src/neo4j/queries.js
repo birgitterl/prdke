@@ -70,7 +70,7 @@ exports.getFollowers = async function (user) {
 // Message queries for timeline
 exports.getMyMessages = async function (user) {
   var query =
-    'MATCH(x {username: $user.username})-[r]->(m:Message) RETURN m AS message ORDER BY m.timestamp DESC LIMIT 25';
+    'MATCH(x {username: $user.username})-[r]->(m:Message) RETURN m AS message ORDER BY m.id DESC LIMIT 25';
   var session = driver.session();
   var result = await session.run(query, { user });
   session.close();
@@ -79,7 +79,7 @@ exports.getMyMessages = async function (user) {
 
 exports.getMessagesIFollow = async function (user) {
   var query =
-    'MATCH (p:Profile {username: $user.username})-[:follows]->(p2:Profile)-[:posted]->(m:Message) return p2, m AS message ORDER BY m.timestamp DESC LIMIT 25';
+    'MATCH (p:Profile {username: $user.username})-[:follows]->(p2:Profile)-[:posted]->(m:Message) return p2, m AS message ORDER BY m.id DESC LIMIT 25';
   var session = driver.session();
   var result = await session.run(query, { user });
   session.close();
@@ -88,7 +88,7 @@ exports.getMessagesIFollow = async function (user) {
 
 exports.getMessagesFromProfileIFollow = async function (user, otherUser) {
   var query =
-    'MATCH (p:Profile {username: $user.username})-[:follows]->(p2:Profile {username: $otherUser.username})-[:posted]->(m:Message) return p2, m AS message ORDER BY m.timestamp DESC LIMIT 25';
+    'MATCH (p:Profile {username: $user.username})-[:follows]->(p2:Profile {username: $otherUser.username})-[:posted]->(m:Message) return p2, m AS message ORDER BY m.id DESC LIMIT 25';
   var session = driver.session();
   var result = await session.run(query, { user, otherUser });
   session.close();

@@ -3,10 +3,11 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Card, Container, ListGroup, ListGroupItem } from 'react-bootstrap';
 import { getMyMessages } from '../../actions/messageservice';
+import Spinner from '../layout/Spinner';
 
 const UserTimeline = ({
   auth: { user },
-  myposts: { messages, loading },
+  posts: { messages, loading },
   getMyMessages
 }) => {
   useEffect(() => {
@@ -14,19 +15,21 @@ const UserTimeline = ({
   }, [getMyMessages]);
   return (
     <Container>
-      <h3>My messages/post</h3>
-
+      <h3>My messages/posts</h3>
       <Card>
         <Card.Header>Messages of {user.username}</Card.Header>
         <Container fluid></Container>
-
-        <ListGroup>
-          {messages.map((post, index) => (
-            <ListGroupItem key={index}>
-              {`${post.text} posted on ${post.timestamp}`}
-            </ListGroupItem>
-          ))}
-        </ListGroup>
+        {loading ? (
+          <Spinner />
+        ) : (
+          <ListGroup>
+            {messages.map((post, index) => (
+              <ListGroupItem key={index}>
+                {`${post.text} posted on ${post.timestamp}`}
+              </ListGroupItem>
+            ))}
+          </ListGroup>
+        )}
       </Card>
     </Container>
   );
@@ -34,18 +37,13 @@ const UserTimeline = ({
 
 UserTimeline.propTypes = {
   getMyMessages: PropTypes.func.isRequired,
-  myposts: PropTypes.object.isRequired,
+  posts: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired
 };
 
 const mapStateToProps = (state) => ({
-  myposts: state.myposts,
+  posts: state.posts,
   auth: state.auth
 });
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    getMyMessages: () => dispatch(getMyMessages())
-  };
-};
-export default connect(mapStateToProps, mapDispatchToProps)(UserTimeline);
+export default connect(mapStateToProps, { getMyMessages })(UserTimeline);
