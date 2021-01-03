@@ -25,7 +25,7 @@ const Hometimeline = ({
       <h3>Messages of profiles {user.username} follows</h3>
       <Card>
         <Card.Header>
-          This are the last 25 posts of profiles I follow
+          This are the last 100 posts of profiles I follow
         </Card.Header>
         <Container fluid></Container>
         {loading ? (

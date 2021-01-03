@@ -17,7 +17,7 @@ const UserTimeline = ({
     <Container>
       <h3>My messages/posts</h3>
       <Card>
-        <Card.Header>Messages of {user.username}</Card.Header>
+        <Card.Header>Last 30 messages of {user.username}</Card.Header>
         <Container fluid></Container>
         {loading ? (
           <Spinner />

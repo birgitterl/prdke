@@ -270,7 +270,7 @@ paths:
       summary: Get my messages
       description: >-
         through the auth header, the user object will be submitted and the
-        last 25 messages of the user will be returned in descending order
+        last 30 messages of the user will be returned in descending order
       security:
         - authentication: []
       responses:
@@ -290,7 +290,7 @@ paths:
       summary: Get messages from profiles I follow
       description: >-
         through the auth header, the user object will be submitted and the 
-        last 25 messages of profiles the user follows will be returned
+        last 100 messages of profiles the user follows will be returned
       security:
         - authentication: []
       responses:
@@ -310,7 +310,7 @@ paths:
       summary: Get messages from a specific profile I follow
       description: >-
         through the auth header, the user object will be submitted and the 
-        last 25 messages of a specific profile the user follows will be returned
+        last 30 messages of a specific profile the user follows will be returned
       security:
         - authentication: []
       parameters:
