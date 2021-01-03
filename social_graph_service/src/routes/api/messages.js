@@ -7,7 +7,7 @@ const query = require('../../neo4j/queries.js');
 // TO DO: Delete
 const driver = require('../../config/db');
 
-router.post('/', async function(req, res) {
+router.post('/', auth, async function(req, res) {
     const user = req.body.author;
     const text = req.body.text;
     try {
