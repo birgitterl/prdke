@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* import React from 'react';
+=======
+import React from 'react';
+>>>>>>> cae8b56ddf46ebf2037e82f0b347f3c7b7154745
 
 const ProfileInfo = ({ auth: { isAuthenticated } }) => {
   if (!isAuthenticated) {
@@ -16,4 +20,7 @@ const mapStateToProps = (state) => ({
 });
 
 export default ProfileInfo;
+<<<<<<< HEAD
  */
+=======
+>>>>>>> cae8b56ddf46ebf2037e82f0b347f3c7b7154745

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* import React, { Fragment, useEffect } from 'react';
+=======
+import React, { Fragment, useEffect } from 'react';
+>>>>>>> cae8b56ddf46ebf2037e82f0b347f3c7b7154745
 import { Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -45,4 +49,7 @@ const UserProfile = ({
 };
 
 export default UserProfile;
+<<<<<<< HEAD
  */
+=======
+>>>>>>> cae8b56ddf46ebf2037e82f0b347f3c7b7154745

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* import socialGraphService from '..utils/socialGraphService';
+=======
+import socialGraphService from '..utils/socialGraphService';
+>>>>>>> cae8b56ddf46ebf2037e82f0b347f3c7b7154745
 import { setAller } from './alert';
 
 import {
@@ -24,4 +28,7 @@ export const getProfileOfInterest = () => async (dispatch) => {
     });
   }
 };
+<<<<<<< HEAD
  */
+=======
+>>>>>>> cae8b56ddf46ebf2037e82f0b347f3c7b7154745
