@@ -4,6 +4,7 @@ services:
   auth_service:
     build: ./auth_service
     container_name: "auth-service"
+    restart: always
     ports:
       - "8080:8080"
     depends_on:
@@ -20,6 +21,7 @@ services:
   moody_frontend:
     build: ./moody
     container_name: "moody-frontend"
+    restart: always
     stdin_open: true
     depends_on:
       - auth_service
@@ -38,11 +40,13 @@ services:
   search_service:
     build: ./search_service
     container_name: "search-service"
+    restart: always
     ports:
       - "7050:7050"
     depends_on:
       - elasticsearch
       - rabbitmq
+      - social_graph_service
     volumes:
       - ./search_service:/app/src
       - ./search_service/package.json:/app/package.json
@@ -55,6 +59,7 @@ services:
   social_graph_service:
     build: ./social_graph_service
     container_name: "social-graph-service"
+    restart: always
     ports:
       - "5000:5000"
     depends_on:

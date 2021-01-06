@@ -37,7 +37,7 @@ export const getProfiles = (queryData) => async (dispatch) => {
   try {
     const query = `username=${queryData}`;
     const res = await socialGraphService.get(`/profiles/?${query}`);
-    dispatch({
+    await dispatch({
       type: GET_PROFILES,
       payload: res.data
     });
