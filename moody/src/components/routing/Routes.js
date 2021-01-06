@@ -8,11 +8,7 @@ import Profile from '../profile/Profile';
 import NotFound from '../layout/NotFound';
 import Homesite from '../home/Homesite';
 import SearchResult from '../search/SearchResult';
-<<<<<<< HEAD
 //import UserProfile from '../profile/UserProfile';
-=======
-import UserProfile from '../profile/UserProfile';
->>>>>>> cae8b56ddf46ebf2037e82f0b347f3c7b7154745
 
 const Routes = (props) => {
   return (
@@ -25,11 +21,7 @@ const Routes = (props) => {
         <Route exact path="/profileform" component={ProfileForm} />
         <Route exact path="/profile/me" component={Profile} />
         <Route exact path="/searchresult" component={SearchResult} />
-<<<<<<< HEAD
         {/* <Route exact path="/profile/username" component={UserProfile} /> */}
-=======
-        <Route exact path="/profile/username" component={UserProfile} />
->>>>>>> cae8b56ddf46ebf2037e82f0b347f3c7b7154745
         <Route component={NotFound} />
       </Switch>
     </section>
