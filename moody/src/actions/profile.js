@@ -6,7 +6,8 @@ import {
   GET_PROFILES,
   PROFILE_ERROR,
   UPDATE_PROFILE,
-  GET_PROFILEOFINTEREST
+  GET_PROFILEOFINTEREST,
+  GET_FOLLOWERS_OF_PROFILE
 } from './types';
 
 // Get current users profile
@@ -71,4 +72,27 @@ export async function getProfile(user) {
   } catch (err) {
     console.log(err);
   }
-}
+};
+
+export const getFollowersOfProfile = (user) => async (dispatch) => {
+  try {
+    const res = await socialGraphService.post('/follow/followers', {
+      body: {
+        user: user
+      }
+    });
+
+    console.log(res);
+
+    dispatch({
+      type: GET_FOLLOWERS_OF_PROFILE,
+      payload: res.data
+    });
+  } catch (err) {
+    console.log(err);
+    dispatch({
+      type: PROFILE_ERROR,
+      payload: { msg: err.message, status: err.status }
+    });
+  }
+};

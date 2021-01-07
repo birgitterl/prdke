@@ -21,7 +21,7 @@ const Routes = (props) => {
         <Route exact path="/profileform" component={ProfileForm} />
         <Route exact path="/profile/me" component={Profile} />
         <Route exact path="/searchresult" component={SearchResult} />
-        <Route exact path="/profile/username" component={UserProfile} />
+        <Route exact path="/profile/:username" component={UserProfile} />
         <Route component={NotFound} />
       </Switch>
     </section>

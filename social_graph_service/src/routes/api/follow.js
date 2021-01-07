@@ -60,4 +60,21 @@ router.get('/myFollowers', auth, async (req, res) => {
   }
 });
 
+router.post('/followers', auth, async (req, res) => {
+  const user = {
+    username: req.body.body.user.username
+  }
+  console.log(user);
+  try {
+    const followers = await query.getFollowers(user);
+    if (!followers) {
+      return res.status(404).send('Nobody is following you');
+    } else {
+      return res.status(200).json(followers);
+    }
+  } catch (err) {
+    return res.status(500).send('Server Error');
+  }
+});
+
 module.exports = router;

@@ -83,7 +83,7 @@ function sortMessages(messageArray) {
 // Post new Message
 export async function postMessage(msg) {
   try {
-    const res = await socialGraphService
+    await socialGraphService
       .post('messages', {
         author: msg.author,
         text: msg.text
