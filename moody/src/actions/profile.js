@@ -56,3 +56,19 @@ export const createProfile = (formData, history, edit = false) => async (
     });
   }
 };
+
+//Get specific profile
+export async function getProfile(user) {
+  try {
+    const res = await socialGraphService
+      .get('/profiles', {
+        username: user
+      })
+      .then((res) => {
+        console.log('Profile retrieved');
+      });
+    return res;
+  } catch (err) {
+    console.log(err);
+  }
+}

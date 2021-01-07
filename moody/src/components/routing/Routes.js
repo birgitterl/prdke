@@ -8,6 +8,7 @@ import Profile from '../profile/Profile';
 import NotFound from '../layout/NotFound';
 import Homesite from '../home/Homesite';
 import SearchResult from '../search/SearchResult';
+import UserProfile from '../profile/UserProfile';
 
 const Routes = (props) => {
   return (
@@ -20,6 +21,7 @@ const Routes = (props) => {
         <Route exact path="/profileform" component={ProfileForm} />
         <Route exact path="/profile/me" component={Profile} />
         <Route exact path="/searchresult" component={SearchResult} />
+        <Route exact path="/profile/username" component={UserProfile} />
         <Route component={NotFound} />
       </Switch>
     </section>
