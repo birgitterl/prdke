@@ -15,7 +15,7 @@ const UserTimeline = ({
   }, [getMyMessages]);
   return (
     <Container>
-      <h3>My messages/posts</h3>
+      <h3>My posted messages</h3>
       <Card>
         <Card.Header>Last 30 messages of {user.username}</Card.Header>
         <Container fluid></Container>
@@ -25,7 +25,9 @@ const UserTimeline = ({
           <ListGroup>
             {messages.map((post, index) => (
               <ListGroupItem key={index}>
-                {`${post.text} posted on ${post.timestamp}`}
+                {`${
+                  post.text
+                } posted on ${post.timestamp.toLocaleDateString()} at ${post.timestamp.toLocaleTimeString()}`}
               </ListGroupItem>
             ))}
           </ListGroup>

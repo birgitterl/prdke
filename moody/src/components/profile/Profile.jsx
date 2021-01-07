@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { setAlert } from '../../actions/alert';
+import { Container, Col, Row } from 'react-bootstrap';
 
 const Profile = ({ auth: { isAuthenticated } }) => {
   if (!isAuthenticated) {
@@ -13,8 +14,16 @@ const Profile = ({ auth: { isAuthenticated } }) => {
   return (
     <div>
       <h3>This is My Personal Profile component</h3>
-      <Message />
-      <UserTimeline />
+      <Container fluid>
+        <Row>
+          <Col>
+            <Message />
+          </Col>
+          <Col>
+            <UserTimeline />
+          </Col>
+        </Row>
+      </Container>
     </div>
   );
 };
