@@ -1,4 +1,4 @@
-import { GET_PROFILEOFINTEREST, PROFILE_ERROR } from '../actions/types';
+/* import { GET_PROFILEOFINTEREST, PROFILE_ERROR } from '../actions/types';
 
 const initialState = {
   profile: null,
@@ -29,3 +29,4 @@ const profileOfInterest = (state = initialState, action) => {
 };
 
 export default profileOfInterest;
+*/

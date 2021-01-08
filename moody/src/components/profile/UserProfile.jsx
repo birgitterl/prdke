@@ -1,47 +1,57 @@
-import React, { Fragment, useEffect } from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { getCurrentProfile } from '../../actions/profile';
-import UserTimeline from './UserTimeline';
-import Header from '../layout/Header';
-import { Container } from 'react-bootstrap';
-import Profile from './Profile';
-import ProfileInfo from './ProfileInfo';
-import profileOfInterest from '../search';
+import { Redirect } from 'react-router-dom';
+import { Container, ListGroup, Button } from 'react-bootstrap';
+import { getFollowersOfProfile } from '../../actions/profile';
 
 const UserProfile = ({
-  auth: { isAuthenticated },
-  search: { profileOfInterest }
+  auth: { isAuthenticated, user },
+  search: { profileOfInterest },
+  getFollowersOfProfile,
+  profile: { followingProfiles }
 }) => {
   if (!isAuthenticated) {
     return <Redirect to="/" />;
   }
 
+  const profile = profileOfInterest;
+
+  const getFollowersOfProfileOfInterest = async () => getFollowersOfProfile(profile);
+
+  console.log(followingProfiles);
+  const isFollowed = async () => followingProfiles.includes(user.username);
+
   return (
     <Container>
-      <Header />
-      <h3>Personal Profile</h3>
-      <Card>
-        <Card.Header>Profile of {user.username}</Card.Header>
-        <Container fluid></Container>
-
-        {loading ? <Spinner /> : <ProfileInfo />}
-      </Card>
-
-      <UserTimeline />
+      <h1>{profile.username}</h1>
+      {profile.privacy ? (
+        <ListGroup>
+        <ListGroup.Item>Wohnort: {profile.hometown}</ListGroup.Item>
+        <ListGroup.Item>Geburtstag: {profile.birthday}</ListGroup.Item>
+      </ListGroup>
+      ) : (
+        <p>This account is not visible for the public.</p>
+      )}
+      {isFollowed ? ( 
+        <Button onClick={getFollowersOfProfileOfInterest}>Unfollow</Button>
+      ) : (
+        <Button onClick={getFollowersOfProfileOfInterest}>Follow</Button>
+      )}
     </Container>
   );
-
-  Profile.propTypes = {
-    auth: PropTypes.object.isRequired,
-    search: PropTypes.object.isRequired
-  };
-
-  const mapStateToProps = (state) => ({
-    auth: state.auth,
-    search: state.search
-  });
 };
 
-export default UserProfile;
+UserProfile.propTypes = {
+  auth: PropTypes.object.isRequired,
+  search: PropTypes.object.isRequired,
+  getFollowersOfProfile: PropTypes.func.isRequired
+};
+
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+  search: state.search,
+  profile: state.profile
+});
+
+export default connect(mapStateToProps, { getFollowersOfProfile })(UserProfile);

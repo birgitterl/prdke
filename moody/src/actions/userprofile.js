@@ -1,4 +1,5 @@
-import socialGraphService from '..utils/socialGraphService';
+
+/* import socialGraphService from '..utils/socialGraphService';
 import { setAller } from './alert';
 
 import {
@@ -24,3 +25,4 @@ export const getProfileOfInterest = () => async (dispatch) => {
     });
   }
 };
+ */
