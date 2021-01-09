@@ -5,12 +5,9 @@ import {
 } from '../actions/types';
 
 const initialState = {
-  //property = props
   // loading flag - data is fetched or not
   loading: true,
-  // data: array
   messages: [],
-  // error:''
   error: {}
 };
 
@@ -20,7 +17,6 @@ const posts = (state = initialState, action) => {
   switch (type) {
     case GET_MY_MESSAGES:
       return {
-        // copy of the state object
         ...state,
         loading: false,
         messages: payload
