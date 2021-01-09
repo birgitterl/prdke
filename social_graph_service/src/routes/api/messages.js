@@ -71,4 +71,20 @@ router.get('/followedProfile', auth, async (req, res) => {
   }
 });
 
+//@TODO: eliminate route after elastic implementation
+router.get('/', auth, async (req, res) => {
+  const user = req.user;
+  try {
+    const message = await query.searchMessages(user, req.query.search);
+
+    if (!message) {
+      return res.status(404).send('No message found');
+    } else {
+      return res.status(200).json(message);
+    }
+  } catch (err) {
+    return res.status(500).send('Server Error');
+  }
+});
+
 module.exports = router;

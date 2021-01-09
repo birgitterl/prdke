@@ -1,11 +1,11 @@
-import React, { useState, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { Col, Button, Card } from 'react-bootstrap';
 import { getProfileByUsername } from '../../actions/search';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
-const SearchItem = ({
+const SearchProfileItem = ({
   getProfileByUsername,
   inputProfile: { username },
   search: { profileOfInterestLoading, profileOfInterest }
@@ -38,7 +38,7 @@ const SearchItem = ({
   );
 };
 
-SearchItem.propTypes = {
+SearchProfileItem.propTypes = {
   inputProfile: PropTypes.object.isRequired,
   getProfileByUsername: PropTypes.func.isRequired,
   search: PropTypes.object.isRequired
@@ -48,4 +48,6 @@ const mapStateToProps = (state) => ({
   search: state.search
 });
 
-export default connect(mapStateToProps, { getProfileByUsername })(SearchItem);
+export default connect(mapStateToProps, { getProfileByUsername })(
+  SearchProfileItem
+);

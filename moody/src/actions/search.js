@@ -2,15 +2,18 @@ import socialGraphService from '../utils/socialGraphService';
 
 import {
   SEARCH_PROFILES,
+  SEARCH_MESSAGES,
+  SEARCH_HASHTAGS,
   GET_PROFILEOFINTEREST,
   SEARCH_ERROR,
-  GET_PROFILES
+  CLEAR_SEARCH,
+  SET_SEARCH_TEXT
 } from './types';
 
 // Get current users profile
-export const searchProfiles = (text) => async (dispatch) => {
+export const setText = (text) => async (dispatch) => {
   dispatch({
-    type: SEARCH_PROFILES,
+    type: SET_SEARCH_TEXT,
     payload: text
   });
 };
@@ -20,9 +23,12 @@ export const getProfileByUsername = (username) => async (dispatch) => {
   try {
     const res = await socialGraphService.get(`/profiles/${username}`);
 
-    dispatch({
+    await dispatch({
       type: GET_PROFILEOFINTEREST,
       payload: res.data
+    });
+    dispatch({
+      type: CLEAR_SEARCH
     });
   } catch (err) {
     dispatch({
@@ -32,16 +38,34 @@ export const getProfileByUsername = (username) => async (dispatch) => {
   }
 };
 
-// Get usernames
-export const getProfiles = (queryData) => async (dispatch) => {
+// @TODO: search should fetch data from elastic
+export const searchProfiles = (queryData) => async (dispatch) => {
   try {
-    const query = `username=${queryData}`;
-    const res = await socialGraphService.get(`/profiles/?${query}`);
-    await dispatch({
-      type: GET_PROFILES,
-      payload: res.data
+    const queryProfiles = `username=${queryData}`;
+    const resProfiles = await socialGraphService.get(
+      `/profiles/?${queryProfiles}`
+    );
+
+    dispatch({
+      type: SEARCH_PROFILES,
+      payload: resProfiles.data
+    });
+
+    const queryMessages = `search=${queryData}`;
+    const resMessages = await socialGraphService.get(
+      `/messages/?${queryMessages}`
+    );
+    dispatch({
+      type: SEARCH_MESSAGES,
+      payload: resMessages.data
     });
   } catch (err) {
     console.log(err);
   }
+};
+
+export const clearSearch = () => async (dispatch) => {
+  dispatch({
+    type: CLEAR_SEARCH
+  });
 };

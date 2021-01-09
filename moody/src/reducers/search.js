@@ -1,18 +1,21 @@
 import {
   SEARCH_PROFILES,
-  GET_PROFILES,
+  SEARCH_MESSAGES,
+  SEARCH_HASHTAGS,
   GET_PROFILEOFINTEREST,
   CLEAR_PROFILEOFINTEREST,
-  CLEAR_PROFILES,
-  CLEAR_SEARCH
+  CLEAR_SEARCH,
+  SET_SEARCH_TEXT
 } from '../actions/types';
 
 const initialState = {
   text: '',
   profilesLoading: true,
+  messagesLoading: true,
   profileOfInterestLoading: true,
   error: {},
   profiles: [],
+  messages: [],
   profileOfInterest: null
 };
 
@@ -20,20 +23,26 @@ const search = function (state = initialState, action) {
   const { type, payload } = action;
 
   switch (type) {
-    case SEARCH_PROFILES:
+    case SET_SEARCH_TEXT:
       return {
         ...state,
         text: payload,
         profilesLoading: true,
         profileOfInterestLoading: true,
-        profiles: [],
-        profileOfInterest: null
+        profiles: []
       };
-    case GET_PROFILES:
+    case SEARCH_PROFILES:
       return {
         ...state,
         profilesLoading: false,
         profiles: payload,
+        text: ''
+      };
+    case SEARCH_MESSAGES:
+      return {
+        ...state,
+        messagesLoading: false,
+        messages: payload,
         text: ''
       };
     case GET_PROFILEOFINTEREST:
@@ -41,12 +50,6 @@ const search = function (state = initialState, action) {
         ...state,
         profileOfInterest: payload,
         profileOfInterestLoading: false
-      };
-    case CLEAR_PROFILES:
-      return {
-        ...state,
-        profilesLoading: true,
-        profiles: []
       };
     case CLEAR_PROFILEOFINTEREST:
       return {
@@ -57,7 +60,9 @@ const search = function (state = initialState, action) {
     case CLEAR_SEARCH:
       return {
         ...state,
-        text: ''
+        text: '',
+        profilesLoading: true,
+        profiles: []
       };
     default:
       return state;

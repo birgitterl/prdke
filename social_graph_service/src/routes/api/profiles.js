@@ -60,7 +60,7 @@ router.get('/me', auth, async (req, res) => {
 });
 
 // Get all Profiles
-//@TODO: eliminate query params after search implementation
+//@TODO: eliminate query params after search implementations
 router.get('/', async function (req, res) {
   try {
     let result = await query.getAllProfiles();
