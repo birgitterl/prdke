@@ -1,6 +1,4 @@
 import axios from 'axios';
-import store from '../store';
-import { LOGOUT } from '../actions/types';
 
 const socialGraphService = axios.create({
   baseURL: 'http://localhost:5000/api',

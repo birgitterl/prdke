@@ -14,7 +14,7 @@ const initialState = {
   error: {}
 };
 
-const timelines = (state = initialState, action) => {
+const posts = (state = initialState, action) => {
   const { type, payload } = action;
 
   switch (type) {
@@ -43,4 +43,4 @@ const timelines = (state = initialState, action) => {
   }
 };
 
-export default timelines;
+export default posts;

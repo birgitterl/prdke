@@ -1,88 +1,83 @@
 import React, { useState } from 'react';
 import Picker from 'emoji-picker-react';
-import jwt_decode from 'jwt-decode';
 import { postMessage } from '../../actions/messageservice';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { Form, Button } from 'react-bootstrap';
+import { setAlert } from '../../actions/alert';
 
-export function Message(props) {
+export function Message({ postMessage }) {
   const [text, setText] = useState('');
-  const [chosenEmoji, setChosenEmoji] = useState(null);
-  const [published, setPublished] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [emoji, setEmoji] = useState(null);
 
   const onEmojiClick = (event, emojiObject) => {
-    setChosenEmoji(emojiObject);
+    setEmoji(emojiObject);
   };
 
-  const onChangeText = (e) => {
-    setText(e.target.value);
-  };
-
-  const saveMessage = () => {
-    const token = localStorage.getItem('token');
-    console.log(token);
-
-    var data = {
-      author: jwt_decode(token).user.username,
-      text: text + '[' + chosenEmoji.emoji + ']'
-    };
-    console.log(data);
-
-    postMessage(data);
-    console.log('postMessage called');
-    setPublished(true);
-    setSubmitted(true);
-  };
-
-  const newMessage = () => {
-    setText('');
-    setChosenEmoji(null);
-    setPublished(false);
-    setSubmitted(false);
+  const onSubmit = (e) => {
+    e.preventDefault();
+    if (!emoji) {
+      console.log('no emoji');
+      var data = {
+        text: text,
+        emoji: null
+      };
+      postMessage(data);
+    } else {
+      var data = {
+        text: text,
+        emoji: emoji.emoji
+      };
+      postMessage(data);
+      console.log('postMessage called');
+      setText('');
+      setEmoji(null);
+    }
   };
 
   return (
-    <div className="submit-form">
-      {submitted ? (
-        <div>
-          <h4>Message posted successfully!</h4>
-          <button className="btn btn-success" onClick={newMessage}>
-            New Message
-          </button>
-        </div>
-      ) : (
-        <div>
-          <h3>New messages/posts</h3>
-          <div className="form-group">
-            <label htmlFor="text">Message</label>
-            <textarea
-              type="text"
-              className="form-control"
-              id="text"
-              required
-              value={text}
-              onChange={onChangeText}
-              name="text"
-              maxLength="280"
-            />
-          </div>
+    <Form onSubmit={onSubmit}>
+      <h3>Post a Message</h3>
+      <Form.Group controlId="text">
+        <Form.Control
+          as="textarea"
+          rows={5}
+          type="text"
+          id="text"
+          required
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder="You can write 280 characters..."
+          maxLength="280"
+        ></Form.Control>
+      </Form.Group>
+      <Form.Group>
+        {emoji ? (
+          <span>Your emoji: {emoji.emoji}</span>
+        ) : (
           <div>
-            {chosenEmoji ? (
-              <span>Your emoji: {chosenEmoji.emoji}</span>
-            ) : (
-              <div>
-                <p>No emoji chosen. Show your emotion!</p>
-                <Picker onEmojiClick={onEmojiClick} />
-              </div>
-            )}
+            <h4>Show your mood and select an emoji!</h4>
+            <Picker onEmojiClick={onEmojiClick} />
           </div>
-          <br></br>
-          <button onClick={saveMessage} className="btn btn-success">
-            Post
-          </button>
-        </div>
-      )}
-    </div>
+        )}
+      </Form.Group>
+      <br></br>
+      <Button type="submit" className="btn-primary-width-full">
+        Post new message
+      </Button>
+    </Form>
   );
 }
 
-export default Message;
+Message.propTypes = {
+  postMessage: PropTypes.func.isRequired,
+  posts: PropTypes.object.isRequired
+};
+
+const mapStateToProps = (state) => ({
+  posts: state.posts
+});
+
+export default connect(mapStateToProps, {
+  postMessage
+})(Message);

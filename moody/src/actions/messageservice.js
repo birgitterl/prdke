@@ -1,12 +1,13 @@
 // User timeline = Fetch my messages, Home timeline = Fetch messages of a profile I follow
-
 import socialGraphService from '../utils/socialGraphService';
+import { setAlert } from './alert';
 
 import {
   GET_MY_MESSAGES,
   GET_OTHER_MESSAGES,
   GET_MESSAGES_FOLLOWED_PROFILE,
-  MESSAGE_ERROR
+  MESSAGE_ERROR,
+  POST_MESSAGE
 } from './types';
 
 // Get the users current messages
@@ -81,17 +82,22 @@ function sortMessages(messageArray) {
 }
 
 // Post new Message
-export async function postMessage(msg) {
+export const postMessage = (msg) => async (dispatch) => {
   try {
-    await socialGraphService
-      .post('messages', {
-        author: msg.author,
-        text: msg.text
-      })
-      .then((res) => {
-        console.log(res);
+    if (msg.emoji === null) {
+      dispatch(setAlert('You need to select an Emoji first', 'danger'));
+    } else {
+      const res = await socialGraphService.post('/messages', {
+        text: msg.text + ' ' + msg.emoji
       });
+      dispatch({
+        type: POST_MESSAGE,
+        payload: res.data
+      });
+      dispatch(getMyMessages());
+      dispatch(setAlert('Message successfully posted', 'success'));
+    }
   } catch (err) {
     console.log(err);
   }
-}
+};

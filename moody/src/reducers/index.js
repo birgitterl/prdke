@@ -3,13 +3,12 @@ import alert from './alert';
 import auth from './auth';
 import profile from './profile';
 import search from './search';
-import timelines from './timelines';
+import posts from './posts';
 
 export default combineReducers({
   alert,
   auth,
   profile,
   search,
-  // key: value
-  posts: timelines
+  posts
 });

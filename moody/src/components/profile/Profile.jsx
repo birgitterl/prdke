@@ -4,15 +4,15 @@ import Message from './Message';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { setAlert } from '../../actions/alert';
 import { Container, Col, Row } from 'react-bootstrap';
+import { Fragment } from 'react';
 
 const Profile = ({ auth: { isAuthenticated } }) => {
   if (!isAuthenticated) {
     return <Redirect to="/" />;
   }
   return (
-    <div>
+    <Fragment>
       <h3>This is My Personal Profile component</h3>
       <Container fluid>
         <Row>
@@ -24,7 +24,7 @@ const Profile = ({ auth: { isAuthenticated } }) => {
           </Col>
         </Row>
       </Container>
-    </div>
+    </Fragment>
   );
 };
 

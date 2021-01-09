@@ -9,7 +9,8 @@ import {
 const initialState = {
   profile: null,
   loading: true,
-  error: {}
+  error: {},
+  followingProfiles: null
 };
 
 const profile = (state = initialState, action) => {
@@ -17,11 +18,16 @@ const profile = (state = initialState, action) => {
 
   switch (type) {
     case GET_PROFILE:
+      return {
+        ...state,
+        profile: payload,
+        loading: false
+      };
     case GET_FOLLOWERS_OF_PROFILE:
       return {
         ...state,
-        followingProfiles: payload,
-      }
+        followingProfiles: payload
+      };
     case UPDATE_PROFILE:
       return {
         ...state,

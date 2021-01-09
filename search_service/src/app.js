@@ -3,7 +3,6 @@ const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 const swaggerDoc = YAML.load('./src/config/swaggerDoc.yaml');
 const cors = require('cors');
-const subsribeToQueue = require('./rabbitmq/mqservice');
 
 const app = express();
 

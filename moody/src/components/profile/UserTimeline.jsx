@@ -25,9 +25,10 @@ const UserTimeline = ({
           <ListGroup>
             {messages.map((post, index) => (
               <ListGroupItem key={index}>
-                {`${
-                  post.text
-                } posted on ${post.timestamp.toLocaleDateString()} at ${post.timestamp.toLocaleTimeString()}`}
+                <h4>{post.text}</h4>
+                <p>
+                  {`posted on ${post.timestamp.toLocaleDateString()} at ${post.timestamp.toLocaleTimeString()}`}
+                </p>
               </ListGroupItem>
             ))}
           </ListGroup>
