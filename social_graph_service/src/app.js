@@ -4,7 +4,6 @@ const YAML = require('yamljs');
 const swaggerDoc = YAML.load('./src/config/swaggerDoc.yaml');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const connectRabbitMQ = require('./rabbitmq/mqservice');
 
 const app = express();
 
@@ -14,7 +13,6 @@ app.use(cors());
 
 // Homepage at localhost:5000
 app.get('/', (req, res) => {
-  connectRabbitMQ();
   res.send('Social Graph Service is up and running...');
 });
 
@@ -22,7 +20,6 @@ app.get('/', (req, res) => {
 app.use('/api/messages', require('./routes/api/messages'));
 app.use('/api/profiles', require('./routes/api/profiles'));
 app.use('/api/follow', require('./routes/api/follow'));
-//app.use('/viewProfile', require('./routes/api/viewProfile'));
 
 // Swagger documentation setup - available under 'localhost:5000/api-docs':
 app.use(

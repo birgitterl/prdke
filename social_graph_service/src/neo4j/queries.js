@@ -103,7 +103,7 @@ exports.createMessage = async function (user, text) {
   var message;
 
   var query1 =
-    'CREATE (a:Message {author: $user, text: $text, timestamp: $timestamp}) RETURN a AS message';
+    'CREATE (a:Message {author: $user.username, text: $text, timestamp: $timestamp}) RETURN a AS message';
   var query2 =
     'MATCH (a:Message), (b:Profile) WHERE a.author = b.username MERGE (b)-[r:posted]->(a)';
   var query3 = 'MERGE (a:Hashtag {name: $hashtag})';
@@ -130,26 +130,24 @@ exports.createMessage = async function (user, text) {
     console.log(err);
   });
   postedSession.close();
-  console.log('TEST');
 
-  console.log(hashtags);
+  if (hashtags !== null) {
+    for (var hashtag of hashtags) {
+      console.log(hashtag);
 
-  for (var hashtag of hashtags) {
-    console.log(hashtag);
-
-    await hashTagSession.run(query3, { hashtag }).catch(function (err) {
-      console.log(err);
-    });
-    hashTagSession.close();
-
-    await containsSession
-      .run(query4, { messageId, hashtag })
-      .catch(function (err) {
+      await hashTagSession.run(query3, { hashtag }).catch(function (err) {
         console.log(err);
       });
-    containsSession.close();
-  }
+      hashTagSession.close();
 
+      await containsSession
+        .run(query4, { messageId, hashtag })
+        .catch(function (err) {
+          console.log(err);
+        });
+      containsSession.close();
+    }
+  }
   console.log(message);
   return message;
 };
