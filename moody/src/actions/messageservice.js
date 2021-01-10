@@ -14,6 +14,8 @@ import {
 export const getMyMessages = () => async (dispatch) => {
   try {
     const res = await socialGraphService.get('/messages/my');
+    console.log('Res.data');
+    console.log(res.data);
     var resultSet = sortMessages(res.data);
     dispatch({
       type: GET_MY_MESSAGES,
@@ -31,6 +33,8 @@ export const getMyMessages = () => async (dispatch) => {
 export const getOtherMessages = () => async (dispatch) => {
   try {
     const res = await socialGraphService.get('/messages/other');
+    console.log('Res.data');
+    console.log(res.data);
     var resultSet = sortMessages(res.data);
     dispatch({
       type: GET_OTHER_MESSAGES,
@@ -48,9 +52,12 @@ export const getOtherMessages = () => async (dispatch) => {
 export const getMessagesFromProfileIFollow = (username) => async (dispatch) => {
   const query = `username=${username}`;
   try {
-    const res = await socialGraphService.get(`/messages/?${query}`);
+    const res = await socialGraphService.get(
+      '/messages/followedProfile?$username'
+    );
+    console.log('Res.data');
+    console.log(res.data);
     var resultSet = sortMessages(res.data);
-    console.log(resultSet);
     dispatch({
       type: GET_MESSAGES_FOLLOWED_PROFILE,
       payload: resultSet
@@ -75,7 +82,9 @@ function sortMessages(messageArray) {
   var sortedArray = resultArray.sort(function (a, b) {
     return b.timestamp - a.timestamp;
   });
+  console.log('ResultArray ');
   console.log(resultArray);
+  console.log('SortedArray ');
   console.log(sortedArray);
   return sortedArray;
 }

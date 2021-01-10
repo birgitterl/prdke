@@ -1,16 +1,10 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import {
-  Card,
-  Col,
-  Container,
-  ListGroup,
-  ListGroupItem,
-  Row
-} from 'react-bootstrap';
+import { Card, Container, ListGroup, ListGroupItem } from 'react-bootstrap';
 import { getOtherMessages } from '../../actions/messageservice';
 import Spinner from '../layout/Spinner';
+import { NavLink } from 'react-router-dom';
 
 const Hometimeline = ({
   auth: { user },
@@ -20,6 +14,7 @@ const Hometimeline = ({
   useEffect(() => {
     getOtherMessages();
   }, [getOtherMessages]);
+
   return (
     <Container>
       <h3>Messages of profiles {user.username} follows</h3>
@@ -34,8 +29,14 @@ const Hometimeline = ({
           <ListGroup>
             {messages.map((post, index) => (
               <ListGroupItem key={index}>
-                <Row>{post.author}</Row>
-                <Col>{`${post.text} posted on ${post.timestamp}`}</Col>
+                <h4>
+                  <NavLink to={`/profile/${post.author}`}>
+                    {post.author}
+                  </NavLink>
+                </h4>
+                <p>{`${
+                  post.text
+                } posted on ${post.timestamp.toLocaleDateString()} at ${post.timestamp.toLocaleTimeString()}`}</p>
               </ListGroupItem>
             ))}
           </ListGroup>
