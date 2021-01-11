@@ -43,7 +43,7 @@ export const searchItems = (queryData) => async (dispatch) => {
   try {
     const queryProfiles = `username=${queryData}`;
     const resProfiles = await socialGraphService.get(
-      `/profiles/?${queryProfiles}`
+      `/search/profiles?${queryProfiles}`
     );
 
     dispatch({
@@ -51,9 +51,9 @@ export const searchItems = (queryData) => async (dispatch) => {
       payload: resProfiles.data
     });
 
-    const queryMessages = `search=${queryData}`;
+    const queryMessages = `text=${queryData}`;
     const resMessages = await socialGraphService.get(
-      `/messages/search?${queryMessages}`
+      `/search/messages?${queryMessages}`
     );
     dispatch({
       type: SEARCH_MESSAGES,

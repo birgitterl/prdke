@@ -1,170 +1,397 @@
 openapi: 3.0.1
 info:
-  title: moody Authentication Service
-  description: This is the REST API documentation for the moody auth_service
+  title: moody Social Graph Service
+  description: This is the REST API documentation for the moody social_graph_service
   version: 1.0.0
 servers:
 - url: /api
 tags:
-- name: users
-  description: Everything about your Users
-- name: auth
-  description: Authentication operations
+- name: profile
+  description: Everything about your profiles
+- name: followerRelation
+  description: Follower Relationships between moody profiles
+- name: message
+  description: Everything about the posted messages
 paths:
-  /users:
-    get:
-      tags:
-      - users
-      summary: Get all users
-      description: fetch all existing moody users
-      responses:
-        200:
-          description: OK
-          content:
-            '*/*':
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    username:
-                      type: string
-                      example: Julia
-        404:
-          description: No users found
-          content: {}
-        500:
-          description: Internal server error
-          content: {}
+  /profiles:
     post:
       tags:
-      - users
-      summary: Register a new user
-      description: a new user is created, persisted in the database and an access
-        token is returned.
+      - profile
+      summary: Create a new profile or update an existing one
+      description: If the user (provided via the header) does not have a profile yet,
+        a new profile will be created. Else the profile will be updated.
       requestBody:
-        description: User object that will be created
+        description: Profile object to be created or updated
         content:
-          '*/*':
+          application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/Profile'
         required: true
       responses:
         201:
-          description: User created
+          description: Profile created / updated
           content:
-            '*/*':
+            application/json:
               schema:
-                type: object
-                properties:
-                  token:
-                    type: string
-                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNWZhODFhMmQxNTY2NjEwMDNiMDg5OWYyIn0sImlhdCI6MTYwNDg1NTgwOSwiZXhwIjoxNjA1MjE1ODA5fQ.XUZZrYGuUxBk4WQis8VII4GGadFESHwg8Il994WPk04
-        400:
-          description: Bad Request
-          content: {}
-        403:
-          description: Forbidden - User exists already
-          content: {}
+                $ref: '#/components/schemas/Profile'
         500:
           description: Internal server error
           content: {}
-      x-codegen-request-body-name: body
-    delete:
-      tags:
-      - users
-      summary: Delete all registered users
-      description: all existing users are deleted (for testing purpose only)
-      responses:
-        200:
-          description: All users removed
-          content: {}
-        500:
-          description: Internal server error
-          content: {}
-  /auth:
+      security:
+      - authentication: []
     get:
       tags:
-      - auth
-      summary: Get user by token
-      description: a token must be provided in the authentication header and the related
-        user object is returned
+      - profile
+      summary: Get all profiles
+      description: Fetching all exisiting profiles.
       responses:
         200:
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
-                type: object
-                properties:
-                  _id:
-                    type: string
-                    example: 5fa81a2d156661003b0899f2
-                  username:
-                    type: string
-                    example: Julia
-        400:
-          description: Invalid ID supplied
-          content: {}
+                type: array
+                items:
+                  $ref: '#/components/schemas/Profile'
         404:
-          description: User not found by id
+          description: No profiles found
+          content: {}
+        500:
+          description: Internal server error
+          content: {}
+    delete:
+      tags:
+      - profile
+      summary: Delete all registered profiles
+      description: all existing profiles are deleted (for testing purpose only)
+      responses:
+        200:
+          description: All profiles removed
+          content: {}
+        500:
+          description: Internal server error
+          content: {}
+  /profiles/me:
+    get:
+      tags:
+      - profile
+      summary: Get my profile
+      description: through the auth header, the user object will be submitted and
+        the current user's profile will be returned
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+        404:
+          description: No profile found
           content: {}
         500:
           description: Internal server error
           content: {}
       security:
       - authentication: []
+  /follow:
     post:
       tags:
-      - auth
-      summary: Login/authenticate user
-      description: username and passwords are matched against the existing users and
-        upon successful login, a token is returned
+      - followerRelation
+      summary: Create a new follow relationship between two profiles
+      description: a relationship will be created betweent two existing moody profiles.
       requestBody:
-        description: User object that needs to be authenticated
+        description: Profile I want to follow
         content:
-          '*/*':
+          application/json:
             schema:
-              $ref: '#/components/schemas/User'
-        required: true
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: Sepp
+        required: false
       responses:
-        200:
-          description: OK
-          content:
-            '*/*':
-              schema:
-                type: object
-                properties:
-                  token:
-                    type: string
-                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNWZhODFhMmQxNTY2NjEwMDNiMDg5OWYyIn0sImlhdCI6MTYwNDg1NTgwOSwiZXhwIjoxNjA1MjE1ODA5fQ.XUZZrYGuUxBk4WQis8VII4GGadFESHwg8Il994WPk04
-        400:
-          description: Bad Request
-          content: {}
-        403:
-          description: Forbidden - User exists already
-          content: {}
-        404:
-          description: Not found - Invalid credentials
+        201:
+          description: Follow relationship created
           content: {}
         500:
           description: Internal server error
           content: {}
-      x-codegen-request-body-name: body
+      security:
+      - authentication: []
+    delete:
+      tags:
+      - followerRelation
+      summary: Delete an existing follow relationship between two profiles
+      description: Delete an existing follow relationship between two profiles
+      requestBody:
+        description: Profile I want to unfollow
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: Sepp
+        required: false
+      responses:
+        200:
+          description: Follow relationship deleted
+          content: {}
+        500:
+          description: Internal server error
+          content: {}
+      security:
+      - authentication: []
+  /follow/myFollowers:
+    get:
+      tags:
+      - followerRelation
+      summary: Get profiles of all my followers
+      description: through the auth header, the user object will be submitted and
+        the followers of the user (in ascending order) will be returned
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'                
+        404:
+          description: No follower found
+          content: {}
+        500:
+          description: Internal server error
+          content: {}
+      security:
+      - authentication: []
+  /messages:
+    post:
+      tags:
+      - message
+      summary: Create a new message
+      description: A new message is created and linked to a profile.
+      requestBody:
+        description: The message I want to send.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+                  example: My personal message :)
+                emoji:
+                  type: string
+                  example: "🤢"
+        required: true
+      responses:
+        201:
+          description: Message created
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/Message'
+        500:
+          description: Internal server error
+          content: {}
+      security:
+      - authentication: []
+    get:
+      tags:
+      - message
+      summary: Get all messages 
+      description: Fetching all exisiting profiles.
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Message'
+        404:
+          description: No messages found
+          content: {}
+        500:
+          description: Internal server error
+          content: {}
+    delete:
+      tags:
+      - message
+      summary: Delete all messages
+      description: all existing messages are deleted (for testing purpose only)
+      responses:
+        200:
+          description: All profiles removed
+          content: {}
+        500:
+          description: Internal server error
+          content: {}
+  /messages/my:
+    get:
+      tags:
+      - message
+      summary: Get my messages
+      description: through the auth header, the user object will be submitted and
+        the last 30 messages of the user will be returned in descending order
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Message'
+        404:
+          description: No messages found
+          content: {}
+        500:
+          description: Internal server error
+          content: {}
+      security:
+      - authentication: []
+  /messages/other:
+    get:
+      tags:
+      - message
+      summary: Get messages from profiles I follow
+      description: through the auth header, the user object will be submitted and
+        the  last 100 messages of profiles the user follows will be returned
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+             schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Message'
+        404:
+          description: No message found
+          content: {}
+        500:
+          description: Internal server error
+          content: {}
+      security:
+      - authentication: []
+  /messages/{username}:
+    get:
+      tags:
+      - message
+      summary: Get messages from a specific profile
+      description: Get all messages by a given username
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+          description: the username of a profile
+      responses:
+        200:
+          description: A list of messages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Message'
+        404:
+          description: No message found
+          content: {}
+        500:
+          description: Internal server error
+          content: {}
+      security:
+      - authentication: []
+  /search/messages:
+    get:
+      tags:
+      - search
+      summary: Get messages from a specific search term
+      description: Search for messages of my followed profiles given a specific search term (text)
+      parameters:
+        - name: text
+          in: query
+          required: true
+          schema:
+            type: string
+            example: bla
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Message'
+        404:
+          description: No messages found
+          content: {}
+        500:
+          description: Internal server error
+          content: {}
 components:
   schemas:
-    User:
+    Profile:
       required:
-      - password
-      - username
+      - hometown
+      - gender
       type: object
       properties:
+        birthday:
+          type: string
+          format: date
+        hometown:
+          type: string
+          example: Linz
+        gender:
+          type: string
+          example: female
+          enum:
+          - male
+          - female
+          - transgender
+        background:
+          type: string
+          example: none
+        privacy:
+          type: string
+          example: public
+          default: public
+          enum:
+          - private
+          - public
+        notifications:
+          type: boolean
+          example: false
+          default: false
         username:
           type: string
-          example: Hugo
-        password:
+          example: Hugo     
+    Message:
+      required:
+      - text
+      type: object
+      properties:
+        text:
           type: string
-          example: "123456"
+          example: My first message
+        emoji:
+          type: string
+          example: 🤢
+        author:
+          type: string
+          example: Sepp
+        timestamp:
+          type: string
+          format: date-time
+          example: Thu Dec 03 2020 13:23:42 GMT+0000 (Coordinated Universal Time)
   securitySchemes:
     authentication:
       type: apiKey

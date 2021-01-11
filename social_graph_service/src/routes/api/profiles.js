@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../../middleware/auth');
-const { check, validationResult } = require('express-validator');
 const query = require('../../neo4j/queries.js');
 const publishToQueue = require('../../rabbitmq/mqservice');
 
@@ -45,18 +44,11 @@ router.get('/me', auth, async (req, res) => {
 });
 
 // Get all Profiles
-//@TODO: eliminate query params after search implementations
 router.get('/', async function (req, res) {
   try {
     let result = await query.getAllProfiles();
     if (!result.length) {
       return res.status(404).json({ errors: [{ msg: 'No profiles found' }] });
-    } else if (req.query.username != 'undefined') {
-      const s = req.query.username;
-      const regex = new RegExp(s, 'i');
-      return res
-        .status(200)
-        .json(result.filter(({ username }) => username.match(regex)));
     } else {
       return res.status(200).json(result);
     }

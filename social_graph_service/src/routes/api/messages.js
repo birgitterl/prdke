@@ -3,9 +3,6 @@ const router = express.Router();
 const auth = require('../../middleware/auth');
 const query = require('../../neo4j/queries.js');
 
-// TO DO: Delete
-const driver = require('../../config/db');
-
 router.post('/', auth, async (req, res) => {
   const user = req.user;
   const text = req.body.text;
@@ -20,6 +17,37 @@ router.post('/', auth, async (req, res) => {
   } catch (err) {
     console.log(err);
     return res.status(500).send('Server Error');
+  }
+});
+
+// Get all messages
+// Private route
+router.get('/', auth, async (req, res) => {
+  try {
+    const messages = await query.getAllMessages();
+    if (!messages.length) {
+      return res.status(404).send('No message found');
+    } else {
+      return res.status(200).json(messages);
+    }
+  } catch (err) {
+    return res.status(500).send('Server Error');
+  }
+});
+
+// Delete all Profiles (DEV only --> @TODO: delete)
+router.delete('/', async (req, res) => {
+  try {
+    let result = await query.deleteAllMessages();
+    if (!result) {
+      res.status(500).json({ errors: [{ msg: 'Internal server error' }] });
+    } else {
+      return res
+        .status(200)
+        .json({ errors: [{ msg: 'All messages removed' }] });
+    }
+  } catch (err) {
+    res.status(500).json({ errors: [{ msg: 'Internal server error' }] });
   }
 });
 
@@ -41,6 +69,7 @@ router.get('/my', auth, async (req, res) => {
 
 // Get messages from people I follow
 // Private Route
+// @TODO change path name to something more specific
 router.get('/other', auth, async (req, res) => {
   const user = req.user;
   try {
@@ -58,31 +87,14 @@ router.get('/other', auth, async (req, res) => {
 // Get messages from a specific Profile I follow
 // Private Route
 // Fehler Handling funkt noch nicht
-router.get('/followedProfile', auth, async (req, res) => {
-  const user = req.user;
-  const otherUser = req.query;
+router.get('/:username', auth, async (req, res) => {
+  const username = req.params.username;
   try {
-    const message = await query.getMessagesFromProfileIFollow(user, otherUser);
-    if (!message) {
-      return res.status(404).send('No message found');
+    const messages = await query.getMessagesOfUser(username);
+    if (!messages.length) {
+      return res.status(404).send('No messages found');
     } else {
-      return res.status(200).json(message);
-    }
-  } catch (err) {
-    return res.status(500).send('Server Error');
-  }
-});
-
-//@TODO: eliminate route after elastic implementation
-router.get('/search', auth, async (req, res) => {
-  const user = req.user;
-  try {
-    const message = await query.searchMessages(user, req.query.search);
-
-    if (!message) {
-      return res.status(404).send('No message found');
-    } else {
-      return res.status(200).json(message);
+      return res.status(200).json(messages);
     }
   } catch (err) {
     return res.status(500).send('Server Error');

@@ -1,11 +1,11 @@
 import {
   SEARCH_PROFILES,
   SEARCH_MESSAGES,
-  SEARCH_HASHTAGS,
   GET_PROFILEOFINTEREST,
   CLEAR_PROFILEOFINTEREST,
   CLEAR_SEARCH,
-  SET_SEARCH_TEXT
+  SET_SEARCH_TEXT,
+  SEARCH_ERROR
 } from '../actions/types';
 
 const initialState = {
@@ -28,8 +28,10 @@ const search = function (state = initialState, action) {
         ...state,
         text: payload,
         profilesLoading: true,
+        messagesLoading: true,
         profileOfInterestLoading: true,
-        profiles: []
+        profiles: [],
+        messages: []
       };
     case SEARCH_PROFILES:
       return {
@@ -62,7 +64,14 @@ const search = function (state = initialState, action) {
         ...state,
         text: '',
         profilesLoading: true,
-        profiles: []
+        profiles: [],
+        messages: []
+      };
+    case SEARCH_ERROR:
+      return {
+        ...state,
+        error: payload,
+        loading: false
       };
     default:
       return state;
