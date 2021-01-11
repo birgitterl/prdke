@@ -35,7 +35,7 @@ const Hometimeline = ({
                   </NavLink>
                 </h4>
                 <p>{`${
-                  post.text
+                  post.text + ' ' + post.emoji
                 } posted on ${post.timestamp.toLocaleDateString()} at ${post.timestamp.toLocaleTimeString()}`}</p>
               </ListGroupItem>
             ))}

@@ -7,39 +7,24 @@ const publishToQueue = require('../../rabbitmq/mqservice');
 
 // Create a new profile or update existing profile
 // Private route
-router.post(
-  '/',
-  auth,
-  [
-    (check('privacy', 'Please provide your privacy settings').notEmpty(),
-    check(
-      'notifications',
-      'Please provide your notification settings'
-    ).notEmpty())
-  ],
-  async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(403).json({ errors: errors.array() });
-    }
-    const user = req.user;
-    const profile = req.body;
+router.post('/', auth, async (req, res) => {
+  const user = req.user;
+  const profile = req.body;
 
-    try {
-      let result = await query.createOrUpdateProfile(user, profile);
-      if (!result) {
-        res.status(500).json({ errors: [{ msg: 'Internal server error' }] });
-      } else {
-        // @TODO: check if publish is only done on create or also on update?
-        await publishToQueue(result);
-        delete result['username'];
-        return res.status(201).json(result);
-      }
-    } catch (err) {
+  try {
+    let result = await query.createOrUpdateProfile(user, profile);
+    if (!result) {
       res.status(500).json({ errors: [{ msg: 'Internal server error' }] });
+    } else {
+      // @TODO: check if publish is only done on create or also on update?
+      await publishToQueue(result);
+      delete result['username'];
+      return res.status(201).json(result);
     }
+  } catch (err) {
+    res.status(500).json({ errors: [{ msg: 'Internal server error' }] });
   }
-);
+});
 
 // Get my profile
 // Private route

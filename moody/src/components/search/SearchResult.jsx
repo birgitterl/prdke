@@ -17,8 +17,7 @@ const SearchResult = ({ profiles, messages }) => {
             <h4>No profiles found...</h4>
           )}
         </Row>
-        <h3>Here are the profiles we found</h3>
-
+        <h3>Here are the messages we found</h3>
         <Row md={{ span: 4 }}>
           {messages.length > 0 ? (
             messages.map((m) => <SearchMessageItem key={m} inputMessage={m} />)

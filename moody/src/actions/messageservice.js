@@ -96,7 +96,8 @@ export const postMessage = (msg) => async (dispatch) => {
       dispatch(setAlert('You need to select an Emoji first', 'danger'));
     } else {
       const res = await socialGraphService.post('/messages', {
-        text: msg.text + ' ' + msg.emoji
+        text: msg.text,
+        emoji: msg.emoji
       });
       dispatch({
         type: POST_MESSAGE,

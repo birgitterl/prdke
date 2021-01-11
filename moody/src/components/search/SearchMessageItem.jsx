@@ -1,19 +1,28 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { Col, Button, Card } from 'react-bootstrap';
+import { Col, Card } from 'react-bootstrap';
 import { getProfileByUsername } from '../../actions/search';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 
-const SearchMessageItem = ({ inputMessage: { author, text, timestamp } }) => {
+const SearchMessageItem = ({
+  inputMessage: { author, text, emoji, timestamp }
+}) => {
+  const msg = text + ' ' + emoji;
+  const date = new Date(timestamp);
   return (
     <Fragment>
       <Col className="col-md4-bottom-margin" md={{ span: 4 }}>
         <Card>
+          <Card.Header>
+            <h4>{author}</h4>
+          </Card.Header>
           <Card.Body>
-            <Card.Title>{author}</Card.Title>
-            <Card.Text>{text}</Card.Text>
-            <Card.Text>{timestamp}</Card.Text>
+            <Card.Title>{msg}</Card.Title>
+            <Card.Text>
+              <p>
+                {`posted on ${date.toLocaleDateString()} at ${date.toLocaleTimeString()}`}
+              </p>
+            </Card.Text>
           </Card.Body>
         </Card>
       </Col>

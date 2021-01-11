@@ -1,12 +1,12 @@
 import React from 'react';
 import { Form, Button } from 'react-bootstrap';
-import { setText, searchProfiles } from '../../actions/search';
+import { setText, searchItems } from '../../actions/search';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 
 const SearchBox = ({
-  searchProfiles,
+  searchItems,
   setText,
   search: { text, profilesLoading }
 }) => {
@@ -16,7 +16,7 @@ const SearchBox = ({
 
   const onSubmit = (e) => {
     e.preventDefault();
-    searchProfiles(text);
+    searchItems(text);
     document.getElementById('searchForm').reset();
   };
 
@@ -42,11 +42,11 @@ const SearchBox = ({
 SearchBox.propTypes = {
   setText: PropTypes.func.isRequired,
   search: PropTypes.object.isRequired,
-  searchProfiles: PropTypes.func.isRequired
+  searchItems: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state) => ({
   search: state.search
 });
 
-export default connect(mapStateToProps, { searchProfiles, setText })(SearchBox);
+export default connect(mapStateToProps, { searchItems, setText })(SearchBox);

@@ -39,7 +39,7 @@ export const getProfileByUsername = (username) => async (dispatch) => {
 };
 
 // @TODO: search should fetch data from elastic
-export const searchProfiles = (queryData) => async (dispatch) => {
+export const searchItems = (queryData) => async (dispatch) => {
   try {
     const queryProfiles = `username=${queryData}`;
     const resProfiles = await socialGraphService.get(
@@ -53,7 +53,7 @@ export const searchProfiles = (queryData) => async (dispatch) => {
 
     const queryMessages = `search=${queryData}`;
     const resMessages = await socialGraphService.get(
-      `/messages/?${queryMessages}`
+      `/messages/search?${queryMessages}`
     );
     dispatch({
       type: SEARCH_MESSAGES,

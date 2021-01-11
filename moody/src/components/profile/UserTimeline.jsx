@@ -13,6 +13,7 @@ const UserTimeline = ({
   useEffect(() => {
     getMyMessages();
   }, [getMyMessages]);
+
   return (
     <Container>
       <h3>My posted messages</h3>
@@ -25,7 +26,7 @@ const UserTimeline = ({
           <ListGroup>
             {messages.map((post, index) => (
               <ListGroupItem key={index}>
-                <h4>{post.text}</h4>
+                <h4>{post.text + ' ' + post.emoji}</h4>
                 <p>
                   {`posted on ${post.timestamp.toLocaleDateString()} at ${post.timestamp.toLocaleTimeString()}`}
                 </p>

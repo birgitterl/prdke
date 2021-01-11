@@ -106,13 +106,13 @@ exports.getMessagesFromProfileIFollow = async function (user, otherUser) {
   return result.records.map((record) => record.get('message').properties);
 };
 
-exports.createMessage = async function (user, text) {
+exports.createMessage = async function (user, text, emoji) {
   var timestamp = new Date().toString();
   var hashtags = text.match(/#\w+/g);
   var message;
 
   var query1 =
-    'CREATE (a:Message {author: $user.username, text: $text, timestamp: $timestamp}) RETURN a AS message';
+    'CREATE (a:Message {author: $user.username, text: $text, emoji: $emoji, timestamp: $timestamp}) RETURN a AS message';
   var query2 =
     'MATCH (a:Message), (b:Profile) WHERE a.author = b.username MERGE (b)-[r:posted]->(a)';
   var query3 = 'MERGE (a:Hashtag {name: $hashtag})';
@@ -125,7 +125,7 @@ exports.createMessage = async function (user, text) {
   var containsSession = driver.session();
 
   await messageSession
-    .run(query1, { user, text, timestamp })
+    .run(query1, { user, text, emoji, timestamp })
     .then((res) => {
       message = res.records[0]._fields[0].properties;
       messageId = res.records[0]._fields[0].identity.low;

@@ -9,8 +9,9 @@ const driver = require('../../config/db');
 router.post('/', auth, async (req, res) => {
   const user = req.user;
   const text = req.body.text;
+  const emoji = req.body.emoji;
   try {
-    const result = await query.createMessage(user, text);
+    const result = await query.createMessage(user, text, emoji);
     if (!result) {
       return res.status(400).send('Error while creating message');
     } else {
@@ -56,6 +57,7 @@ router.get('/other', auth, async (req, res) => {
 
 // Get messages from a specific Profile I follow
 // Private Route
+// Fehler Handling funkt noch nicht
 router.get('/followedProfile', auth, async (req, res) => {
   const user = req.user;
   const otherUser = req.query;
@@ -72,7 +74,7 @@ router.get('/followedProfile', auth, async (req, res) => {
 });
 
 //@TODO: eliminate route after elastic implementation
-router.get('/', auth, async (req, res) => {
+router.get('/search', auth, async (req, res) => {
   const user = req.user;
   try {
     const message = await query.searchMessages(user, req.query.search);

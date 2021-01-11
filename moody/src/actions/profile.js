@@ -72,7 +72,7 @@ export async function getProfile(user) {
   } catch (err) {
     console.log(err);
   }
-};
+}
 
 export const getFollowersOfProfile = (user) => async (dispatch) => {
   try {

@@ -18,8 +18,10 @@ const SearchProfileItem = ({
     <Fragment>
       <Col className="col-md4-bottom-margin" md={{ span: 4 }}>
         <Card>
+          <Card.Header>
+            <h4>{username}</h4>
+          </Card.Header>
           <Card.Body>
-            <Card.Title>{username}</Card.Title>
             <Card.Text>Visit the profile of {username}</Card.Text>
             <Button
               className="btn-primary-width-full"
