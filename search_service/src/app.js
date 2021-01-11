@@ -2,6 +2,8 @@ const express = require('express');
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 const swaggerDoc = YAML.load('./src/config/swaggerDoc.yaml');
+const bodyParser = require('body-parser');
+
 const cors = require('cors');
 
 const app = express();
@@ -9,6 +11,8 @@ const app = express();
 // Init middleware
 app.use(express.json());
 app.use(cors());
+
+app.use('/api/search', require('./routes/api/search'));
 
 app.use(
   '/api-docs',
