@@ -1,7 +1,13 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Card, Container, ListGroup, ListGroupItem } from 'react-bootstrap';
+import {
+  Card,
+  Container,
+  ListGroup,
+  ListGroupItem,
+  Button
+} from 'react-bootstrap';
 import { getOtherMessages } from '../../actions/messageservice';
 import Spinner from '../layout/Spinner';
 import { NavLink } from 'react-router-dom';
@@ -14,7 +20,9 @@ const Hometimeline = ({
   useEffect(() => {
     getOtherMessages();
   }, [getOtherMessages]);
-
+  const onClick = async () => {
+    getOtherMessages();
+  };
   return (
     <Container>
       <h3>Messages of profiles {user.username} follows</h3>
@@ -38,6 +46,7 @@ const Hometimeline = ({
           </ListGroup>
         )}
       </Card>
+      <Button onClick={onClick}>Refresh Timeline</Button>
     </Container>
   );
 };
