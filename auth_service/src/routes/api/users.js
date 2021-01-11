@@ -73,7 +73,7 @@ router.post(
 router.delete('/', async (req, res) => {
   try {
     await User.remove();
-    await res.status(200).json({
+    res.status(200).json({
       msg: 'All users removed'
     });
   } catch (err) {
