@@ -39,6 +39,18 @@ router.delete('/', auth, async (req, res) => {
     return res.status(500).send('Server Error');
   }
 });
+// GET check if follow relationship between current user and profile of interest exists
+// Private Route
+router.get('/:username', auth, async (req, res) => {
+  const user = req.user.username;
+  const other = req.params.username;
+  try {
+    const followers = await query.getFollowRelationship(user, other);
+    return res.status(200).json(followers);
+  } catch (err) {
+    return res.status(500).send('Server Error');
+  }
+});
 
 // GET profiles that follow me -> incoming
 // Private Route

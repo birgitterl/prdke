@@ -29,11 +29,7 @@ const Hometimeline = ({
           <ListGroup>
             {messages.map((post, index) => (
               <ListGroupItem key={index}>
-                <h4>
-                  <NavLink to={`/profile/${post.author}`}>
-                    {post.author}
-                  </NavLink>
-                </h4>
+                <h4>{post.author}</h4>
                 <p>{`${
                   post.text + ' ' + post.emoji
                 } posted on ${post.timestamp.toLocaleDateString()} at ${post.timestamp.toLocaleTimeString()}`}</p>

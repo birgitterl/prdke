@@ -76,6 +76,16 @@ exports.getFollowers = async function (user) {
   return result.records.map((record) => record.get('followers').properties);
 };
 
+exports.getFollowRelationship = async function (user, other) {
+  var query =
+    'MATCH  (p:Profile {username: $user}), (b:Profile {username: $other}) RETURN EXISTS( (p)-[:follows]->(b) ) AS blaah  ';
+  var session = driver.session();
+  var result = await session.run(query, { user, other });
+  console.log(result);
+  session.close();
+  console.log(result.records.map((record) => record.get('blah'))[0]);
+};
+
 // Message queries
 
 // Post a message
@@ -152,7 +162,7 @@ exports.deleteAllMessages = async function () {
   if (result) return true;
 };
 
-// Message queries for timeline
+// Message queries for timeline (usertimeline)
 exports.getMyMessages = async function (user) {
   var query =
     'MATCH(x {username: $user.username})-[r]->(m:Message) RETURN m AS message LIMIT 30';
@@ -162,10 +172,11 @@ exports.getMyMessages = async function (user) {
   return result.records.map((record) => record.get('message').properties);
 };
 
-// getOtherMessages from all profiles I follow
+// getOtherMessages from all profiles I follow (hometimeline)
 exports.getMessagesIFollow = async function (user) {
   var query =
     'MATCH (p:Profile {username: $user.username}) CALL {WITH p MATCH (p)-[:follows]->(other:Profile) RETURN other} CALL {WITH other MATCH (other)-[:posted]->(m:Message) return m AS message LIMIT 3} RETURN message LIMIT 100';
+
   var session = driver.session();
   var result = await session.run(query, { user });
   session.close();
@@ -174,14 +185,14 @@ exports.getMessagesIFollow = async function (user) {
 
 exports.searchMessages = async function (user, text) {
   var query =
-    'MATCH (p:Profile {username: $user.username}) CALL {WITH p MATCH (p)-[:follows]->(other:Profile) RETURN other} CALL {WITH other MATCH (other)-[:posted]->(m:Message) WHERE m.text CONTAINS $text return m AS message} RETURN message';
+    'MATCH (p:Profile {username: $user.username})-[:follows]->(other:Profile)-[:posted]->(m:Message) WHERE m.text CONTAINS $text return m AS message';
   var session = driver.session();
   var result = await session.run(query, { user, text });
   session.close();
   return result.records.map((record) => record.get('message').properties);
 };
 
-// getMessages of a specific profile I follow
+// getMessages of a specific profile (profiletimeline if required)
 exports.getMessagesOfUser = async function (username) {
   var query = 'MATCH(m:Message {author: $username}) RETURN m as messages';
   var session = driver.session();

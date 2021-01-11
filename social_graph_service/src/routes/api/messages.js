@@ -35,8 +35,8 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
-// Delete all Profiles (DEV only --> @TODO: delete)
-router.delete('/', async (req, res) => {
+// Delete all Messages (DEV only --> @TODO: delete)
+router.delete('/', auth, async (req, res) => {
   try {
     let result = await query.deleteAllMessages();
     if (!result) {

@@ -4,22 +4,21 @@ info:
   description: This is the REST API documentation for the moody social_graph_service
   version: 1.0.0
 servers:
-- url: /api
+  - url: /api
 tags:
-- name: profile
-  description: Everything about your profiles
-- name: followerRelation
-  description: Follower Relationships between moody profiles
-- name: message
-  description: Everything about the posted messages
+  - name: profile
+    description: Everything about your profiles
+  - name: followerRelation
+    description: Follower Relationships between moody profiles
+  - name: message
+    description: Everything about the posted messages
 paths:
   /profiles:
     post:
       tags:
-      - profile
+        - profile
       summary: Create a new profile or update an existing one
-      description: If the user (provided via the header) does not have a profile yet,
-        a new profile will be created. Else the profile will be updated.
+      description: If the user (provided via the header) does not have a profile yet, a new profile will be created. Else the profile will be updated.
       requestBody:
         description: Profile object to be created or updated
         content:
@@ -38,10 +37,10 @@ paths:
           description: Internal server error
           content: {}
       security:
-      - authentication: []
+        - authentication: []
     get:
       tags:
-      - profile
+        - profile
       summary: Get all profiles
       description: Fetching all exisiting profiles.
       responses:
@@ -61,7 +60,7 @@ paths:
           content: {}
     delete:
       tags:
-      - profile
+        - profile
       summary: Delete all registered profiles
       description: all existing profiles are deleted (for testing purpose only)
       responses:
@@ -74,10 +73,9 @@ paths:
   /profiles/me:
     get:
       tags:
-      - profile
+        - profile
       summary: Get my profile
-      description: through the auth header, the user object will be submitted and
-        the current user's profile will be returned
+      description: through the auth header, the user object will be submitted and the current user's profile will be returned
       responses:
         200:
           description: OK
@@ -92,11 +90,11 @@ paths:
           description: Internal server error
           content: {}
       security:
-      - authentication: []
+        - authentication: []
   /follow:
     post:
       tags:
-      - followerRelation
+        - followerRelation
       summary: Create a new follow relationship between two profiles
       description: a relationship will be created betweent two existing moody profiles.
       requestBody:
@@ -118,10 +116,10 @@ paths:
           description: Internal server error
           content: {}
       security:
-      - authentication: []
+        - authentication: []
     delete:
       tags:
-      - followerRelation
+        - followerRelation
       summary: Delete an existing follow relationship between two profiles
       description: Delete an existing follow relationship between two profiles
       requestBody:
@@ -143,21 +141,20 @@ paths:
           description: Internal server error
           content: {}
       security:
-      - authentication: []
+        - authentication: []
   /follow/myFollowers:
     get:
       tags:
-      - followerRelation
+        - followerRelation
       summary: Get profiles of all my followers
-      description: through the auth header, the user object will be submitted and
-        the followers of the user (in ascending order) will be returned
+      description: through the auth header, the user object will be submitted and the followers of the user (in ascending order) will be returned
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Profile'                
+                $ref: '#/components/schemas/Profile'
         404:
           description: No follower found
           content: {}
@@ -165,11 +162,37 @@ paths:
           description: Internal server error
           content: {}
       security:
-      - authentication: []
+        - authentication: []
+
+  /follow/{username}:
+    get:
+      tags:
+        - followerRelation
+      summary: Check follow relationship
+      description: Check if a specific follow relationship between the current user and an other user exists
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+          description: the username of a profile
+      responses:
+        200:
+          description: true if relationship exists and false if not
+          content:
+            application/json:
+              schema:
+                type: boolean
+        500:
+          description: Internal server error
+          content: {}
+      security:
+        - authentication: []
   /messages:
     post:
       tags:
-      - message
+        - message
       summary: Create a new message
       description: A new message is created and linked to a profile.
       requestBody:
@@ -184,7 +207,7 @@ paths:
                   example: My personal message :)
                 emoji:
                   type: string
-                  example: "🤢"
+                  example: '🤢'
         required: true
       responses:
         201:
@@ -192,16 +215,16 @@ paths:
           content:
             application/json:
               schema:
-                  $ref: '#/components/schemas/Message'
+                $ref: '#/components/schemas/Message'
         500:
           description: Internal server error
           content: {}
       security:
-      - authentication: []
+        - authentication: []
     get:
       tags:
-      - message
-      summary: Get all messages 
+        - message
+      summary: Get all messages
       description: Fetching all exisiting profiles.
       responses:
         200:
@@ -219,26 +242,27 @@ paths:
           description: Internal server error
           content: {}
       security:
-      - authentication: []
+        - authentication: []
     delete:
       tags:
-      - message
+        - message
       summary: Delete all messages
       description: all existing messages are deleted (for testing purpose only)
       responses:
         200:
-          description: All profiles removed
+          description: All messages removed
           content: {}
         500:
           description: Internal server error
           content: {}
+      security:
+        - authentication: []
   /messages/my:
     get:
       tags:
-      - message
+        - message
       summary: Get my messages
-      description: through the auth header, the user object will be submitted and
-        the last 30 messages of the user will be returned in descending order
+      description: through the auth header, the user object will be submitted and the last 30 messages of the user will be returned in descending order
       responses:
         200:
           description: OK
@@ -255,20 +279,19 @@ paths:
           description: Internal server error
           content: {}
       security:
-      - authentication: []
+        - authentication: []
   /messages/other:
     get:
       tags:
-      - message
+        - message
       summary: Get messages from profiles I follow
-      description: through the auth header, the user object will be submitted and
-        the  last 100 messages of profiles the user follows will be returned
+      description: through the auth header, the user object will be submitted and the  last 100 messages of profiles the user follows will be returned
       responses:
         200:
           description: OK
           content:
             application/json:
-             schema:
+              schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/Message'
@@ -279,11 +302,11 @@ paths:
           description: Internal server error
           content: {}
       security:
-      - authentication: []
+        - authentication: []
   /messages/{username}:
     get:
       tags:
-      - message
+        - message
       summary: Get messages from a specific profile
       description: Get all messages by a given username
       parameters:
@@ -309,11 +332,11 @@ paths:
           description: Internal server error
           content: {}
       security:
-      - authentication: []
+        - authentication: []
   /search/messages:
     get:
       tags:
-      - search
+        - search
       summary: Get messages from a specific search term
       description: Search for messages of my followed profiles given a specific search term (text)
       parameters:
@@ -339,11 +362,11 @@ paths:
           description: Internal server error
           content: {}
       security:
-      - authentication: []
+        - authentication: []
   /search/profiles:
     get:
       tags:
-      - search
+        - search
       summary: Get profiles from a specific search term
       description: Search for usernames of profiles given a specific search term
       parameters:
@@ -369,13 +392,13 @@ paths:
           description: Internal server error
           content: {}
       security:
-      - authentication: []
+        - authentication: []
 components:
   schemas:
     Profile:
       required:
-      - hometown
-      - gender
+        - hometown
+        - gender
       type: object
       properties:
         birthday:
@@ -388,9 +411,9 @@ components:
           type: string
           example: female
           enum:
-          - male
-          - female
-          - transgender
+            - male
+            - female
+            - transgender
         background:
           type: string
           example: none
@@ -399,18 +422,18 @@ components:
           example: public
           default: public
           enum:
-          - private
-          - public
+            - private
+            - public
         notifications:
           type: boolean
           example: false
           default: false
         username:
           type: string
-          example: Hugo     
+          example: Hugo
     Message:
       required:
-      - text
+        - text
       type: object
       properties:
         text:
