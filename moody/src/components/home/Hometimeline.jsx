@@ -10,12 +10,13 @@ import {
 } from 'react-bootstrap';
 import { getOtherMessages } from '../../actions/messageservice';
 import Spinner from '../layout/Spinner';
-import { NavLink } from 'react-router-dom';
+import { setAlert } from '../../actions/alert';
 
 const Hometimeline = ({
-  auth: { user },
+  auth: { user, isAuthenticated },
   posts: { messages, loading },
-  getOtherMessages
+  getOtherMessages,
+  setAlert
 }) => {
   useEffect(() => {
     getOtherMessages();
@@ -23,6 +24,11 @@ const Hometimeline = ({
   const onClick = async () => {
     getOtherMessages();
   };
+
+  if (isAuthenticated && user === null) {
+    setAlert('User Profile is loading', 'danger');
+    return <Spinner />;
+  }
   return (
     <Container>
       <h3>Messages of profiles {user.username} follows</h3>
@@ -54,7 +60,8 @@ const Hometimeline = ({
 Hometimeline.propTypes = {
   getOtherMessages: PropTypes.func.isRequired,
   posts: PropTypes.object.isRequired,
-  auth: PropTypes.object.isRequired
+  auth: PropTypes.object.isRequired,
+  setAlert: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state) => ({
@@ -62,4 +69,7 @@ const mapStateToProps = (state) => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps, { getOtherMessages })(Hometimeline);
+export default connect(mapStateToProps, {
+  getOtherMessages,
+  setAlert
+})(Hometimeline);
