@@ -6,14 +6,17 @@ const query = require('../../neo4j/queries.js');
 // Add a new relationship between two profiles
 // Private Route
 router.post('/', auth, async (req, res) => {
-  const user = req.user;
+  const user = req.user.username;
   const otherUser = req.body.username;
   try {
     let result = await query.createFollowRelationship(user, otherUser);
     if (!result) {
       return res.status(500).send('Server Error');
     } else {
-      return res.status(201).send('Follow relationship created');
+      let response = { relationship: result };
+      console.log(response);
+
+      return res.status(201).json(response);
     }
   } catch (err) {
     return res.status(500).send('Server Error');
@@ -24,16 +27,18 @@ router.post('/', auth, async (req, res) => {
 // Private Route
 // @TODO: change to path: /:username and add const otherUser = req.params.username;
 // @TODO: change swagger doku
-router.delete('/', auth, async (req, res) => {
-  const user = req.user;
-  const otherUser = req.body.username;
+router.delete('/:username', auth, async (req, res) => {
+  const user = req.user.username;
+  const otherUser = req.params.username;
 
   try {
     let result = await query.deleteFollowRelationship(user, otherUser);
     if (!result) {
       return res.status(500).send('Server Error');
     } else {
-      return res.status(200).send('Follow relationship deleted');
+      let response = { relationship: result };
+      console.log(response);
+      return res.status(201).json(response);
     }
   } catch (err) {
     return res.status(500).send('Server Error');
@@ -44,11 +49,13 @@ router.delete('/', auth, async (req, res) => {
 router.get('/:username', auth, async (req, res) => {
   const user = req.user.username;
   const other = req.params.username;
+  let response = null;
   try {
     const followers = await query.getFollowRelationship(user, other);
-    return res.status(200).json(followers);
+    response = { following: followers };
+    return res.status(200).json(response);
   } catch (err) {
-    return res.status(500).send('Server Error');
+    console.log(err);
   }
 });
 

@@ -29,7 +29,6 @@ export function Message({ postMessage }) {
         emoji: emoji.emoji
       };
       postMessage(data);
-      console.log('postMessage called');
       setText('');
       setEmoji(null);
     }

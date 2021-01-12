@@ -2,19 +2,16 @@ import socialGraphService from '../utils/socialGraphService';
 import { setAlert } from './alert';
 
 import {
+  GET_FOLLOWS,
   GET_PROFILE,
-  GET_PROFILES,
   PROFILE_ERROR,
-  UPDATE_PROFILE,
-  GET_PROFILEOFINTEREST,
-  GET_FOLLOWERS_OF_PROFILE
+  UPDATE_PROFILE
 } from './types';
 
 // Get current users profile
 export const getCurrentProfile = () => async (dispatch) => {
   try {
     const res = await socialGraphService.get('/profiles/me');
-
     dispatch({
       type: GET_PROFILE,
       payload: res.data
@@ -57,9 +54,45 @@ export const createProfile = (formData, history, edit = false) => async (
     });
   }
 };
+// Get followers of current user
+export const getFollowRelationship = (username) => async (dispatch) => {
+  console.log(username);
+  try {
+    const res = await socialGraphService.get(`/follow/${username}`);
+    console.log(res.data.following);
+    dispatch({
+      type: GET_FOLLOWS,
+      payload: res.data.following
+    });
+  } catch (err) {
+    dispatch({
+      type: PROFILE_ERROR,
+      payload: { msg: err.message, status: err.status }
+    });
+  }
+};
+
+export const createFollowRelationship = (user) => async (dispatch) => {
+  const body = { username: user };
+  try {
+    const res = await socialGraphService.post('/follow', body);
+    dispatch(getFollowRelationship(user));
+  } catch (err) {
+    console.log(err.msg);
+  }
+};
+
+export const deleteFollowRelationship = (username) => async (dispatch) => {
+  try {
+    const res = await socialGraphService.delete(`/follow/${username}`);
+    dispatch(getFollowRelationship(username));
+  } catch (err) {
+    console.log(err);
+  }
+};
 
 //Get specific profile
-export async function getProfile(user) {
+/*export async function getProfile(user) {
   try {
     const res = await socialGraphService
       .get('/profiles', {
@@ -72,9 +105,9 @@ export async function getProfile(user) {
   } catch (err) {
     console.log(err);
   }
-}
+}*/
 
-export const getFollowersOfProfile = (user) => async (dispatch) => {
+/*export const getFollowersOfProfile = (user) => async (dispatch) => {
   try {
     const res = await socialGraphService.post('/follow/followers', {
       body: {
@@ -95,4 +128,4 @@ export const getFollowersOfProfile = (user) => async (dispatch) => {
       payload: { msg: err.message, status: err.status }
     });
   }
-};
+};*/

@@ -117,31 +117,6 @@ paths:
           content: {}
       security:
         - authentication: []
-    delete:
-      tags:
-        - followerRelation
-      summary: Delete an existing follow relationship between two profiles
-      description: Delete an existing follow relationship between two profiles
-      requestBody:
-        description: Profile I want to unfollow
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                  example: Sepp
-        required: false
-      responses:
-        200:
-          description: Follow relationship deleted
-          content: {}
-        500:
-          description: Internal server error
-          content: {}
-      security:
-        - authentication: []
   /follow/myFollowers:
     get:
       tags:
@@ -184,6 +159,27 @@ paths:
             application/json:
               schema:
                 type: boolean
+        500:
+          description: Internal server error
+          content: {}
+      security:
+        - authentication: []
+    delete:
+      tags:
+        - followerRelation
+      summary: Delete an existing follow relationship between two profiles
+      description: Delete an existing follow relationship between two profiles
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+          description: the username of a profile
+      responses:
+        200:
+          description: Follow relationship deleted
+          content: {}
         500:
           description: Internal server error
           content: {}

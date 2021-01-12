@@ -3,14 +3,14 @@ import {
   PROFILE_ERROR,
   CLEAR_PROFILE,
   UPDATE_PROFILE,
-  GET_FOLLOWERS_OF_PROFILE
+  GET_FOLLOWS
 } from '../actions/types';
 
 const initialState = {
   profile: null,
   loading: true,
   error: {},
-  followingProfiles: null
+  follows: false
 };
 
 const profile = (state = initialState, action) => {
@@ -23,16 +23,16 @@ const profile = (state = initialState, action) => {
         profile: payload,
         loading: false
       };
-    case GET_FOLLOWERS_OF_PROFILE:
-      return {
-        ...state,
-        followingProfiles: payload
-      };
     case UPDATE_PROFILE:
       return {
         ...state,
         profile: payload,
         loading: false
+      };
+    case GET_FOLLOWS:
+      return {
+        ...state,
+        follows: payload
       };
     case PROFILE_ERROR:
       return {

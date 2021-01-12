@@ -48,5 +48,3 @@ process.on('exit', () => {
   mqChannel.close();
   console.log('Closing rabbitmq channel');
 });
-
-module.exports = subscribeToQueue;

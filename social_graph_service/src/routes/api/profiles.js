@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../../middleware/auth');
 const query = require('../../neo4j/queries.js');
-const publishToQueue = require('../../rabbitmq/mqservice');
+//const publishToQueue = require('../../rabbitmq/mqservice');
 
 // Create a new profile or update existing profile
 // Private route
@@ -16,7 +16,7 @@ router.post('/', auth, async (req, res) => {
       res.status(500).json({ errors: [{ msg: 'Internal server error' }] });
     } else {
       // @TODO: check if publish is only done on create or also on update?
-      await publishToQueue(result);
+      //await publishToQueue(result);
       delete result['username'];
       return res.status(201).json(result);
     }

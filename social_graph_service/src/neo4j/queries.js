@@ -49,22 +49,20 @@ exports.searchProfiles = async function (text) {
 // Follow queries
 exports.createFollowRelationship = async function (user, otherUser) {
   var query =
-    'MATCH (f:Profile {username: $user.username})' +
-    'MATCH (u:Profile {username: $otherUser})' +
-    'MERGE (f)-[r:follows]->(u) RETURN r as following';
+    'MATCH (f:Profile), (u:Profile) WHERE f.username=$user AND u.username = $otherUser MERGE (f)-[r:follows]->(u) RETURN type(r) as following';
   var session = driver.session();
   var result = await session.run(query, { user, otherUser });
   session.close();
-  return result.records.map((record) => record.get('following').properties);
+  return result.records.map((record) => record.get('following'))[0];
 };
 
 exports.deleteFollowRelationship = async function (user, otherUser) {
   var query =
-    'MATCH (f:Profile {username: $user.username}) -[r:follows]-> ({username: $otherUser}) DELETE r';
+    'MATCH (f:Profile {username:$user} ) -[r:follows]->(u:Profile {username:$otherUser}) DELETE r return "unfollows"';
   var session = driver.session();
   var result = await session.run(query, { user, otherUser });
   session.close();
-  if (result) return true;
+  return result.records.map((record) => record.get(0))[0];
 };
 
 exports.getFollowers = async function (user) {
@@ -81,9 +79,8 @@ exports.getFollowRelationship = async function (user, other) {
     'MATCH  (p:Profile {username: $user}), (b:Profile {username: $other}) RETURN EXISTS( (p)-[:follows]->(b) ) AS blaah  ';
   var session = driver.session();
   var result = await session.run(query, { user, other });
-  console.log(result);
   session.close();
-  console.log(result.records.map((record) => record.get('blah'))[0]);
+  return result.records.map((record) => record.get(0))[0];
 };
 
 // Message queries
