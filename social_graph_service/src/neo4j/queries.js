@@ -104,6 +104,7 @@ exports.createMessage = async function (user, text, emoji) {
   var hashTagSession = driver.session();
   var containsSession = driver.session();
 
+  // Return nach dem ersten catch error --> Rollback falls bei den weiteren sessions ein Fehler kommt
   await messageSession
     .run(query1, { user, text, emoji, timestamp })
     .then((res) => {
