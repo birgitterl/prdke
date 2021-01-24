@@ -58,18 +58,6 @@ paths:
         500:
           description: Internal server error
           content: {}
-    delete:
-      tags:
-        - profile
-      summary: Delete all registered profiles
-      description: all existing profiles are deleted (for testing purpose only)
-      responses:
-        200:
-          description: All profiles removed
-          content: {}
-        500:
-          description: Internal server error
-          content: {}
   /profiles/me:
     get:
       tags:
@@ -91,6 +79,46 @@ paths:
           content: {}
       security:
         - authentication: []
+  /profiles/{username}:
+    get:
+      tags:
+        - profile
+      summary: Get profile by username
+      description: If there is a profile for the username, this profile object will be returned
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+          description: the username of a profile
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+        404:
+          description: No profile found
+          content: {}
+        500:
+          description: Internal server error
+          content: {}
+      security:
+        - authentication: []
+    delete:
+      tags:
+        - profile
+      summary: Delete all registered profiles
+      description: all existing profiles are deleted (for testing purpose only)
+      responses:
+        200:
+          description: All profiles removed
+          content: {}
+        500:
+          description: Internal server error
+          content: {}
   /follow:
     post:
       tags:
@@ -111,7 +139,11 @@ paths:
       responses:
         201:
           description: Follow relationship created
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { 'relationship': 'follows' }
         500:
           description: Internal server error
           content: {}
@@ -177,9 +209,13 @@ paths:
           required: true
           description: the username of a profile
       responses:
-        200:
+        201:
           description: Follow relationship deleted
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { 'relationship': 'unfollows' }
         500:
           description: Internal server error
           content: {}
@@ -221,7 +257,7 @@ paths:
       tags:
         - message
       summary: Get all messages
-      description: Fetching all exisiting profiles.
+      description: Fetching all existing messages.
       responses:
         200:
           description: OK
@@ -239,26 +275,12 @@ paths:
           content: {}
       security:
         - authentication: []
-    delete:
-      tags:
-        - message
-      summary: Delete all messages
-      description: all existing messages are deleted (for testing purpose only)
-      responses:
-        200:
-          description: All messages removed
-          content: {}
-        500:
-          description: Internal server error
-          content: {}
-      security:
-        - authentication: []
   /messages/my:
     get:
       tags:
         - message
       summary: Get my messages
-      description: through the auth header, the user object will be submitted and the last 30 messages of the user will be returned in descending order
+      description: through the auth header, the user object will be submitted and the last 30 messages of the user will be returned
       responses:
         200:
           description: OK
@@ -281,7 +303,7 @@ paths:
       tags:
         - message
       summary: Get messages from profiles I follow
-      description: through the auth header, the user object will be submitted and the  last 100 messages of profiles the user follows will be returned
+      description: through the auth header, the user object will be submitted and the last 100 messages of profiles the user follows will be returned
       responses:
         200:
           description: OK
@@ -323,6 +345,20 @@ paths:
                   $ref: '#/components/schemas/Message'
         404:
           description: No message found
+          content: {}
+        500:
+          description: Internal server error
+          content: {}
+      security:
+        - authentication: []
+    delete:
+      tags:
+        - message
+      summary: Delete all messages
+      description: all existing messages are deleted (for testing purpose only)
+      responses:
+        200:
+          description: All messages removed
           content: {}
         500:
           description: Internal server error

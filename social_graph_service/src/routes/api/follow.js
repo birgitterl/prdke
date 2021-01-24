@@ -14,7 +14,6 @@ router.post('/', auth, async (req, res) => {
       return res.status(500).send('Server Error');
     } else {
       let response = { relationship: result };
-      console.log(response);
 
       return res.status(201).json(response);
     }
@@ -25,8 +24,6 @@ router.post('/', auth, async (req, res) => {
 
 // Delete a specific relationship
 // Private Route
-// @TODO: change to path: /:username and add const otherUser = req.params.username;
-// @TODO: change swagger doku
 router.delete('/:username', auth, async (req, res) => {
   const user = req.user.username;
   const otherUser = req.params.username;
@@ -37,7 +34,6 @@ router.delete('/:username', auth, async (req, res) => {
       return res.status(500).send('Server Error');
     } else {
       let response = { relationship: result };
-      console.log(response);
       return res.status(201).json(response);
     }
   } catch (err) {
@@ -61,6 +57,7 @@ router.get('/:username', auth, async (req, res) => {
 
 // GET profiles that follow me -> incoming
 // Private Route
+//@TODO delete this route, if incoming nodes are not from interest (e.g. display number of following users)
 router.get('/myFollowers', auth, async (req, res) => {
   const user = req.user;
   try {

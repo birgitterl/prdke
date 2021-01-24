@@ -57,7 +57,7 @@ router.get('/my', auth, async (req, res) => {
   const user = req.user;
   try {
     const message = await query.getMyMessages(user);
-    if (!message) {
+    if (!message.length) {
       return res.status(404).send('No message found');
     } else {
       return res.status(200).json(message);
@@ -74,7 +74,7 @@ router.get('/other', auth, async (req, res) => {
   const user = req.user;
   try {
     const message = await query.getMessagesIFollow(user);
-    if (!message) {
+    if (!message.length) {
       return res.status(404).send('No message found');
     } else {
       return res.status(200).json(message);
