@@ -31,7 +31,7 @@ const SearchMessageItem = ({
 };
 
 SearchMessageItem.propTypes = {
-  inputProfile: PropTypes.object.isRequired,
+  inputMessage: PropTypes.object.isRequired,
   getProfileByUsername: PropTypes.func.isRequired,
   search: PropTypes.object.isRequired
 };

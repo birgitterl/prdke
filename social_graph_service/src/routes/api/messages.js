@@ -2,7 +2,10 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../../middleware/auth');
 const query = require('../../neo4j/queries.js');
+const rabbitMQ = require('../../rabbitmq/publisher');
 
+// Post a new message
+// Private route
 router.post('/', auth, async (req, res) => {
   const user = req.user;
   const text = req.body.text;
@@ -12,6 +15,8 @@ router.post('/', auth, async (req, res) => {
     if (!result) {
       return res.status(400).send('Error while creating message');
     } else {
+      let msg = JSON.stringify(result);
+      rabbitMQ.publish('messages', Buffer.from(msg));
       return res.status(201).json(result);
     }
   } catch (err) {

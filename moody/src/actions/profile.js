@@ -56,10 +56,8 @@ export const createProfile = (formData, history, edit = false) => async (
 };
 // Get followers of current user
 export const getFollowRelationship = (username) => async (dispatch) => {
-  console.log(username);
   try {
     const res = await socialGraphService.get(`/follow/${username}`);
-    console.log(res.data.following);
     dispatch({
       type: GET_FOLLOWS,
       payload: res.data.following

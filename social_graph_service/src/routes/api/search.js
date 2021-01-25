@@ -19,21 +19,4 @@ router.get('/messages', auth, async (req, res) => {
   }
 });
 
-router.get('/profiles', auth, async (req, res) => {
-  try {
-    let result = await query.getAllProfiles();
-    if (!result.length) {
-      return res.status(404).json({ errors: [{ msg: 'No profiles found' }] });
-    } else {
-      const s = req.query.username;
-      const regex = new RegExp(s, 'i');
-      return res
-        .status(200)
-        .json(result.filter(({ username }) => username.match(regex)));
-    }
-  } catch (err) {
-    res.status(500).json({ errors: [{ msg: 'Internal server error' }] });
-  }
-});
-
 module.exports = router;

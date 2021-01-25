@@ -1,4 +1,5 @@
 import socialGraphService from '../utils/socialGraphService';
+import searchService from '../utils/searchService';
 
 import {
   SEARCH_PROFILES,
@@ -6,6 +7,8 @@ import {
   SEARCH_HASHTAGS,
   GET_PROFILEOFINTEREST,
   SEARCH_ERROR,
+  MESSAGE_SEARCH_ERROR,
+  PROFILE_SEARCH_ERROR,
   CLEAR_SEARCH,
   SET_SEARCH_TEXT
 } from './types';
@@ -39,10 +42,11 @@ export const getProfileByUsername = (username) => async (dispatch) => {
 };
 
 // @TODO: search should fetch data from elastic
-export const searchItems = (queryData) => async (dispatch) => {
+/*export const searchItems = (queryData) => async (dispatch) => {
   try {
+    console.log(queryData);
     const queryProfiles = `username=${queryData}`;
-    const resProfiles = await socialGraphService.get(
+    const resProfiles = await searchService.get(
       `/search/profiles?${queryProfiles}`
     );
 
@@ -61,6 +65,43 @@ export const searchItems = (queryData) => async (dispatch) => {
     });
   } catch (err) {
     console.log(err);
+  }
+};*/
+
+export const searchMessages = (queryData) => async (dispatch) => {
+  try {
+    const queryMessages = `text=${queryData}`;
+    const resMessages = await socialGraphService.get(
+      `/search/messages?${queryMessages}`
+    );
+    dispatch({
+      type: SEARCH_MESSAGES,
+      payload: resMessages.data
+    });
+  } catch (err) {
+    dispatch({
+      type: MESSAGE_SEARCH_ERROR,
+      payload: { msg: err.message, status: err.status }
+    });
+  }
+};
+
+export const searchProfiles = (queryData) => async (dispatch) => {
+  try {
+    const queryProfiles = `username=${queryData}`;
+    const resProfiles = await searchService.get(
+      `/search/profiles?${queryProfiles}`
+    );
+
+    dispatch({
+      type: SEARCH_PROFILES,
+      payload: resProfiles.data
+    });
+  } catch (err) {
+    dispatch({
+      type: PROFILE_SEARCH_ERROR,
+      payload: { msg: err.message, status: err.status }
+    });
   }
 };
 

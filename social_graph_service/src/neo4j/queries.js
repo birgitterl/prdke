@@ -1,13 +1,12 @@
 var driver = require('../config/db');
 
 // Profile queries
-exports.findProfile = async function (username) {
+exports.getProfile = async function (username) {
   var query =
     'MATCH (p:Profile) WHERE p.username=$username RETURN p AS profile';
   var session = driver.session();
   var result = await session.run(query, { username });
   session.close();
-
   return result.records.map((record) => record.get('profile').properties)[0];
 };
 
@@ -138,7 +137,6 @@ exports.createMessage = async function (user, text, emoji) {
       containsSession.close();
     }
   }
-  console.log(message);
   return message;
 };
 
@@ -181,9 +179,10 @@ exports.getMessagesIFollow = async function (user) {
   return result.records.map((record) => record.get('message').properties);
 };
 
+// @TODO: eventuell noch messages von public profiles ausgeben
 exports.searchMessages = async function (user, text) {
   var query =
-    'MATCH (p:Profile {username: $user.username})-[:follows]->(other:Profile)-[:posted]->(m:Message) WHERE m.text CONTAINS $text return m AS message';
+    'MATCH (m:Message) WHERE (:Profile {username: $user.username})-[:follows]->(:Profile)-[:posted]->(m:Message) AND m.text CONTAINS $text RETURN m AS message UNION MATCH (n:Message) WHERE (:Profile {privacy: true})-[:posted]->(n:Message) AND n.text CONTAINS $text RETURN n AS message';
   var session = driver.session();
   var result = await session.run(query, { user, text });
   session.close();

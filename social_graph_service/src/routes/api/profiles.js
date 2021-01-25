@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../../middleware/auth');
 const query = require('../../neo4j/queries.js');
-//const publishToQueue = require('../../rabbitmq/mqservice');
+const rabbitMQ = require('../../rabbitmq/publisher');
 
 // Create a new profile or update existing profile
 // Private route
@@ -12,11 +12,12 @@ router.post('/', auth, async (req, res) => {
 
   try {
     let result = await query.createOrUpdateProfile(user, profile);
+
     if (!result) {
       res.status(500).json({ errors: [{ msg: 'Internal server error' }] });
     } else {
-      // @TODO: check if publish is only done on create or also on update?
-      //await publishToQueue(result);
+      let msg = JSON.stringify(result);
+      rabbitMQ.publish('profiles', Buffer.from(msg));
       delete result['username'];
       return res.status(201).json(result);
     }
@@ -30,7 +31,7 @@ router.post('/', auth, async (req, res) => {
 router.get('/me', auth, async (req, res) => {
   const username = req.user.username;
   try {
-    const profile = await query.findProfile(username);
+    const profile = await query.getProfile(username);
 
     if (!profile) {
       return res.status(404).json({ errors: [{ msg: 'No profile found' }] });
@@ -61,9 +62,9 @@ router.get('/', async function (req, res) {
 router.get('/:username', async (req, res) => {
   let username = req.params.username;
   try {
-    let profile = await query.findProfile(username);
+    let profile = await query.getProfile(username);
     if (!profile) {
-      return res.status(404).json({ errors: [{ msg: 'No profiles found' }] });
+      return res.status(404).json({ errors: [{ msg: 'No profile found' }] });
     } else {
       return res.status(200).json(profile);
     }

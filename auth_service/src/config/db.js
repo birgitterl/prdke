@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-//TODO: check connection string!!!
 const DB_URI = 'mongodb://mongo:27017/moody';
 
 const connectDB = () => {

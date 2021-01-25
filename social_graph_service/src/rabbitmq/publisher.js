@@ -1,16 +1,15 @@
 const amqp = require('amqplib/callback_api');
 const URI = 'amqp://admin:admin@rabbitmq:5672';
 
-const QUEUE = 'search';
 var amqpConn = null;
 var pubChannel = null;
 var offlinePubQueue = [];
 
-exports.start = () => {
+start = () => {
   amqp.connect(URI, (err, conn) => {
     if (err) {
-      console.error('[AMQP]', err.message);
-      return setTimeout(this.start, 5000);
+      console.error('[AMQP] conncetion error', err.message);
+      return setTimeout(start, 5000);
     }
     conn.on('error', (err) => {
       if (err.message != 'Connection closing') {
@@ -19,7 +18,7 @@ exports.start = () => {
     });
     conn.on('close', () => {
       console.error('[AMQP] reconnecting...');
-      return setTimeout(this.start, 1000);
+      return setTimeout(start, 5000);
     });
     console.log('[AMQP] Publisher connected');
     amqpConn = conn;
@@ -31,46 +30,45 @@ function startPublisher() {
   amqpConn.createChannel((err, ch) => {
     if (closeOnErr(err)) return;
     ch.on('error', (err) => {
-      console.error('[AMQP] channel error', err.message);
+      console.error('[AMQP4] channel error', err.message);
     });
     ch.on('close', () => {
-      console.log('[AMQP] channel closed');
+      console.log('[AMQP5] channel closed');
     });
 
     pubChannel = ch;
-    while (true) {
+    while (offlinePubQueue.length > 0) {
+      console.log('in der loop');
       var m = offlinePubQueue.shift();
       if (!m) break;
-      var [exchange, routingKey, content] = m;
-      publish(exchange, routingKey, content);
+      this.publish(m[0], m[1]);
     }
   });
 }
 
-exports.publish = (exchange, content) => {
+publish = (routingKey, content) => {
   try {
-    pubChannel.publish(
-      exchange,
-      QUEUE,
-      content,
-      { persistent: true },
-      function (err, ok) {
-        if (err) {
-          console.error('[AMQP] publish', err);
-          offlinePubQueue.push([exchange, routingKey, content]);
-          pubChannel.connection.close();
-        }
+    pubChannel.publish('', routingKey, content, { persistent: true }, function (
+      err,
+      ok
+    ) {
+      if (err) {
+        console.error('[AMQP6] publish', err);
+        offlinePubQueue.push([routingKey, content]);
+        pubChannel.connection.close();
       }
-    );
+    });
   } catch (e) {
-    console.error('[AMQP] publish', e.message);
-    offlinePubQueue.push([exchange, routingKey, content]);
+    console.error('[AMQP7] publish', e.message);
+    offlinePubQueue.push([routingKey, content]);
   }
 };
 
 function closeOnErr(err) {
   if (!err) return false;
-  console.error('[AMQP] error', err);
+  console.error('[AMQP8] error', err);
   amqpConn.close();
   return true;
 }
+
+module.exports = { start, publish };

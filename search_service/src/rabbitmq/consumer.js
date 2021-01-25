@@ -2,18 +2,18 @@ const amqp = require('amqplib/callback_api');
 const URI = 'amqp://admin:admin@rabbitmq:5672';
 
 const elasticsearch = require('elasticsearch');
-var client = new elasticsearch.Client({
+const elasticClient = new elasticsearch.Client({
   host: 'elasticsearch:9200',
   requestTimeout: 5000
 });
 
-const QUEUE = 'search';
 var amqpConn = null;
+const queueProfiles = 'profiles';
 
 exports.start = () => {
   amqp.connect(URI, (err, conn) => {
     if (err) {
-      console.error('[AMQP]', err.message);
+      console.error('[AMQP] connection error', err.message);
       return setTimeout(this.start, 5000);
     }
     conn.on('error', (err) => {
@@ -41,28 +41,31 @@ function startConsumer() {
       console.log('[AMQP] channel closed');
     });
 
-    ch.assertQueue(QUEUE, { durable: true }, (err, _ok) => {
+    ch.assertQueue(queueProfiles, { durable: true }, (err, _ok) => {
       if (closeOnErr(err)) return;
-      ch.consume(QUEUE, processMsg, { noAck: true });
-      console.log('[AMQP] Consumer is listening...');
+      ch.consume(queueProfiles, processProfile, { noAck: true });
+      console.log('[AMQP] Consumer is listening to profiles queue...');
     });
   });
 }
 
-function processMsg(msg) {
-  console.log('[AMQP] Message received: ' + msg.content);
-  /*
-  // @TODO implement save message to elastic
-  if (message.save(msg)) {
-    console.log('[Mongo] message persisted');
-  } else {
-    console.log('[Mongo] message not persisted');
-  }*/
+function processProfile(msg) {
+  try {
+    let profile = JSON.parse(msg.content);
+    if (profile.birthday === '') delete profile['birthday'];
+    console.log('[AMQP] Profile received: ' + JSON.stringify(profile));
+    elasticClient.index({
+      index: 'profiles',
+      id: profile.username,
+      body: profile
+    });
+  } catch (err) {
+    return setTimeout(this.start, 5000);
+  }
 }
 
 function closeOnErr(err) {
   if (!err) return false;
   console.error('[AMQP] error', err);
-  amqpConn.close();
   return true;
 }

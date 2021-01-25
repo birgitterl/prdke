@@ -14,8 +14,6 @@ import {
 export const getMyMessages = () => async (dispatch) => {
   try {
     const res = await socialGraphService.get('/messages/my');
-    console.log('Res.data');
-    console.log(res.data);
     var resultSet = sortMessages(res.data);
     dispatch({
       type: GET_MY_MESSAGES,
@@ -33,8 +31,6 @@ export const getMyMessages = () => async (dispatch) => {
 export const getOtherMessages = () => async (dispatch) => {
   try {
     const res = await socialGraphService.get('/messages/other');
-    console.log('Res.data');
-    console.log(res.data);
     var resultSet = sortMessages(res.data);
     dispatch({
       type: GET_OTHER_MESSAGES,

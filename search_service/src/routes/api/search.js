@@ -6,74 +6,29 @@ const elasticClient = elastic.Client({
   host: 'elasticsearch:9200'
 });
 
-router.post('/profiles', (req, res) => {
-  elasticClient
-    .index({
+router.get('/profiles', async (req, res) => {
+  let querystring = `*${req.query.username}*`;
+  try {
+    const response = await elasticClient.search({
       index: 'profiles',
-      body: req.body
-    })
-    .then((response) => {
-      return res.status(201).json({ msg: 'Profile indexed' });
-    })
-    .catch((err) => {
-      console.log(err);
-      return res
-        .status(500)
-        .json({ errors: [{ msg: 'Internal Server Error' }] });
+      body: {
+        query: {
+          wildcard: {
+            username: {
+              value: querystring
+            }
+          }
+        }
+      }
     });
+    console.log(response);
+    if (response.hits.hits.length > 0) {
+      return res.status(200).json(response.hits.hits.map((hit) => hit._source));
+    } else {
+      return res.status(400).json({ errors: [{ msg: 'No profiles found.' }] });
+    }
+  } catch (err) {
+    res.status(500).json({ errors: [{ msg: 'Internal server error' }] });
+  }
 });
-
-router.post('/messages', (req, res) => {
-  elasticClient
-    .index({
-      index: 'messages',
-      body: req.body
-    })
-    .then((response) => {
-      return res.status(201).json({ msg: 'Message indexed' });
-    })
-    .catch((err) => {
-      console.log(err);
-      return res
-        .status(500)
-        .json({ errors: [{ msg: 'Internal Server Error' }] });
-    });
-});
-
-router.get('/profiles', (req, res) => {
-  let query = {
-    index: 'profiles'
-  };
-  if (req.query.profile) query.q = `*${req.query.profile}*`;
-  elasticClient
-    .search(query)
-    .then((response) => {
-      return res.status(200).json({ profiles: response.hits.hits });
-    })
-    .catch((err) => {
-      console.log(err);
-      return res
-        .status(500)
-        .json({ errors: [{ msg: 'Internal Server Error' }] });
-    });
-});
-
-router.get('/messages', (req, res) => {
-  let query = {
-    index: 'messages'
-  };
-  if (req.query.message) query.q = `*${req.query.message}*`;
-  elasticClient
-    .search(query)
-    .then((response) => {
-      return res.status(200).json({ message: response.hits.hits });
-    })
-    .catch((err) => {
-      console.log(err);
-      return res
-        .status(500)
-        .json({ errors: [{ msg: 'Internal Server Error' }] });
-    });
-});
-
 module.exports = router;

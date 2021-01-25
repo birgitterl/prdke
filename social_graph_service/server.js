@@ -1,5 +1,5 @@
 const app = require('./src/app');
-const connectRabbit = require('./src/rabbitmq/publisher.js');
+const connectRabbit = require('./src/rabbitmq/publisher');
 
 // Connect to RabbitMQ
 connectRabbit.start();

@@ -1,32 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
-import { setText, searchItems } from '../../actions/search';
+import { setText, searchMessages, searchProfiles } from '../../actions/search';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
+import { Fragment } from 'react';
 
 const SearchBox = ({
-  searchItems,
+  searchMessages,
+  searchProfiles,
   setText,
-  search: { text, profilesLoading }
+  search: { text, profilesLoading, messagesLoading }
 }) => {
+  const [redirect, setRedirect] = useState(false);
+
   const onChange = (e) => {
     setText(e.target.value);
   };
 
   const onSubmit = (e) => {
     e.preventDefault();
-    searchItems(text);
+    searchMessages(text);
+    searchProfiles(text);
+    setRedirect(true);
     document.getElementById('searchForm').reset();
   };
 
   return (
-    <div>
+    <Fragment>
       <Form id="searchForm" onSubmit={onSubmit} inline>
         <Form.Control
           type="text"
           name="searchText"
-          placeholder="Search Friends, Messages..."
+          placeholder="Search for Friends, Messages..."
           className="mr-sm-2 ml-sm-5"
           onChange={onChange}
         />
@@ -34,19 +40,24 @@ const SearchBox = ({
           Search
         </Button>
       </Form>
-      {!profilesLoading && <Redirect to="/searchresult" />}
-    </div>
+      {!profilesLoading && !messagesLoading && <Redirect to="/searchresult" />}
+    </Fragment>
   );
 };
 
 SearchBox.propTypes = {
   setText: PropTypes.func.isRequired,
   search: PropTypes.object.isRequired,
-  searchItems: PropTypes.func.isRequired
+  searchMessages: PropTypes.func.isRequired,
+  searchProfiles: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state) => ({
   search: state.search
 });
 
-export default connect(mapStateToProps, { searchItems, setText })(SearchBox);
+export default connect(mapStateToProps, {
+  searchMessages,
+  searchProfiles,
+  setText
+})(SearchBox);

@@ -8,7 +8,7 @@ import { Form, Button, ToggleButton, ToggleButtonGroup } from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
 
 const initialState = {
-  birthday: '',
+  birthday: null,
   hometown: '',
   gender: '',
   privacy: false,
@@ -61,9 +61,10 @@ const ProfileForm = ({
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    if (hometown === '' || gender === '') {
+    if (hometown === '' || gender === '' || birthday === null) {
       if (hometown === '') setAlert('Hometown is required', 'danger');
       else if (gender === '') setAlert('Gender is required', 'danger');
+      else if (birthday === null) setAlert('Birthday is required', 'danger');
     } else {
       createProfile(formData, history, profile ? true : false);
       history.push('/homesite');
@@ -86,7 +87,7 @@ const ProfileForm = ({
           />
         </Form.Group>
         <Form.Group controlId="birthday">
-          <Form.Label>Birthday</Form.Label>
+          <Form.Label>Birthday (*)</Form.Label>
           <Form.Control
             type="date"
             placeholder="Pick your birthday"

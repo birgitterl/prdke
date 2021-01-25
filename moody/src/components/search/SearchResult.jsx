@@ -9,7 +9,9 @@ const SearchResult = ({ profiles, messages }) => {
   return (
     <Fragment>
       <Container fluid>
-        <h3>Here are the profiles we found</h3>
+        <Row>
+          <h3>Here are the profiles we found</h3>
+        </Row>
         <Row md={{ span: 4 }}>
           {profiles.length > 0 ? (
             profiles.map((p) => <SearchProfileItem key={p} inputProfile={p} />)
@@ -17,7 +19,9 @@ const SearchResult = ({ profiles, messages }) => {
             <h4>No profiles found...</h4>
           )}
         </Row>
-        <h3>Here are the messages we found</h3>
+        <Row>
+          <h3>Here are the messages we found</h3>
+        </Row>
         <Row md={{ span: 4 }}>
           {messages.length > 0 ? (
             messages.map((m) => <SearchMessageItem key={m} inputMessage={m} />)

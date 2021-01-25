@@ -5,7 +5,9 @@ import {
   CLEAR_PROFILEOFINTEREST,
   CLEAR_SEARCH,
   SET_SEARCH_TEXT,
-  SEARCH_ERROR
+  SEARCH_ERROR,
+  PROFILE_SEARCH_ERROR,
+  MESSAGE_SEARCH_ERROR
 } from '../actions/types';
 
 const initialState = {
@@ -70,8 +72,21 @@ const search = function (state = initialState, action) {
     case SEARCH_ERROR:
       return {
         ...state,
-        error: payload,
-        loading: false
+        error: payload
+      };
+    case PROFILE_SEARCH_ERROR:
+      return {
+        ...state,
+        profiles: [],
+        profilesLoading: false,
+        error: payload
+      };
+    case MESSAGE_SEARCH_ERROR:
+      return {
+        ...state,
+        messages: [],
+        messagesLoading: false,
+        error: payload
       };
     default:
       return state;
