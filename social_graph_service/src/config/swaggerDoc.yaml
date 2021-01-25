@@ -395,36 +395,6 @@ paths:
           content: {}
       security:
         - authentication: []
-  /search/profiles:
-    get:
-      tags:
-        - search
-      summary: Get profiles from a specific search term
-      description: Search for usernames of profiles given a specific search term
-      parameters:
-        - name: username
-          in: query
-          required: true
-          schema:
-            type: string
-            example: go
-      responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Profile'
-        404:
-          description: No profile found
-          content: {}
-        500:
-          description: Internal server error
-          content: {}
-      security:
-        - authentication: []
 components:
   schemas:
     Profile:

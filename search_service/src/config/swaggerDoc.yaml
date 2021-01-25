@@ -1,152 +1,82 @@
-swagger: '2.0'
+openapi: 3.0.1
 info:
+  title: moody Social Graph Service
   description: This is the REST API documentation for the moody search_service
   version: 1.0.0
-  title: moody Search Service
-host: 'localhost:7050'
-basePath: /api
-tags:
-  - name: users
-    description: Everything about your Users
-  - name: auth
-    description: Authentication operations
-securityDefinitions:
-  authentication:
-    type: apiKey
-    name: Authorization
-    in: header
-definitions:
-  User:
-    type: object
-    required:
-      - username
-      - password
-    properties:
-      username:
-        type: string
-        example: Hugo
-      password:
-        type: string
-        example: '123456'
+servers:
+  - url: /api
+
 paths:
-  /users:
-    post:
-      tags:
-        - users
-      summary: Register a new user
-      description: >-
-        a new user is created, persisted in the database and an access token is
-        returned.
-      parameters:
-        - in: body
-          name: body
-          description: User object that will be created
-          required: true
-          schema:
-            $ref: '#/definitions/User'
-      responses:
-        '201':
-          description: User created
-          schema:
-            type: object
-            properties:
-              token:
-                type: string
-                example: >-
-                  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNWZhODFhMmQxNTY2NjEwMDNiMDg5OWYyIn0sImlhdCI6MTYwNDg1NTgwOSwiZXhwIjoxNjA1MjE1ODA5fQ.XUZZrYGuUxBk4WQis8VII4GGadFESHwg8Il994WPk04
-        '400':
-          description: Bad Request
-        '403':
-          description: Forbidden - User exists already
-        '500':
-          description: Internal server error
+  /search/profiles:
     get:
       tags:
-        - users
-      summary: Get all users
-      description: fetch all existing moody users
-      responses:
-        '200':
-          description: OK
-          schema:
-            type: array
-            items:
-              type: object
-              properties:
-                username:
-                  type: string
-                  example: Julia
-        '404':
-          description: No users found
-        '500':
-          description: Internal server error
-    delete:
-      tags:
-        - users
-      summary: Delete all registered users
-      description: all existing users are deleted (for testing purpose only)
-      responses:
-        '200':
-          description: All users removed
-        '500':
-          description: Internal server error
-  /auth:
-    post:
-      tags:
-        - auth
-      summary: Login/authenticate user
-      description: >-
-        username and passwords are matched against the existing users and upon
-        successful login, a token is returned
+        - search
+      summary: Get profiles from a specific search term
+      description: Search for usernames of profiles given a specific search term
       parameters:
-        - in: body
-          name: body
-          description: User object that needs to be authenticated
+        - name: username
+          in: query
           required: true
           schema:
-            $ref: '#/definitions/User'
+            type: string
+            example: go
       responses:
-        '200':
+        200:
           description: OK
-          schema:
-            type: object
-            properties:
-              token:
-                type: string
-                example: >-
-                  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNWZhODFhMmQxNTY2NjEwMDNiMDg5OWYyIn0sImlhdCI6MTYwNDg1NTgwOSwiZXhwIjoxNjA1MjE1ODA5fQ.XUZZrYGuUxBk4WQis8VII4GGadFESHwg8Il994WPk04
-        '400':
-          description: Bad Request
-        '403':
-          description: Forbidden - User exists already
-        '404':
-          description: Not found - Invalid credentials
-        '500':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Profile'
+        404:
+          description: No profiles found
+          content: {}
+        500:
           description: Internal server error
-    get:
-      tags:
-        - auth
-      summary: Get user by token
-      description: >-
-        a token must be provided in the authentication header and the related
-        user object is returned
+          content: {}
       security:
         - authentication: []
-      responses:
-        '200':
-          description: OK
-          schema:
-            type: object
-            properties:
-              _id:
-                type: string
-                example: 5fa81a2d156661003b0899f2
-              username:
-                type: string
-                example: Julia
-        '400':
-          description: Invalid ID supplied
-        '404':
-          description: User not found by id
-        '500':
-          description: Internal server error
+components:
+  schemas:
+    Profile:
+      required:
+        - hometown
+        - gender
+      type: object
+      properties:
+        birthday:
+          type: string
+          format: date
+        hometown:
+          type: string
+          example: Linz
+        gender:
+          type: string
+          example: female
+          enum:
+            - male
+            - female
+            - transgender
+        background:
+          type: string
+          example: none
+        privacy:
+          type: string
+          example: public
+          default: public
+          enum:
+            - private
+            - public
+        notifications:
+          type: boolean
+          example: false
+          default: false
+        username:
+          type: string
+          example: Hugo
+  securitySchemes:
+    authentication:
+      type: apiKey
+      name: Authorization
+      in: header

@@ -21,7 +21,6 @@ router.get('/profiles', async (req, res) => {
         }
       }
     });
-    console.log(response);
     if (response.hits.hits.length > 0) {
       return res.status(200).json(response.hits.hits.map((hit) => hit._source));
     } else {
