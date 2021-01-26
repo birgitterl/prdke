@@ -26,7 +26,7 @@ const posts = (state = initialState, action) => {
         ...state,
         loading: false,
         error: payload,
-        messages: null
+        messages: []
       };
     case GET_OTHER_MESSAGES:
       return {

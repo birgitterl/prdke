@@ -15,8 +15,6 @@ router.post('/', auth, async (req, res) => {
     if (!result) {
       return res.status(400).send('Error while creating message');
     } else {
-      let msg = JSON.stringify(result);
-      rabbitMQ.publish('messages', Buffer.from(msg));
       return res.status(201).json(result);
     }
   } catch (err) {
