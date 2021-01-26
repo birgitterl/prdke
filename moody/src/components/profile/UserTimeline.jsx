@@ -24,14 +24,16 @@ const UserTimeline = ({
           <Spinner />
         ) : (
           <ListGroup>
-            {messages.map((post, index) => (
-              <ListGroupItem key={index}>
-                <h4>{post.text + ' ' + post.emoji}</h4>
-                <p>
-                  {`posted on ${post.timestamp.toLocaleDateString()} at ${post.timestamp.toLocaleTimeString()}`}
-                </p>
-              </ListGroupItem>
-            ))}
+            {messages.length
+              ? messages.map((post, index) => (
+                  <ListGroupItem key={index}>
+                    <h4>{post.text + ' ' + post.emoji}</h4>
+                    <p>
+                      {`posted on ${post.timestamp.toLocaleDateString()} at ${post.timestamp.toLocaleTimeString()}`}
+                    </p>
+                  </ListGroupItem>
+                ))
+              : 'Please post your first message'}
           </ListGroup>
         )}
       </Card>

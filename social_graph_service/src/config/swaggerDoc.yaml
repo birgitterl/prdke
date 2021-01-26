@@ -58,6 +58,18 @@ paths:
         500:
           description: Internal server error
           content: {}
+    delete:
+      tags:
+        - profile
+      summary: Delete all registered profiles
+      description: all existing profiles are deleted (for testing purpose only)
+      responses:
+        200:
+          description: All profiles removed
+          content: {}
+        500:
+          description: Internal server error
+          content: {}
   /profiles/me:
     get:
       tags:
@@ -107,18 +119,7 @@ paths:
           content: {}
       security:
         - authentication: []
-    delete:
-      tags:
-        - profile
-      summary: Delete all registered profiles
-      description: all existing profiles are deleted (for testing purpose only)
-      responses:
-        200:
-          description: All profiles removed
-          content: {}
-        500:
-          description: Internal server error
-          content: {}
+
   /follow:
     post:
       tags:
@@ -144,27 +145,6 @@ paths:
               schema:
                 type: object
                 example: { 'relationship': 'follows' }
-        500:
-          description: Internal server error
-          content: {}
-      security:
-        - authentication: []
-  /follow/myFollowers:
-    get:
-      tags:
-        - followerRelation
-      summary: Get profiles of all my followers
-      description: through the auth header, the user object will be submitted and the followers of the user (in ascending order) will be returned
-      responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Profile'
-        404:
-          description: No follower found
-          content: {}
         500:
           description: Internal server error
           content: {}
@@ -275,6 +255,20 @@ paths:
           content: {}
       security:
         - authentication: []
+    delete:
+      tags:
+        - message
+      summary: Delete all messages
+      description: all existing messages are deleted (for testing purpose only)
+      responses:
+        200:
+          description: All messages removed
+          content: {}
+        500:
+          description: Internal server error
+          content: {}
+      security:
+        - authentication: []
   /messages/my:
     get:
       tags:
@@ -298,7 +292,7 @@ paths:
           content: {}
       security:
         - authentication: []
-  /messages/other:
+  /messages/iFollow:
     get:
       tags:
         - message
@@ -321,50 +315,7 @@ paths:
           content: {}
       security:
         - authentication: []
-  /messages/{username}:
-    get:
-      tags:
-        - message
-      summary: Get messages from a specific profile
-      description: Get all messages by a given username
-      parameters:
-        - in: path
-          name: username
-          schema:
-            type: string
-          required: true
-          description: the username of a profile
-      responses:
-        200:
-          description: A list of messages
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Message'
-        404:
-          description: No message found
-          content: {}
-        500:
-          description: Internal server error
-          content: {}
-      security:
-        - authentication: []
-    delete:
-      tags:
-        - message
-      summary: Delete all messages
-      description: all existing messages are deleted (for testing purpose only)
-      responses:
-        200:
-          description: All messages removed
-          content: {}
-        500:
-          description: Internal server error
-          content: {}
-      security:
-        - authentication: []
+
   /search/messages:
     get:
       tags:

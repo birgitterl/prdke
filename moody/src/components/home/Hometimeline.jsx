@@ -41,14 +41,16 @@ const Hometimeline = ({
           <Spinner />
         ) : (
           <ListGroup>
-            {messages.map((post, index) => (
-              <ListGroupItem key={index}>
-                <h4>{post.author}</h4>
-                <p>{`${
-                  post.text + ' ' + post.emoji
-                } posted on ${post.timestamp.toLocaleDateString()} at ${post.timestamp.toLocaleTimeString()}`}</p>
-              </ListGroupItem>
-            ))}
+            {messages.length
+              ? messages.map((post, index) => (
+                  <ListGroupItem key={index}>
+                    <h4>{post.author}</h4>
+                    <p>{`${
+                      post.text + ' ' + post.emoji
+                    } posted on ${post.timestamp.toLocaleDateString()} at ${post.timestamp.toLocaleTimeString()}`}</p>
+                  </ListGroupItem>
+                ))
+              : 'No messages to display'}
           </ListGroup>
         )}
       </Card>

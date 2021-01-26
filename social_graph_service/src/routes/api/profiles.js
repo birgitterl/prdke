@@ -73,7 +73,7 @@ router.get('/:username', async (req, res) => {
   }
 });
 
-// Delete all Profiles (DEV only --> @TODO: delete)
+// Delete all Profiles (DEV only)
 router.delete('/', async (req, res) => {
   try {
     let result = await query.deleteAllProfiles();

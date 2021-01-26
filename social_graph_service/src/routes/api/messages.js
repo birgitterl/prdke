@@ -38,7 +38,7 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
-// Delete all Messages (DEV only --> @TODO: delete)
+// Delete all Messages (DEV only)
 router.delete('/', auth, async (req, res) => {
   try {
     let result = await query.deleteAllMessages();
@@ -60,7 +60,7 @@ router.get('/my', auth, async (req, res) => {
   const user = req.user;
   try {
     const message = await query.getMyMessages(user);
-    if (!message) {
+    if (!message.length) {
       return res.status(404).send('No message found');
     } else {
       return res.status(200).json(message);
@@ -72,32 +72,14 @@ router.get('/my', auth, async (req, res) => {
 
 // Get messages from people I follow
 // Private Route
-// @TODO change path name to something more specific
-router.get('/other', auth, async (req, res) => {
+router.get('/iFollow', auth, async (req, res) => {
   const user = req.user;
   try {
     const message = await query.getMessagesIFollow(user);
-    if (!message) {
+    if (!message.length) {
       return res.status(404).send('No message found');
     } else {
       return res.status(200).json(message);
-    }
-  } catch (err) {
-    return res.status(500).send('Server Error');
-  }
-});
-
-// Get messages from a specific Profile I follow
-// Private Route
-// Fehler Handling funkt noch nicht
-router.get('/:username', auth, async (req, res) => {
-  const username = req.params.username;
-  try {
-    const messages = await query.getMessagesOfUser(username);
-    if (!messages.length) {
-      return res.status(404).send('No messages found');
-    } else {
-      return res.status(200).json(messages);
     }
   } catch (err) {
     return res.status(500).send('Server Error');

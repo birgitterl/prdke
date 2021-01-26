@@ -3,7 +3,7 @@ const router = express.Router();
 const auth = require('../../middleware/auth');
 const query = require('../../neo4j/queries.js');
 
-// Add a new relationship between two profiles
+// Add a new relationship between two profiles (follow)
 // Private Route
 router.post('/', auth, async (req, res) => {
   const user = req.user.username;
@@ -22,7 +22,7 @@ router.post('/', auth, async (req, res) => {
   }
 });
 
-// Delete a specific relationship
+// Delete a specific relationship (unfollow)
 // Private Route
 router.delete('/:username', auth, async (req, res) => {
   const user = req.user.username;
@@ -40,7 +40,7 @@ router.delete('/:username', auth, async (req, res) => {
     return res.status(500).send('Server Error');
   }
 });
-// GET check if follow relationship between current user and profile of interest exists
+// Check if follow relationship between current user and profile of interest exists
 // Private Route
 router.get('/:username', auth, async (req, res) => {
   const user = req.user.username;
@@ -55,23 +55,7 @@ router.get('/:username', auth, async (req, res) => {
   }
 });
 
-// GET profiles that follow me -> incoming
-// Private Route
-//@TODO delete this route, if incoming nodes are not from interest (e.g. display number of following users)
-router.get('/myFollowers', auth, async (req, res) => {
-  const user = req.user;
-  try {
-    const followers = await query.getFollowers(user);
-    if (followers.length <= 0) {
-      return res.status(404).send('No follower found');
-    } else {
-      return res.status(200).json(followers);
-    }
-  } catch (err) {
-    return res.status(500).send('Server Error');
-  }
-});
-
+/*
 //@TODO delete this route?? what is it for?
 router.post('/followers', auth, async (req, res) => {
   const user = {
@@ -88,6 +72,6 @@ router.post('/followers', auth, async (req, res) => {
   } catch (err) {
     return res.status(500).send('Server Error');
   }
-});
+});*/
 
 module.exports = router;
