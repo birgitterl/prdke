@@ -69,7 +69,7 @@ router.post(
   }
 );
 
-// Delete all registered users (DEV --> @TODO delete afterwards)
+// Delete all registered users (DEV)
 router.delete('/', async (req, res) => {
   try {
     await User.remove();
@@ -86,7 +86,11 @@ router.delete('/', async (req, res) => {
 router.get('/', async (req, res) => {
   try {
     const users = await User.find().select('username');
-    res.json(users);
+    if (!users.length) {
+      res.status(404).send('No users found');
+    } else {
+      res.json(users);
+    }
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
