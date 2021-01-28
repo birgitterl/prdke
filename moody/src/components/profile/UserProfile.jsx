@@ -1,53 +1,75 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { Container, ListGroup, Button, Row, Col } from 'react-bootstrap';
-import { getFollowersOfProfile } from '../../actions/profile';
+import { setAlert } from '../../actions/alert';
+import {
+  createFollowRelationship,
+  deleteFollowRelationship
+} from '../../actions/profile';
 
 const UserProfile = ({
   auth: { isAuthenticated, user },
   search: { profileOfInterest },
-  getFollowersOfProfile,
-  profile: { followingProfiles }
+  createFollowRelationship,
+  deleteFollowRelationship,
+  profile: { follows, profile },
+  setAlert
 }) => {
+  const { username, privacy, hometown, birthday, gender } = profileOfInterest;
+  useEffect(() => {}, [
+    follows,
+    createFollowRelationship,
+    deleteFollowRelationship
+  ]);
   if (!isAuthenticated) {
     return <Redirect to="/" />;
   }
 
-  const profile = profileOfInterest;
+  if (user.username === profileOfInterest.username) {
+    return <Redirect to="/profile/me" />;
+  }
+  const onClickFollow = () => {
+    if (profile === null) {
+      setAlert('Please create your own profile first!', 'danger');
+    } else {
+      createFollowRelationship(username);
+    }
+  };
 
-  const getFollowersOfProfileOfInterest = async () =>
-    getFollowersOfProfile(profile);
-
-  console.log(followingProfiles);
-  const isFollowed = async () => followingProfiles.includes(user.username);
+  const onClickUnfollow = () => {
+    deleteFollowRelationship(username);
+  };
 
   return (
     <Container>
-      <h1>{profile.username}</h1>
+      <h1>{username}</h1>
       <Row>
         <Col className="col-md4-bottom-margin" md={{ span: 6 }}>
-          {profile.privacy ? (
+          {privacy || follows ? (
             <ListGroup>
-              <ListGroup.Item>Wohnort: {profile.hometown}</ListGroup.Item>
-              <ListGroup.Item>Geburtstag: {profile.birthday}</ListGroup.Item>
+              <ListGroup.Item>Hometown: {hometown}</ListGroup.Item>
+              <ListGroup.Item>Birthday: {birthday}</ListGroup.Item>
+              <ListGroup.Item>Gender: {gender}</ListGroup.Item>
             </ListGroup>
           ) : (
             <p>This account is not visible for the public.</p>
           )}
         </Col>
-        <Col>
-          {isFollowed ? (
-            <Button variant="primary" onClick={getFollowersOfProfileOfInterest}>
+        {follows ? (
+          <Col>
+            <Button variant="primary" onClick={onClickUnfollow}>
               Unfollow
             </Button>
-          ) : (
-            <Button variant="primary" onClick={getFollowersOfProfileOfInterest}>
+          </Col>
+        ) : (
+          <Col>
+            <Button variant="primary" onClick={onClickFollow}>
               Follow
             </Button>
-          )}
-        </Col>
+          </Col>
+        )}
       </Row>
     </Container>
   );
@@ -56,7 +78,9 @@ const UserProfile = ({
 UserProfile.propTypes = {
   auth: PropTypes.object.isRequired,
   search: PropTypes.object.isRequired,
-  getFollowersOfProfile: PropTypes.func.isRequired
+  createFollowRelationship: PropTypes.func.isRequired,
+  deleteFollowRelationship: PropTypes.func.isRequired,
+  setAlert: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state) => ({
@@ -65,4 +89,8 @@ const mapStateToProps = (state) => ({
   profile: state.profile
 });
 
-export default connect(mapStateToProps, { getFollowersOfProfile })(UserProfile);
+export default connect(mapStateToProps, {
+  createFollowRelationship,
+  deleteFollowRelationship,
+  setAlert
+})(UserProfile);
