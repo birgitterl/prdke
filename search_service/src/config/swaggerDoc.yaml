@@ -1,6 +1,6 @@
 openapi: 3.0.1
 info:
-  title: moody Social Graph Service
+  title: moody Search Service
   description: This is the REST API documentation for the moody search_service
   version: 1.0.0
 servers:
@@ -41,6 +41,7 @@ components:
   schemas:
     Profile:
       required:
+        - birthday
         - hometown
         - gender
       type: object
