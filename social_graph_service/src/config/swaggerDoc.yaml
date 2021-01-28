@@ -350,6 +350,7 @@ components:
   schemas:
     Profile:
       required:
+        - birthday
         - hometown
         - gender
       type: object
@@ -387,6 +388,7 @@ components:
     Message:
       required:
         - text
+        - emoji
       type: object
       properties:
         text:

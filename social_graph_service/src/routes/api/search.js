@@ -3,7 +3,7 @@ const router = express.Router();
 const auth = require('../../middleware/auth');
 const query = require('../../neo4j/queries.js');
 
-//@TODO: eliminate route after elastic implementation
+// Message search over neo4j database
 router.get('/messages', auth, async (req, res) => {
   const user = req.user;
   try {

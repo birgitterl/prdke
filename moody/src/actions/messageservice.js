@@ -30,7 +30,7 @@ export const getMyMessages = () => async (dispatch) => {
 // Get the last 100 messages of profiles I follow
 export const getOtherMessages = () => async (dispatch) => {
   try {
-    const res = await socialGraphService.get('/messages/other');
+    const res = await socialGraphService.get('/messages/iFollow');
     var resultSet = sortMessages(res.data);
     dispatch({
       type: GET_OTHER_MESSAGES,
