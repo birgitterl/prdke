@@ -372,12 +372,9 @@ components:
           type: string
           example: none
         privacy:
-          type: string
-          example: public
-          default: public
-          enum:
-            - private
-            - public
+          type: boolean
+          example: false
+          default: false
         notifications:
           type: boolean
           example: false

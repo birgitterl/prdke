@@ -24,7 +24,7 @@ router.get('/profiles', async (req, res) => {
     if (response.hits.hits.length > 0) {
       return res.status(200).json(response.hits.hits.map((hit) => hit._source));
     } else {
-      return res.status(400).json({ errors: [{ msg: 'No profiles found.' }] });
+      return res.status(404).json({ errors: [{ msg: 'No profiles found.' }] });
     }
   } catch (err) {
     res.status(500).json({ errors: [{ msg: 'Internal server error' }] });
