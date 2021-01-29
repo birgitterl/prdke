@@ -4,17 +4,17 @@ info:
   description: This is the REST API documentation for the moody auth_service
   version: 1.0.0
 servers:
-- url: /api
+  - url: /api
 tags:
-- name: users
-  description: Everything about your Users
-- name: auth
-  description: Authentication operations
+  - name: users
+    description: Everything about your Users
+  - name: auth
+    description: Authentication operations
 paths:
   /users:
     get:
       tags:
-      - users
+        - users
       summary: Get all users
       description: fetch all existing moody users
       responses:
@@ -38,10 +38,9 @@ paths:
           content: {}
     post:
       tags:
-      - users
+        - users
       summary: Register a new user
-      description: a new user is created, persisted in the database and an access
-        token is returned.
+      description: a new user is created, persisted in the database and an access token is returned.
       requestBody:
         description: User object that will be created
         content:
@@ -72,7 +71,7 @@ paths:
       x-codegen-request-body-name: body
     delete:
       tags:
-      - users
+        - users
       summary: Delete all registered users
       description: all existing users are deleted (for testing purpose only)
       responses:
@@ -85,10 +84,9 @@ paths:
   /auth:
     get:
       tags:
-      - auth
+        - auth
       summary: Get user by token
-      description: a token must be provided in the authentication header and the related
-        user object is returned
+      description: a token must be provided in the authentication header and the related user object is returned
       responses:
         200:
           description: OK
@@ -113,13 +111,12 @@ paths:
           description: Internal server error
           content: {}
       security:
-      - authentication: []
+        - authentication: []
     post:
       tags:
-      - auth
+        - auth
       summary: Login/authenticate user
-      description: username and passwords are matched against the existing users and
-        upon successful login, a token is returned
+      description: username and passwords are matched against the existing users and upon successful login, a token is returned
       requestBody:
         description: User object that needs to be authenticated
         content:
@@ -141,9 +138,6 @@ paths:
         400:
           description: Bad Request
           content: {}
-        403:
-          description: Forbidden - User exists already
-          content: {}
         404:
           description: Not found - Invalid credentials
           content: {}
@@ -155,8 +149,8 @@ components:
   schemas:
     User:
       required:
-      - password
-      - username
+        - password
+        - username
       type: object
       properties:
         username:
@@ -164,7 +158,7 @@ components:
           example: Hugo
         password:
           type: string
-          example: "123456"
+          example: '123456'
   securitySchemes:
     authentication:
       type: apiKey
