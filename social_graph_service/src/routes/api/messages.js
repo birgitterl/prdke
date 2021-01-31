@@ -23,7 +23,7 @@ router.post('/', auth, async (req, res) => {
   }
 });
 
-// Get all messages
+// Get all messages (DEV only)
 // Private route
 router.get('/', auth, async (req, res) => {
   try {
