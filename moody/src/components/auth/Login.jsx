@@ -40,6 +40,7 @@ const Login = ({ login, isAuthenticated }) => {
             placeholder="Enter your Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
             minLength="6"
           />
         </Form.Group>

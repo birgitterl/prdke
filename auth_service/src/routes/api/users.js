@@ -1,99 +1,108 @@
+const mongoose = require('mongoose');
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { check, validationResult } = require('express-validator');
 
 const User = require('../../models/User');
 
 // Register a new user
-router.post(
-  '/',
-  [
-    check(
-      'password',
-      'Please enter a password with 6 or more characters'
-    ).isLength({ min: 6 })
-  ],
-  async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(403).json({ errors: errors.array() });
-    }
+router.post('/', async (req, res) => {
+  const { username, password } = req.body;
+  let user = null;
 
-    const { username, password } = req.body;
-
-    try {
-      // See if user exists
-      let user = await User.findOne({ username });
-
-      if (user) {
-        return res
-          .status(400)
-          .json({ errors: [{ msg: 'User already exists' }] });
-      }
-
-      user = new User({
-        username,
-        password
-      });
-
-      // Encrypt password with bcrypt
-      const salt = await bcrypt.genSalt(10);
-
-      user.password = await bcrypt.hash(password, salt);
-
-      // save user to DB
-      await user.save();
-
-      // Return jsonwebtoken (change expires to 3600)
-      const payload = {
-        user: {
-          id: user.id,
-          username: user.username
-        }
-      };
-
-      jwt.sign(
-        payload,
-        'mysecrettoken',
-        { expiresIn: 360000 },
-        (err, token) => {
-          if (err) throw err;
-          return res.status(201).json({ token });
-        }
-      );
-    } catch (err) {
-      res.status(500).json({ errors: [{ msg: 'Internal server error' }] });
-    }
+  let state = mongoose.connection.readyState;
+  if (state !== 1) {
+    return res.status(503).json({
+      errors: [{ status: 503, msg: 'Service unavailable' }]
+    });
   }
-);
 
-// Delete all registered users (DEV)
-router.delete('/', async (req, res) => {
   try {
-    await User.remove();
-    res.status(200).json({
-      msg: 'All users removed'
+    // See if user exists
+    user = await User.findOne({ username });
+
+    if (user) {
+      return res.status(400).json({
+        errors: [
+          {
+            status: 400,
+            msg: 'User already exists - Please choose another username'
+          }
+        ]
+      });
+    }
+
+    user = new User({
+      username,
+      password
+    });
+
+    // Encrypt password with bcrypt
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(password, salt);
+
+    // Save user to MongoDB
+    await user.save();
+
+    // Return jsonwebtoken (change expires to 3600)
+    const payload = {
+      user: {
+        id: user.id,
+        username: user.username
+      }
+    };
+
+    jwt.sign(payload, 'mysecrettoken', { expiresIn: 3600 }, (err, token) => {
+      if (err) throw err;
+      return res.status(201).json({ status: 200, token });
     });
   } catch (err) {
-    console.error(err.message);
-    res.status(500).json({ errors: [{ msg: 'Internal server error' }] });
+    return res
+      .status(500)
+      .json({ errors: [{ status: 500, msg: 'Internal server error' }] });
   }
 });
 
-// Get all users
-router.get('/', async (req, res) => {
+// Delete all registered users (for testing only)
+router.delete('/', async (req, res) => {
+  let state = mongoose.connection.readyState;
+  if (state !== 1) {
+    return res.status(503).json({
+      errors: [{ status: 503, msg: 'Service unavailable' }]
+    });
+  }
   try {
-    const users = await User.find().select('username');
+    await User.remove();
+    return res.status(200).json({ status: 200, msg: 'OK - All users removed' });
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ errors: [{ status: 500, msg: 'Internal server error' }] });
+  }
+});
+
+// Get all users (for testing only)
+router.get('/', async (req, res) => {
+  let state = mongoose.connection.readyState;
+  if (state !== 1) {
+    return res.status(503).json({
+      errors: [{ status: 503, msg: 'Service unavailable' }]
+    });
+  }
+  try {
+    const users = await User.find().select('-password -_id -__v');
     if (!users.length) {
-      res.status(404).send('No users found');
+      return res
+        .status(404)
+        .json({ errors: [{ status: 404, msg: 'No users found' }] });
     } else {
-      res.json(users);
+      res.status(200).json({ status: 200, users });
     }
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
+    res
+      .status(500)
+      .json({ errors: [{ status: 500, msg: 'Internal server error' }] });
   }
 });
 

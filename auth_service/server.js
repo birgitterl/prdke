@@ -1,10 +1,12 @@
-const connectDB = require('./src/config/db');
 const app = require('./src/app');
+const connectDB = require('./src/config/db');
 
-//Connect to DB
+const port = process.env.PORT || 8080;
+
+// Connect to MongoDB with restart on failure options
 connectDB();
 
-// Connect to port
-app.listen(8080, () => {
-  console.log('Server started on port 8080...');
+// Start the server
+app.listen(port, () => {
+  console.log('Server startet on port ' + port);
 });

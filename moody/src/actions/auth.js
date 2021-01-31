@@ -14,6 +14,7 @@ import {
 export const loadUser = () => async (dispatch) => {
   try {
     const res = await authService.get('/auth');
+    delete res.data['status'];
 
     dispatch({
       type: USER_LOADED,
@@ -30,7 +31,7 @@ export const loadUser = () => async (dispatch) => {
 export const register = (formData) => async (dispatch) => {
   try {
     const res = await authService.post('/users', formData);
-
+    delete res.data['status'];
     dispatch({
       type: REGISTER_SUCCESS,
       payload: res.data
@@ -41,7 +42,18 @@ export const register = (formData) => async (dispatch) => {
     const errors = err.response.data.errors;
 
     if (errors) {
-      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+      errors.forEach((error) => {
+        if (error.status === 500 || error.status === 503) {
+          dispatch(
+            setAlert(
+              'Ups... Something went wrong. Please try again later',
+              'danger'
+            )
+          );
+        } else {
+          dispatch(setAlert(error.msg, 'danger'));
+        }
+      });
     }
 
     dispatch({
@@ -56,6 +68,7 @@ export const login = (username, password) => async (dispatch) => {
 
   try {
     const res = await authService.post('/auth', body);
+    delete res.data['status'];
 
     dispatch({
       type: LOGIN_SUCCESS,
@@ -67,9 +80,19 @@ export const login = (username, password) => async (dispatch) => {
     const errors = err.response.data.errors;
 
     if (errors) {
-      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+      errors.forEach((error) => {
+        if (error.status === 500 || error.status === 503) {
+          dispatch(
+            setAlert(
+              'Ups... Something went wrong. Please try again later',
+              'danger'
+            )
+          );
+        } else {
+          dispatch(setAlert(error.msg, 'danger'));
+        }
+      });
     }
-
     dispatch({
       type: LOGIN_FAIL
     });

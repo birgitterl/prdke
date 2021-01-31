@@ -46,6 +46,7 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
             placeholder="Enter your Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
             minLength="6"
           />
         </Form.Group>
@@ -56,6 +57,7 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
             placeholder="Confirm your Password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
+            required
             minLength="6"
           />
         </Form.Group>

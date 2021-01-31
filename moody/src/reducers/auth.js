@@ -39,7 +39,7 @@ const auth = function (state = initialState, action) {
         ...state,
         isAuthenticated: true,
         loading: false,
-        user: payload
+        user: payload.user
       };
     default:
       return state;

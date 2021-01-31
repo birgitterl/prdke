@@ -23,19 +23,58 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    username:
-                      type: string
-                      example: Julia
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  users:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        username:
+                          type: string
+                          example: Hugo
         404:
           description: No users found
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 404
+                  msg:
+                    type: string
+                    example: No users found
         500:
           description: Internal server error
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 500
+                  msg:
+                    type: string
+                    example: Internal Server Error
+        503:
+          description: Service unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 503
+                  msg:
+                    type: string
+                    example: Service unavailable
     post:
       tags:
         - users
@@ -61,13 +100,43 @@ paths:
                     example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNWZhODFhMmQxNTY2NjEwMDNiMDg5OWYyIn0sImlhdCI6MTYwNDg1NTgwOSwiZXhwIjoxNjA1MjE1ODA5fQ.XUZZrYGuUxBk4WQis8VII4GGadFESHwg8Il994WPk04
         400:
           description: Bad Request
-          content: {}
-        403:
-          description: Forbidden - User exists already
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 400
+                  msg:
+                    type: string
+                    example: User already exists - Please choose another username
         500:
           description: Internal server error
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 500
+                  msg:
+                    type: string
+                    example: Internal Server Error
+        503:
+          description: Service unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 503
+                  msg:
+                    type: string
+                    example: Service unavailable
       x-codegen-request-body-name: body
     delete:
       tags:
@@ -76,11 +145,44 @@ paths:
       description: all existing users are deleted (for testing purpose only)
       responses:
         200:
-          description: All users removed
-          content: {}
+          description: OK - All users removed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  msg:
+                    type: string
+                    example: OK - All users removed
         500:
           description: Internal server error
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 500
+                  msg:
+                    type: string
+                    example: Internal Server Error
+        503:
+          description: Service unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 503
+                  msg:
+                    type: string
+                    example: Service unavailable
   /auth:
     get:
       tags:
@@ -95,21 +197,64 @@ paths:
               schema:
                 type: object
                 properties:
-                  _id:
-                    type: string
-                    example: 5fa81a2d156661003b0899f2
+                  status:
+                    type: number
+                    example: 200
                   username:
                     type: string
                     example: Julia
-        400:
-          description: Invalid ID supplied
-          content: {}
+        401:
+          description: Unautorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 401
+                  msg:
+                    type: string
+                    example: Unauthorized - Token is not valid
         404:
-          description: User not found by id
-          content: {}
+          description: No user found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 404
+                  msg:
+                    type: string
+                    example: Invalid Credentials
         500:
           description: Internal server error
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 500
+                  msg:
+                    type: string
+                    example: Internal Server Error
+        503:
+          description: Service unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 503
+                  msg:
+                    type: string
+                    example: Service unavailable
       security:
         - authentication: []
     post:
@@ -132,18 +277,51 @@ paths:
               schema:
                 type: object
                 properties:
+                  status:
+                    type: number
+                    example: 200
                   token:
                     type: string
                     example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNWZhODFhMmQxNTY2NjEwMDNiMDg5OWYyIn0sImlhdCI6MTYwNDg1NTgwOSwiZXhwIjoxNjA1MjE1ODA5fQ.XUZZrYGuUxBk4WQis8VII4GGadFESHwg8Il994WPk04
-        400:
-          description: Bad Request
-          content: {}
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 401
+                  msg:
+                    type: string
+                    example: Unauthorized - Token is not valid
         404:
-          description: Not found - Invalid credentials
-          content: {}
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 404
+                  msg:
+                    type: string
+                    example: No user found
         500:
           description: Internal server error
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 500
+                  msg:
+                    type: string
+                    example: Internal Server Error
       x-codegen-request-body-name: body
 components:
   schemas:
