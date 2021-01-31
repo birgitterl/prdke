@@ -5,7 +5,6 @@ import { setAlert } from './alert';
 import {
   GET_MY_MESSAGES,
   GET_OTHER_MESSAGES,
-  GET_MESSAGES_FOLLOWED_PROFILE,
   MESSAGE_ERROR,
   POST_MESSAGE
 } from './types';

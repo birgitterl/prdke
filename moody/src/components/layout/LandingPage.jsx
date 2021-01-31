@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Container, Row, Button } from 'react-bootstrap';
 import Spinner from './Spinner';
 
 const Landing = ({ auth: { isAuthenticated, loading } }) => {

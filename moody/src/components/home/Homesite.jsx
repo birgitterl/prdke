@@ -2,7 +2,7 @@ import React, { Fragment, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getCurrentProfile } from '../../actions/profile';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Container, Row } from 'react-bootstrap';
 import Hometimeline from './Hometimeline';
 import { Link, Redirect } from 'react-router-dom';
 import Spinner from '../layout/Spinner';

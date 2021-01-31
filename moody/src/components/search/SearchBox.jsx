@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Form, Button } from 'react-bootstrap';
 import { setText, searchMessages, searchProfiles } from '../../actions/search';
 import { connect } from 'react-redux';
@@ -12,8 +12,6 @@ const SearchBox = ({
   setText,
   search: { text, profilesLoading, messagesLoading }
 }) => {
-  const [redirect, setRedirect] = useState(false);
-
   const onChange = (e) => {
     setText(e.target.value);
   };
@@ -22,7 +20,6 @@ const SearchBox = ({
     e.preventDefault();
     searchMessages(text);
     searchProfiles(text);
-    setRedirect(true);
     document.getElementById('searchForm').reset();
   };
 

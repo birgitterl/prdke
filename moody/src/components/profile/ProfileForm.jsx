@@ -27,7 +27,6 @@ const ProfileForm = ({
   const [birthday, setBirthday] = useState(initialState.birthday);
   const [gender, setGender] = useState(initialState.gender);
   const [privacy, setPrivacy] = useState(initialState.privacy);
-  const [background, setBackground] = useState(initialState.background);
   const [notifications, setNotifications] = useState(
     initialState.notifications
   );
@@ -44,7 +43,6 @@ const ProfileForm = ({
       setGender(profileData.gender);
       setPrivacy(profileData.privacy);
       setNotifications(profileData.notifications);
-      setBackground(profileData.backgorund);
     }
   }, [loading, getCurrentProfile, profile]);
 

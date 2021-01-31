@@ -4,11 +4,11 @@ import { postMessage } from '../../actions/messageservice';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Form, Button } from 'react-bootstrap';
-import { setAlert } from '../../actions/alert';
 
 export function Message({ postMessage }) {
   const [text, setText] = useState('');
   const [emoji, setEmoji] = useState(null);
+  let data = null;
 
   const onEmojiClick = (event, emojiObject) => {
     setEmoji(emojiObject);
@@ -18,13 +18,13 @@ export function Message({ postMessage }) {
     e.preventDefault();
     if (!emoji) {
       console.log('no emoji');
-      var data = {
+      data = {
         text: text,
         emoji: null
       };
       postMessage(data);
     } else {
-      var data = {
+      data = {
         text: text,
         emoji: emoji.emoji
       };
