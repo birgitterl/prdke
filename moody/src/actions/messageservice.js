@@ -43,28 +43,6 @@ export const getOtherMessages = () => async (dispatch) => {
   }
 };
 
-// Get the last 30 messages of a specific profile I follow
-export const getMessages = (username) => async (dispatch) => {
-  const query = `username=${username}`;
-  try {
-    const res = await socialGraphService.get(
-      '/messages/followedProfile?$username'
-    );
-    console.log('Res.data');
-    console.log(res.data);
-    var resultSet = sortMessages(res.data);
-    dispatch({
-      type: GET_OTHER_MESSAGES,
-      payload: resultSet
-    });
-  } catch (err) {
-    dispatch({
-      type: MESSAGE_ERROR,
-      payload: { msg: err.message, status: err.status }
-    });
-  }
-};
-
 function sortMessages(messageArray) {
   // copy res.data to resultArray for sorting
   var resultArray = messageArray;

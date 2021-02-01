@@ -13,7 +13,7 @@ const Profile = ({ auth: { isAuthenticated } }) => {
   }
   return (
     <Fragment>
-      <h3>This is My Personal Profile component</h3>
+      <h3>This is My Personal Profile</h3>
       <Container fluid>
         <Row>
           <Col>
