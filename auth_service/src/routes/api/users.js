@@ -14,7 +14,8 @@ router.post('/', async (req, res) => {
   let state = mongoose.connection.readyState;
   if (state !== 1) {
     return res.status(503).json({
-      errors: [{ status: 503, msg: 'Service unavailable' }]
+      status: 503,
+      msg: 'Service unavailable'
     });
   }
 
@@ -24,12 +25,8 @@ router.post('/', async (req, res) => {
 
     if (user) {
       return res.status(400).json({
-        errors: [
-          {
-            status: 400,
-            msg: 'User already exists - Please choose another username'
-          }
-        ]
+        status: 400,
+        msg: 'User already exists - Please choose another username'
       });
     }
 
@@ -55,12 +52,16 @@ router.post('/', async (req, res) => {
 
     jwt.sign(payload, 'mysecrettoken', { expiresIn: 3600 }, (err, token) => {
       if (err) throw err;
-      return res.status(201).json({ status: 200, token });
+      return res.status(201).json({
+        status: 200,
+        token
+      });
     });
   } catch (err) {
-    return res
-      .status(500)
-      .json({ errors: [{ status: 500, msg: 'Internal server error' }] });
+    return res.status(500).json({
+      status: 500,
+      msg: 'Internal server error'
+    });
   }
 });
 
@@ -69,16 +70,21 @@ router.delete('/', async (req, res) => {
   let state = mongoose.connection.readyState;
   if (state !== 1) {
     return res.status(503).json({
-      errors: [{ status: 503, msg: 'Service unavailable' }]
+      status: 503,
+      msg: 'Service unavailable'
     });
   }
   try {
     await User.remove();
-    return res.status(200).json({ status: 200, msg: 'OK - All users removed' });
+    return res.status(200).json({
+      status: 200,
+      msg: 'OK - All users removed'
+    });
   } catch (err) {
-    return res
-      .status(500)
-      .json({ errors: [{ status: 500, msg: 'Internal server error' }] });
+    return res.status(500).json({
+      status: 500,
+      msg: 'Internal server error'
+    });
   }
 });
 
@@ -87,22 +93,28 @@ router.get('/', async (req, res) => {
   let state = mongoose.connection.readyState;
   if (state !== 1) {
     return res.status(503).json({
-      errors: [{ status: 503, msg: 'Service unavailable' }]
+      status: 503,
+      msg: 'Service unavailable'
     });
   }
   try {
     const users = await User.find().select('-password -_id -__v');
     if (!users.length) {
-      return res
-        .status(404)
-        .json({ errors: [{ status: 404, msg: 'No users found' }] });
+      return res.status(404).json({
+        status: 404,
+        msg: 'No users found'
+      });
     } else {
-      res.status(200).json({ status: 200, users });
+      res.status(200).json({
+        status: 200,
+        users
+      });
     }
   } catch (err) {
-    res
-      .status(500)
-      .json({ errors: [{ status: 500, msg: 'Internal server error' }] });
+    res.status(500).json({
+      status: 500,
+      msg: 'Internal server error'
+    });
   }
 });
 

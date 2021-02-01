@@ -7,9 +7,10 @@ module.exports = function (req, res, next) {
 
   // Check if no token
   if (!token) {
-    return res
-      .status(401)
-      .json({ status: 401, msg: 'No token, authorization denied' });
+    return res.status(401).json({
+      status: 401,
+      msg: 'No token, authorization denied'
+    });
   }
 
   // Verify token
@@ -19,7 +20,8 @@ module.exports = function (req, res, next) {
     next();
   } catch (err) {
     return res.status(401).json({
-      errors: [{ status: 401, msg: 'Unauthorized - Token is not valid' }]
+      status: 401,
+      msg: 'Unauthorized - Token is not valid'
     });
   }
 };

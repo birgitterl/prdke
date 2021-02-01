@@ -21,8 +21,10 @@ export const loadUser = () => async (dispatch) => {
       payload: res.data
     });
   } catch (err) {
+    const error = err.response.data;
     dispatch({
-      type: AUTH_ERROR
+      type: AUTH_ERROR,
+      payload: { status: error.status, msg: error.msg }
     });
   }
 };
@@ -39,25 +41,21 @@ export const register = (formData) => async (dispatch) => {
     dispatch(setAlert('Registration successful', 'success'));
     dispatch(loadUser());
   } catch (err) {
-    const errors = err.response.data.errors;
+    const error = err.response.data;
 
-    if (errors) {
-      errors.forEach((error) => {
-        if (error.status === 500 || error.status === 503) {
-          dispatch(
-            setAlert(
-              'Ups... Something went wrong. Please try again later',
-              'danger'
-            )
-          );
-        } else {
-          dispatch(setAlert(error.msg, 'danger'));
-        }
-      });
+    if (error.status === 500 || error.status === 503) {
+      dispatch(
+        setAlert(
+          'Ups... Something went wrong. Please try again later',
+          'danger'
+        )
+      );
+    } else {
+      dispatch(setAlert(error.msg, 'danger'));
     }
-
     dispatch({
-      type: REGISTER_FAIL
+      type: REGISTER_FAIL,
+      payload: { status: error.status, msg: error.msg }
     });
   }
 };
@@ -77,24 +75,21 @@ export const login = (username, password) => async (dispatch) => {
     dispatch(setAlert('Login successful', 'success'));
     dispatch(loadUser());
   } catch (err) {
-    const errors = err.response.data.errors;
+    const error = err.response.data;
 
-    if (errors) {
-      errors.forEach((error) => {
-        if (error.status === 500 || error.status === 503) {
-          dispatch(
-            setAlert(
-              'Ups... Something went wrong. Please try again later',
-              'danger'
-            )
-          );
-        } else {
-          dispatch(setAlert(error.msg, 'danger'));
-        }
-      });
+    if (error.status === 500 || error.status === 503) {
+      dispatch(
+        setAlert(
+          'Ups... Something went wrong. Please try again later',
+          'danger'
+        )
+      );
+    } else {
+      dispatch(setAlert(error.msg, 'danger'));
     }
     dispatch({
-      type: LOGIN_FAIL
+      type: LOGIN_FAIL,
+      payload: { status: error.status, msg: error.msg }
     });
   }
 };

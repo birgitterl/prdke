@@ -14,7 +14,8 @@ router.post('/', async (req, res) => {
   let state = mongoose.connection.readyState;
   if (state !== 1) {
     return res.status(503).json({
-      errors: [{ status: 503, msg: 'Service unavailable' }]
+      status: 503,
+      msg: 'Service unavailable'
     });
   }
 
@@ -23,16 +24,18 @@ router.post('/', async (req, res) => {
 
     if (!user) {
       return res.status(404).json({
-        errors: [{ status: 404, msg: 'Invalid Username. Please try again.' }]
+        status: 404,
+        msg: 'Invalid Username. Please try again.'
       });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      return res
-        .status(404)
-        .json({ errors: [{ msg: 'Invalid Password. Please try again' }] });
+      return res.status(404).json({
+        status: 404,
+        msg: 'Invalid Password. Please try again'
+      });
     }
 
     const payload = {
@@ -47,32 +50,39 @@ router.post('/', async (req, res) => {
       return res.status(200).json({ status: 200, token });
     });
   } catch (err) {
-    return res
-      .status(500)
-      .json({ errors: [{ status: 500, msg: 'Internal server error' }] });
+    return res.status(500).json({
+      status: 500,
+      msg: 'Internal server error'
+    });
   }
 });
 
-// get current profile
+// get current user
 router.get('/', auth, async (req, res) => {
   let state = mongoose.connection.readyState;
   if (state !== 1) {
     return res.status(503).json({
-      errors: [{ status: 503, msg: 'Service unavailable' }]
+      status: 503,
+      msg: 'Service unavailable'
     });
   }
   try {
     const user = await User.findById(req.user.id).select('-password -_id -__v');
     if (user === null) {
-      return res
-        .status(404)
-        .json({ errors: [{ status: 404, msg: 'No user found' }] });
+      return res.status(404).json({
+        status: 404,
+        msg: 'No user found'
+      });
     }
-    return res.status(200).json({ status: 200, user });
+    return res.status(200).json({
+      status: 200,
+      user
+    });
   } catch (err) {
-    return res
-      .status(500)
-      .json({ errors: [{ status: 500, msg: 'Internal server error' }] });
+    return res.status(500).json({
+      status: 500,
+      msg: 'Internal server error'
+    });
   }
 });
 

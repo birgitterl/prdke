@@ -2,15 +2,18 @@ import {
   REGISTER_SUCCESS,
   USER_LOADED,
   AUTH_ERROR,
+  LOGIN_FAIL,
   LOGIN_SUCCESS,
-  LOGOUT
+  LOGOUT,
+  REGISTER_FAIL
 } from '../actions/types';
 
 const initialState = {
   token: localStorage.getItem('token'),
   isAuthenticated: null,
   loading: true,
-  user: null
+  user: null,
+  error: {}
 };
 
 const auth = function (state = initialState, action) {
@@ -26,6 +29,16 @@ const auth = function (state = initialState, action) {
         loading: false
       };
     case AUTH_ERROR:
+    case LOGIN_FAIL:
+    case REGISTER_FAIL:
+      return {
+        ...state,
+        token: null,
+        isAuthenticated: false,
+        loading: false,
+        user: null,
+        error: payload
+      };
     case LOGOUT:
       return {
         ...state,
