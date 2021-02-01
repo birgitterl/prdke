@@ -6,8 +6,9 @@ const query = require('../../neo4j/queries.js');
 // Message search over neo4j database
 router.get('/messages', auth, async (req, res) => {
   const user = req.user;
+  const text = req.query.text;
   try {
-    const messages = await query.searchMessages(user, req.query.text);
+    const messages = await query.searchMessages(user, text);
 
     if (!messages.length) {
       return res.status(404).send('No messages found');

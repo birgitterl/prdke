@@ -39,15 +39,13 @@ const search = function (state = initialState, action) {
       return {
         ...state,
         profilesLoading: false,
-        profiles: payload,
-        text: ''
+        profiles: payload
       };
     case SEARCH_MESSAGES:
       return {
         ...state,
         messagesLoading: false,
-        messages: payload,
-        text: ''
+        messages: payload
       };
     case GET_PROFILEOFINTEREST:
       return {

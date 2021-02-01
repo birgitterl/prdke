@@ -14,9 +14,9 @@ import { setAlert } from '../../actions/alert';
 
 const Hometimeline = ({
   auth: { user, isAuthenticated },
+  profile,
   posts: { messages, loading },
-  getOtherMessages,
-  setAlert
+  getOtherMessages
 }) => {
   useEffect(() => {
     getOtherMessages();
@@ -25,8 +25,7 @@ const Hometimeline = ({
     getOtherMessages();
   };
 
-  if (isAuthenticated && user === null) {
-    setAlert('User Profile is loading', 'danger');
+  if (isAuthenticated && profile.loading === true) {
     return <Spinner />;
   }
   return (
@@ -63,12 +62,14 @@ Hometimeline.propTypes = {
   getOtherMessages: PropTypes.func.isRequired,
   posts: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
-  setAlert: PropTypes.func.isRequired
+  setAlert: PropTypes.func.isRequired,
+  profile: PropTypes.object.isRequired
 };
 
 const mapStateToProps = (state) => ({
   posts: state.posts,
-  auth: state.auth
+  auth: state.auth,
+  profile: state.profile
 });
 
 export default connect(mapStateToProps, {

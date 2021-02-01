@@ -41,33 +41,6 @@ export const getProfileByUsername = (username) => async (dispatch) => {
   }
 };
 
-// @TODO: search should fetch data from elastic
-/*export const searchItems = (queryData) => async (dispatch) => {
-  try {
-    console.log(queryData);
-    const queryProfiles = `username=${queryData}`;
-    const resProfiles = await searchService.get(
-      `/search/profiles?${queryProfiles}`
-    );
-
-    dispatch({
-      type: SEARCH_PROFILES,
-      payload: resProfiles.data
-    });
-
-    const queryMessages = `text=${queryData}`;
-    const resMessages = await socialGraphService.get(
-      `/search/messages?${queryMessages}`
-    );
-    dispatch({
-      type: SEARCH_MESSAGES,
-      payload: resMessages.data
-    });
-  } catch (err) {
-    console.log(err);
-  }
-};*/
-
 export const searchMessages = (queryData) => async (dispatch) => {
   try {
     const queryMessages = `text=${queryData}`;

@@ -12,10 +12,6 @@ const SearchBox = ({
   setText,
   search: { text, profilesLoading, messagesLoading }
 }) => {
-  const onChange = (e) => {
-    setText(e.target.value);
-  };
-
   const onSubmit = (e) => {
     e.preventDefault();
     searchMessages(text);
@@ -31,7 +27,7 @@ const SearchBox = ({
           name="searchText"
           placeholder="Search for Friends, Messages..."
           className="mr-sm-2 ml-sm-5"
-          onChange={onChange}
+          onChange={(e) => setText(e.target.value)}
         />
         <Button type="submit" variant="outline-primary" className="p-2">
           Search

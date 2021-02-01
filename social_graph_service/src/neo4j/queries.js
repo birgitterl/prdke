@@ -12,7 +12,7 @@ exports.getProfile = async function (username) {
 
 exports.createOrUpdateProfile = async function (user, props) {
   var query =
-    'MERGE(a:Profile {username:$user.username}) ON CREATE SET a.username=$user.username, a.hometown =$props.hometown, a.gender=$props.gender, a.birthday=$props.birthday, a.privacy=$props.privacy, a.notifications=$props.notifications, a.background=$props.background ON MATCH SET a.hometown =$props.hometown, a.gender=$props.gender, a.birthday=$props.birthday, a.privacy=$props.privacy, a.notifications=$props.notifications, a.background=$props.background RETURN a AS profile';
+    'MERGE(a:Profile {username:$user.username}) ON CREATE SET a.username=$user.username, a.hometown =$props.hometown, a.gender=$props.gender, a.birthday=$props.birthday, a.privacy=$props.privacy, a.notifications=$props.notifications, a.background=$props.background ON MATCH SET a.hometown =$props.hometown, a.gender=$props.gender, a.birthday=$props.birthday, a.privacy=$props.privacy, a.notifications=$props.notifications RETURN a AS profile';
   var session = driver.session();
   var result = await session.run(query, { user, props });
   session.close();
@@ -182,7 +182,7 @@ exports.getMessagesIFollow = async function (user) {
 // @TODO: eventuell noch messages von public profiles ausgeben
 exports.searchMessages = async function (user, text) {
   var query =
-    'MATCH (m:Message) WHERE (:Profile {username: $user.username})-[:follows]->(:Profile)-[:posted]->(m:Message) AND m.text CONTAINS $text RETURN m AS message UNION MATCH (n:Message) WHERE (:Profile {privacy: true})-[:posted]->(n:Message) AND n.text CONTAINS $text RETURN n AS message';
+    'MATCH (m:Message) WHERE (:Profile {username: $user.username})-[:follows]->(:Profile)-[:posted]->(m:Message) AND toLower(m.text) CONTAINS toLower($text) RETURN m AS message UNION MATCH (n:Message) WHERE (:Profile {privacy: true})-[:posted]->(n:Message) AND toLower(n.text) CONTAINS toLower($text) RETURN n AS message';
   var session = driver.session();
   var result = await session.run(query, { user, text });
   session.close();
