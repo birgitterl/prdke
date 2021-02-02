@@ -16,7 +16,6 @@
     "cors": "*",
     "elasticsearch": "^16.7.2",
     "express": "^4.17.1",
-    "express-validator": "*",
     "jsonwebtoken": "8.5.1",
     "swagger-jsdoc": "4.2.0",
     "swagger-ui-express": "4.1.4",
