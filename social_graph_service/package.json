@@ -14,7 +14,6 @@
     "amqplib": "^0.6.0",
     "body-parser": "*",
     "cors": "*",
-    "ejs": "3.1.5",
     "express": "^4.17.1",
     "express-validator": "*",
     "jsonwebtoken": "8.5.1",

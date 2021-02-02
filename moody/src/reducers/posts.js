@@ -1,7 +1,8 @@
 import {
   GET_MY_MESSAGES,
   GET_OTHER_MESSAGES,
-  MESSAGE_ERROR
+  MESSAGE_ERROR,
+  POST_MESSAGE
 } from '../actions/types';
 
 const initialState = {
@@ -19,7 +20,8 @@ const posts = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        messages: payload
+        messages: payload,
+        error: {}
       };
     case MESSAGE_ERROR:
       return {
@@ -32,7 +34,13 @@ const posts = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        messages: payload
+        messages: payload,
+        error: {}
+      };
+    case POST_MESSAGE:
+      return {
+        ...state,
+        error: {}
       };
     default:
       return state;

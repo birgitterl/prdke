@@ -2,88 +2,156 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../../middleware/auth');
 const query = require('../../neo4j/queries.js');
-const rabbitMQ = require('../../rabbitmq/publisher');
 
 // Post a new message
-// Private route
+// Private route --> DONE
 router.post('/', auth, async (req, res) => {
   const user = req.user;
   const text = req.body.text;
   const emoji = req.body.emoji;
   try {
     const result = await query.createMessage(user, text, emoji);
-    if (!result) {
-      return res.status(400).send('Error while creating message');
+    if (!result || result.error) {
+      throw err;
     } else {
-      return res.status(201).json(result);
+      return res.status(201).json({
+        status: 201,
+        message: result
+      });
     }
   } catch (err) {
-    console.log(err);
-    return res.status(500).send('Server Error');
+    return res.status(500).json({
+      status: 500,
+      msg: 'Internal server error'
+    });
   }
 });
 
 // Get all messages (DEV only)
-// Private route
-router.get('/', auth, async (req, res) => {
+// --> DONE
+router.get('/', async (req, res) => {
   try {
     const messages = await query.getAllMessages();
-    if (!messages.length) {
-      return res.status(404).send('No message found');
+    if (!messages || messages.error) {
+      throw err;
+    } else if (!messages.length) {
+      return res.status(404).json({
+        status: 404,
+        msg: 'No messages found'
+      });
     } else {
-      return res.status(200).json(messages);
+      return res.status(200).json({
+        status: 200,
+        messages
+      });
     }
   } catch (err) {
-    return res.status(500).send('Server Error');
+    return res.status(500).json({
+      status: 500,
+      msg: 'Internal server error'
+    });
   }
 });
 
 // Delete all Messages (DEV only)
-router.delete('/', auth, async (req, res) => {
+// --> DONE
+router.delete('/', async (req, res) => {
   try {
     let result = await query.deleteAllMessages();
-    if (!result) {
-      res.status(500).json({ errors: [{ msg: 'Internal server error' }] });
+    if (!result || result.error) {
+      throw err;
     } else {
-      return res
-        .status(200)
-        .json({ errors: [{ msg: 'All messages removed' }] });
+      return res.status(200).json({
+        status: 200,
+        msg: 'All messages removed'
+      });
     }
   } catch (err) {
-    res.status(500).json({ errors: [{ msg: 'Internal server error' }] });
+    return res.status(500).json({
+      status: 500,
+      msg: 'Internal server error'
+    });
   }
 });
 
 // Get my messages
-// Private route
+// Private route --> DONE
 router.get('/my', auth, async (req, res) => {
   const user = req.user;
   try {
     const message = await query.getMyMessages(user);
-    if (!message.length) {
-      return res.status(404).send('No message found');
+    if (!message || message.error) {
+      throw err;
+    } else if (!message.length) {
+      return res.status(404).json({
+        status: 404,
+        msg: 'No messages found'
+      });
     } else {
-      return res.status(200).json(message);
+      return res.status(200).json({
+        status: 200,
+        message
+      });
     }
   } catch (err) {
-    return res.status(500).send('Server Error');
+    return res.status(500).json({
+      status: 500,
+      msg: 'Internal server error'
+    });
   }
 });
 
 // Get messages from people I follow
-// Private Route
+// Private Route --> DONE
 router.get('/iFollow', auth, async (req, res) => {
   const user = req.user;
   try {
     const message = await query.getMessagesIFollow(user);
-    if (!message.length) {
-      return res.status(404).send('No message found');
+    if (!message) {
+      throw err;
+    } else if (!message.length) {
+      return res.status(404).json({
+        status: 404,
+        msg: 'No messages found'
+      });
     } else {
-      return res.status(200).json(message);
+      return res.status(200).json({
+        status: 200,
+        message
+      });
     }
   } catch (err) {
-    return res.status(500).send('Server Error');
+    return res.status(500).json({
+      status: 500,
+      msg: 'Internal server error'
+    });
   }
 });
 
+// Get messages of a specific profile
+// Private route --> DONE
+router.get('/:username', auth, async (req, res) => {
+  let username = req.params.username;
+  try {
+    const message = await query.getMessagesOfUser(username);
+    if (!message) {
+      throw err;
+    } else if (!message.length) {
+      return res.status(404).json({
+        status: 404,
+        msg: 'No messages found'
+      });
+    } else {
+      return res.status(200).json({
+        status: 200,
+        message
+      });
+    }
+  } catch (err) {
+    return res.status(500).json({
+      status: 500,
+      msg: 'Internal server error'
+    });
+  }
+});
 module.exports = router;

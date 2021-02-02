@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
@@ -13,7 +13,7 @@ import Spinner from '../layout/Spinner';
 import { setAlert } from '../../actions/alert';
 
 const Hometimeline = ({
-  auth: { user, isAuthenticated },
+  auth: { user },
   profile,
   posts: { messages, loading },
   getOtherMessages
@@ -25,36 +25,39 @@ const Hometimeline = ({
     getOtherMessages();
   };
 
-  if (isAuthenticated && profile.loading === true) {
-    return <Spinner />;
-  }
   return (
-    <Container>
-      <h3>Messages of profiles {user.username} follows</h3>
-      <Card>
-        <Card.Header>
-          This are the last 100 posts of profiles I follow
-        </Card.Header>
-        <Container fluid></Container>
-        {loading ? (
-          <Spinner />
-        ) : (
-          <ListGroup>
-            {messages.length
-              ? messages.map((post, index) => (
-                  <ListGroupItem key={index}>
-                    <h4>{post.author}</h4>
-                    <p>{`${
-                      post.text + ' ' + post.emoji
-                    } posted on ${post.timestamp.toLocaleDateString()} at ${post.timestamp.toLocaleTimeString()}`}</p>
-                  </ListGroupItem>
-                ))
-              : 'No messages to display'}
-          </ListGroup>
-        )}
-      </Card>
-      <Button onClick={onClick}>Refresh Timeline</Button>
-    </Container>
+    <Fragment>
+      {!user || profile.loading ? (
+        <Spinner />
+      ) : (
+        <Container>
+          <h3>Messages of profiles {user.username} follows</h3>
+          <Card>
+            <Card.Header>
+              This are the last 100 posts of profiles I follow
+            </Card.Header>
+            <Container fluid></Container>
+            {loading ? (
+              <Spinner />
+            ) : (
+              <ListGroup>
+                {messages.length
+                  ? messages.map((post, index) => (
+                      <ListGroupItem key={index}>
+                        <h4>{post.author}</h4>
+                        <p>{`${
+                          post.text + ' ' + post.emoji
+                        } posted on ${post.timestamp.toLocaleDateString()} at ${post.timestamp.toLocaleTimeString()}`}</p>
+                      </ListGroupItem>
+                    ))
+                  : 'No messages to display'}
+              </ListGroup>
+            )}
+          </Card>
+          <Button onClick={onClick}>Refresh Timeline</Button>
+        </Container>
+      )}
+    </Fragment>
   );
 };
 

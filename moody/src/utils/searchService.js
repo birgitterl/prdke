@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const searchSearvice = axios.create({
+const searchService = axios.create({
   baseURL: 'http://localhost:7050/api',
   headers: {
     'Content-Type': 'application/json'
@@ -14,4 +14,4 @@ const searchSearvice = axios.create({
  logout the user if the token has expired
 **/
 
-export default searchSearvice;
+export default searchService;

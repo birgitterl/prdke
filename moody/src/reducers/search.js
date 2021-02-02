@@ -33,39 +33,43 @@ const search = function (state = initialState, action) {
         messagesLoading: true,
         profileOfInterestLoading: true,
         profiles: [],
-        messages: []
+        messages: [],
+        error: {}
       };
     case SEARCH_PROFILES:
       return {
         ...state,
         profilesLoading: false,
-        profiles: payload
+        profiles: payload,
+        error: {}
       };
     case SEARCH_MESSAGES:
       return {
         ...state,
         messagesLoading: false,
-        messages: payload
+        messages: payload,
+        error: {}
       };
     case GET_PROFILEOFINTEREST:
       return {
         ...state,
         profileOfInterest: payload,
-        profileOfInterestLoading: false
+        profileOfInterestLoading: false,
+        error: {}
       };
     case CLEAR_PROFILEOFINTEREST:
       return {
         ...state,
         profileOfInterestLoading: true,
-        profileOfInterest: null
+        profileOfInterest: null,
+        error: {}
       };
     case CLEAR_SEARCH:
       return {
         ...state,
         text: '',
-        profilesLoading: true,
-        profiles: [],
-        messages: []
+
+        error: {}
       };
     case SEARCH_ERROR:
       return {

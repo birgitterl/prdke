@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
@@ -9,7 +9,7 @@ import {
   deleteFollowRelationship
 } from '../../actions/profile';
 
-const UserProfile = ({
+const OtherProfileInfo = ({
   auth: { isAuthenticated, user },
   search: { profileOfInterest },
   createFollowRelationship,
@@ -17,15 +17,16 @@ const UserProfile = ({
   profile: { follows, profile },
   setAlert
 }) => {
-  const { username, privacy, hometown, birthday, gender } = profileOfInterest;
   useEffect(() => {}, [
     follows,
     createFollowRelationship,
     deleteFollowRelationship
   ]);
-  if (!isAuthenticated) {
+  if (!isAuthenticated || profileOfInterest === null) {
     return <Redirect to="/" />;
   }
+
+  const { username, privacy, hometown, birthday, gender } = profileOfInterest;
 
   if (user.username === profileOfInterest.username) {
     return <Redirect to="/profile/me" />;
@@ -43,39 +44,40 @@ const UserProfile = ({
   };
 
   return (
-    <Container>
-      <h1>{username}</h1>
-      <Row>
-        <Col className="col-md4-bottom-margin" md={{ span: 6 }}>
-          {privacy || follows ? (
-            <ListGroup>
-              <ListGroup.Item>Hometown: {hometown}</ListGroup.Item>
-              <ListGroup.Item>Birthday: {birthday}</ListGroup.Item>
-              <ListGroup.Item>Gender: {gender}</ListGroup.Item>
-            </ListGroup>
+    <Fragment>
+      <Container fluid>
+        <Row>
+          <Col className="col-md4-bottom-margin" md={{ span: 6 }}>
+            {privacy || follows ? (
+              <ListGroup>
+                <ListGroup.Item>Hometown: {hometown}</ListGroup.Item>
+                <ListGroup.Item>Birthday: {birthday}</ListGroup.Item>
+                <ListGroup.Item>Gender: {gender}</ListGroup.Item>
+              </ListGroup>
+            ) : (
+              <p>This account is not visible for the public.</p>
+            )}
+          </Col>
+          {follows ? (
+            <Col>
+              <Button variant="primary" onClick={onClickUnfollow}>
+                Unfollow
+              </Button>
+            </Col>
           ) : (
-            <p>This account is not visible for the public.</p>
+            <Col>
+              <Button variant="primary" onClick={onClickFollow}>
+                Follow
+              </Button>
+            </Col>
           )}
-        </Col>
-        {follows ? (
-          <Col>
-            <Button variant="primary" onClick={onClickUnfollow}>
-              Unfollow
-            </Button>
-          </Col>
-        ) : (
-          <Col>
-            <Button variant="primary" onClick={onClickFollow}>
-              Follow
-            </Button>
-          </Col>
-        )}
-      </Row>
-    </Container>
+        </Row>
+      </Container>
+    </Fragment>
   );
 };
 
-UserProfile.propTypes = {
+OtherProfileInfo.propTypes = {
   auth: PropTypes.object.isRequired,
   search: PropTypes.object.isRequired,
   createFollowRelationship: PropTypes.func.isRequired,
@@ -93,4 +95,4 @@ export default connect(mapStateToProps, {
   createFollowRelationship,
   deleteFollowRelationship,
   setAlert
-})(UserProfile);
+})(OtherProfileInfo);

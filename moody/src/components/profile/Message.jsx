@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { Form, Button } from 'react-bootstrap';
 
 export function Message({ postMessage }) {
-  const [text, setText] = useState('');
+  const [text, setText] = useState(null);
   const [emoji, setEmoji] = useState(null);
   let data = null;
 
@@ -17,10 +17,15 @@ export function Message({ postMessage }) {
   const onSubmit = (e) => {
     e.preventDefault();
     if (!emoji) {
-      console.log('no emoji');
       data = {
         text: text,
         emoji: null
+      };
+      postMessage(data);
+    } else if (!text) {
+      data = {
+        text: null,
+        emoji: emoji.emoji
       };
       postMessage(data);
     } else {
@@ -43,7 +48,6 @@ export function Message({ postMessage }) {
           rows={5}
           type="text"
           id="text"
-          required
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="You can write 280 characters..."

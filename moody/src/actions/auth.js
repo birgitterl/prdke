@@ -11,6 +11,7 @@ import {
 } from './types';
 
 // Load User
+// --> DONE
 export const loadUser = () => async (dispatch) => {
   try {
     const res = await authService.get('/auth');
@@ -30,6 +31,7 @@ export const loadUser = () => async (dispatch) => {
 };
 
 // Register User
+// --> DONE
 export const register = (formData) => async (dispatch) => {
   try {
     const res = await authService.post('/users', formData);
@@ -61,6 +63,7 @@ export const register = (formData) => async (dispatch) => {
 };
 
 // Login User
+// --> DONE
 export const login = (username, password) => async (dispatch) => {
   const body = { username, password };
 
@@ -95,6 +98,7 @@ export const login = (username, password) => async (dispatch) => {
 };
 
 // Logout
+// --> DONE
 export const logout = () => async (dispatch) => {
   await dispatch({
     type: LOGOUT

@@ -5,7 +5,7 @@ const query = require('../../neo4j/queries.js');
 const rabbitMQ = require('../../rabbitmq/publisher');
 
 // Create a new profile or update existing profile
-// Private route
+// Private route --> DONE
 router.post('/', auth, async (req, res) => {
   const user = req.user;
   const profile = req.body;
@@ -14,78 +14,122 @@ router.post('/', auth, async (req, res) => {
     let result = await query.createOrUpdateProfile(user, profile);
 
     if (!result) {
-      res.status(500).json({ errors: [{ msg: 'Internal server error' }] });
+      throw err;
     } else {
       let msg = JSON.stringify(result);
       rabbitMQ.publish('profiles', Buffer.from(msg));
-      delete result['username'];
-      return res.status(201).json(result);
+      return res.status(201).json({
+        status: 201,
+        profile: result
+      });
     }
   } catch (err) {
-    res.status(500).json({ errors: [{ msg: 'Internal server error' }] });
+    return res.status(500).json({
+      status: 500,
+      msg: 'Internal server error'
+    });
   }
 });
 
 // Get my profile
-// Private route
+// Private route --> DONE
 router.get('/me', auth, async (req, res) => {
   const username = req.user.username;
   try {
     const profile = await query.getProfile(username);
-
     if (!profile) {
-      return res.status(404).json({ errors: [{ msg: 'No profile found' }] });
+      return res.status(404).json({
+        status: 404,
+        msg: 'No profile found'
+      });
+    } else if (profile.error) {
+      throw err;
     } else {
       delete profile['username'];
-      return res.status(200).json(profile);
+      return res.status(200).json({
+        status: 200,
+        profile
+      });
     }
   } catch (err) {
-    res.status(500).json({ errors: [{ msg: 'Internal server error' }] });
+    res.status(500).json({
+      status: 500,
+      msg: 'Internal server error'
+    });
   }
 });
 
-// Get all Profiles
-router.get('/', async function (req, res) {
+// Get all Profiles (DEV only)
+// --> DONE
+router.get('/', async (req, res) => {
   try {
     let result = await query.getAllProfiles();
-    if (!result.length) {
-      return res.status(404).json({ errors: [{ msg: 'No profiles found' }] });
+    if (!result) {
+      throw err;
+    } else if (!result.length) {
+      return res.status(404).json({
+        status: 404,
+        msg: 'No profiles found'
+      });
     } else {
-      return res.status(200).json(result);
+      return res.status(200).json({
+        status: 200,
+        profiles: result
+      });
     }
   } catch (err) {
-    res.status(500).json({ errors: [{ msg: 'Internal server error' }] });
+    return res.status(500).json({
+      status: 500,
+      msg: 'Internal server error'
+    });
   }
 });
 
 //Get a profile by username
-router.get('/:username', async (req, res) => {
+// --> DONE
+router.get('/:username', auth, async (req, res) => {
   let username = req.params.username;
   try {
-    let profile = await query.getProfile(username);
+    const profile = await query.getProfile(username);
     if (!profile) {
-      return res.status(404).json({ errors: [{ msg: 'No profile found' }] });
+      return res.status(404).json({
+        status: 404,
+        msg: 'No profile found'
+      });
+    } else if (profile.error) {
+      throw err;
     } else {
-      return res.status(200).json(profile);
+      return res.status(200).json({
+        status: 200,
+        profile
+      });
     }
   } catch (err) {
-    res.status(500).json({ errors: [{ msg: 'Internal server error' }] });
+    res.status(500).json({
+      status: 500,
+      msg: 'Internal server error'
+    });
   }
 });
 
 // Delete all Profiles (DEV only)
+// --> DONE
 router.delete('/', async (req, res) => {
   try {
     let result = await query.deleteAllProfiles();
     if (!result) {
-      res.status(500).json({ errors: [{ msg: 'Internal server error' }] });
+      throw err;
     } else {
-      return res
-        .status(200)
-        .json({ errors: [{ msg: 'All profiles removed' }] });
+      return res.status(200).json({
+        status: 200,
+        msg: 'All profiles removed'
+      });
     }
   } catch (err) {
-    res.status(500).json({ errors: [{ msg: 'Internal server error' }] });
+    return res.status(500).json({
+      status: 500,
+      msg: 'Internal server error'
+    });
   }
 });
 

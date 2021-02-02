@@ -41,7 +41,7 @@ function startPublisher() {
       console.log('in der loop');
       var m = offlinePubQueue.shift();
       if (!m) break;
-      this.publish(m[0], m[1]);
+      publish(m[0], m[1]);
     }
   });
 }

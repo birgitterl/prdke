@@ -3,7 +3,8 @@ import {
   PROFILE_ERROR,
   CLEAR_PROFILE,
   UPDATE_PROFILE,
-  GET_FOLLOWS
+  GET_FOLLOWS,
+  FOLLOWS_ERROR
 } from '../actions/types';
 
 const initialState = {
@@ -21,18 +22,21 @@ const profile = (state = initialState, action) => {
       return {
         ...state,
         profile: payload,
-        loading: false
+        loading: false,
+        error: {}
       };
     case UPDATE_PROFILE:
       return {
         ...state,
         profile: payload,
-        loading: false
+        loading: false,
+        error: {}
       };
     case GET_FOLLOWS:
       return {
         ...state,
-        follows: payload
+        follows: payload,
+        error: {}
       };
     case PROFILE_ERROR:
       return {
@@ -41,10 +45,17 @@ const profile = (state = initialState, action) => {
         loading: false,
         profile: null
       };
+    case FOLLOWS_ERROR:
+      return {
+        ...state,
+        error: payload,
+        follows: null
+      };
     case CLEAR_PROFILE:
       return {
         ...state,
-        profile: null
+        profile: null,
+        error: {}
       };
     default:
       return state;

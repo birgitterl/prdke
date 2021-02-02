@@ -11,11 +11,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
 
-// Homepage at localhost:5000
-app.get('/', (req, res) => {
-  res.send('Social Graph Service is up and running...');
-});
-
 // Define API Routes
 app.use('/api/messages', require('./routes/api/messages'));
 app.use('/api/profiles', require('./routes/api/profiles'));
@@ -28,5 +23,8 @@ app.use(
   swaggerUi.serve,
   swaggerUi.setup(swaggerDoc, { explorer: true })
 );
-
+// Homepage at localhost:5000
+app.get('/', (req, res) => {
+  res.send('Social Graph Service is up and running...');
+});
 module.exports = app;

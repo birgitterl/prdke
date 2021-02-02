@@ -26,7 +26,8 @@ const auth = function (state = initialState, action) {
         ...state,
         ...payload,
         isAuthenticated: true,
-        loading: false
+        loading: false,
+        error: {}
       };
     case AUTH_ERROR:
     case LOGIN_FAIL:
@@ -45,14 +46,16 @@ const auth = function (state = initialState, action) {
         token: null,
         isAuthenticated: false,
         loading: false,
-        user: null
+        user: null,
+        error: {}
       };
     case USER_LOADED:
       return {
         ...state,
         isAuthenticated: true,
         loading: false,
-        user: payload.user
+        user: payload.user,
+        error: {}
       };
     default:
       return state;

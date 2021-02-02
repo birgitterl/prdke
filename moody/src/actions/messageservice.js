@@ -10,40 +10,90 @@ import {
 } from './types';
 
 // Get the users current messages
+//--> DONE
 export const getMyMessages = () => async (dispatch) => {
   try {
     const res = await socialGraphService.get('/messages/my');
-    var resultSet = sortMessages(res.data);
+    delete res.data['status'];
+    var resultSet = sortMessages(res.data.message);
     dispatch({
       type: GET_MY_MESSAGES,
       payload: resultSet
     });
   } catch (err) {
+    const error = err.response.data;
+    if (error.status === 500 || error.status === 503) {
+      dispatch(
+        setAlert(
+          'Ups... Something went wrong. Please try again later',
+          'danger'
+        )
+      );
+    }
     dispatch({
       type: MESSAGE_ERROR,
-      payload: { msg: err.message, status: err.status }
+      payload: { status: error.status, msg: error.msg }
     });
   }
 };
 
-// Get the last 100 messages of profiles I follow
-export const getOtherMessages = () => async (dispatch) => {
+// Get a specific users current messages
+//--> DONE
+export const getUsersMessages = (username) => async (dispatch) => {
   try {
-    const res = await socialGraphService.get('/messages/iFollow');
-    var resultSet = sortMessages(res.data);
+    const res = await socialGraphService.get(`/messages/${username}`);
+    delete res.data['status'];
+    var resultSet = sortMessages(res.data.message);
     dispatch({
       type: GET_OTHER_MESSAGES,
       payload: resultSet
     });
   } catch (err) {
+    const error = err.response.data;
+    if (error.status === 500 || error.status === 503) {
+      dispatch(
+        setAlert(
+          'Ups... Something went wrong. Please try again later',
+          'danger'
+        )
+      );
+    }
     dispatch({
       type: MESSAGE_ERROR,
-      payload: { msg: err.message, status: err.status }
+      payload: { status: error.status, msg: error.msg }
     });
   }
 };
 
-function sortMessages(messageArray) {
+// Get the last 100 messages of profiles I follow
+// --> DONE
+export const getOtherMessages = () => async (dispatch) => {
+  try {
+    const res = await socialGraphService.get('/messages/iFollow');
+    delete res.data['status'];
+    var resultSet = sortMessages(res.data.message);
+    dispatch({
+      type: GET_OTHER_MESSAGES,
+      payload: resultSet
+    });
+  } catch (err) {
+    const error = err.response.data;
+    if (error.status === 500 || error.status === 503) {
+      dispatch(
+        setAlert(
+          'Ups... Something went wrong. Please try again later',
+          'danger'
+        )
+      );
+    }
+    dispatch({
+      type: MESSAGE_ERROR,
+      payload: { status: error.status, msg: error.msg }
+    });
+  }
+};
+
+const sortMessages = (messageArray) => {
   // copy res.data to resultArray for sorting
   var resultArray = messageArray;
   for (var i = 0; i < messageArray.length; i++) {
@@ -52,34 +102,48 @@ function sortMessages(messageArray) {
   }
 
   // sort results by timestamp in ASC order
-  var sortedArray = resultArray.sort(function (a, b) {
+  var sortedArray = resultArray.sort((a, b) => {
     return b.timestamp - a.timestamp;
   });
-  console.log('ResultArray ');
-  console.log(resultArray);
-  console.log('SortedArray ');
-  console.log(sortedArray);
   return sortedArray;
-}
+};
 
 // Post new Message
+// --> DONE
 export const postMessage = (msg) => async (dispatch) => {
-  try {
-    if (msg.emoji === null) {
-      dispatch(setAlert('You need to select an Emoji first', 'danger'));
-    } else {
+  if (msg.emoji === null) {
+    dispatch(setAlert('You need to select an Emoji first', 'danger'));
+  } else if (msg.text === null) {
+    dispatch(setAlert('Please enter a text message first', 'danger'));
+  } else {
+    try {
+      console.log(msg);
       const res = await socialGraphService.post('/messages', {
         text: msg.text,
         emoji: msg.emoji
       });
       dispatch({
         type: POST_MESSAGE,
-        payload: res.data
+        payload: res.data.profile
       });
-      dispatch(getMyMessages());
       dispatch(setAlert('Message successfully posted', 'success'));
+    } catch (err) {
+      const error = err.response.data;
+
+      if (error.status === 500 || error.status === 503) {
+        dispatch(
+          setAlert(
+            'Ups... Something went wrong. Please try again later',
+            'danger'
+          )
+        );
+      }
+
+      dispatch({
+        type: MESSAGE_ERROR,
+        payload: { status: error.status, msg: error.msg }
+      });
     }
-  } catch (err) {
-    console.log(err);
+    dispatch(getMyMessages());
   }
 };

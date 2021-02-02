@@ -1,6 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Form, Button } from 'react-bootstrap';
-import { setText, searchMessages, searchProfiles } from '../../actions/search';
+import {
+  setText,
+  searchMessages,
+  searchProfiles,
+  clearSearch
+} from '../../actions/search';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
@@ -9,14 +14,21 @@ import { Fragment } from 'react';
 const SearchBox = ({
   searchMessages,
   searchProfiles,
+  clearSearch,
   setText,
   search: { text, profilesLoading, messagesLoading }
 }) => {
+  useEffect(() => {
+    setText();
+  }, [setText]);
+
   const onSubmit = (e) => {
     e.preventDefault();
     searchMessages(text);
     searchProfiles(text);
     document.getElementById('searchForm').reset();
+
+    clearSearch();
   };
 
   return (
@@ -42,7 +54,8 @@ SearchBox.propTypes = {
   setText: PropTypes.func.isRequired,
   search: PropTypes.object.isRequired,
   searchMessages: PropTypes.func.isRequired,
-  searchProfiles: PropTypes.func.isRequired
+  searchProfiles: PropTypes.func.isRequired,
+  clearSearch: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state) => ({
@@ -52,5 +65,6 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, {
   searchMessages,
   searchProfiles,
-  setText
+  setText,
+  clearSearch
 })(SearchBox);

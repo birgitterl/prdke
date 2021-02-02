@@ -95,6 +95,9 @@ paths:
               schema:
                 type: object
                 properties:
+                  status:
+                    type: number
+                    example: 201
                   token:
                     type: string
                     example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNWZhODFhMmQxNTY2NjEwMDNiMDg5OWYyIn0sImlhdCI6MTYwNDg1NTgwOSwiZXhwIjoxNjA1MjE1ODA5fQ.XUZZrYGuUxBk4WQis8VII4GGadFESHwg8Il994WPk04
@@ -200,11 +203,14 @@ paths:
                   status:
                     type: number
                     example: 200
-                  username:
-                    type: string
-                    example: Julia
+                  user:
+                    type: object
+                    properties:
+                      username:
+                        type: string
+                        example: Julia
         401:
-          description: Unautorized
+          description: Unauthorized
           content:
             application/json:
               schema:
@@ -283,19 +289,6 @@ paths:
                   token:
                     type: string
                     example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNWZhODFhMmQxNTY2NjEwMDNiMDg5OWYyIn0sImlhdCI6MTYwNDg1NTgwOSwiZXhwIjoxNjA1MjE1ODA5fQ.XUZZrYGuUxBk4WQis8VII4GGadFESHwg8Il994WPk04
-        401:
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: number
-                    example: 401
-                  msg:
-                    type: string
-                    example: Unauthorized - Token is not valid
         404:
           description: Not found
           content:

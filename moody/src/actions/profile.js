@@ -2,6 +2,7 @@ import socialGraphService from '../utils/socialGraphService';
 import { setAlert } from './alert';
 
 import {
+  FOLLOWS_ERROR,
   GET_FOLLOWS,
   GET_PROFILE,
   PROFILE_ERROR,
@@ -9,31 +10,44 @@ import {
 } from './types';
 
 // Get current users profile
+//--> DONE
 export const getCurrentProfile = () => async (dispatch) => {
   try {
     const res = await socialGraphService.get('/profiles/me');
+    delete res.data['status'];
+
     dispatch({
       type: GET_PROFILE,
-      payload: res.data
+      payload: res.data.profile
     });
   } catch (err) {
+    const error = err.response.data;
+    if (error.status === 500 || error.status === 503) {
+      dispatch(
+        setAlert(
+          'Ups... Something went wrong. Please try again later',
+          'danger'
+        )
+      );
+    }
     dispatch({
       type: PROFILE_ERROR,
-      payload: { msg: err.message, status: err.status }
+      payload: { status: error.status, msg: error.msg }
     });
   }
 };
 
 // Create or update profile
+//--> DONE
 export const createProfile = (formData, history, edit = false) => async (
   dispatch
 ) => {
   try {
     const res = await socialGraphService.post('/profiles', formData);
-
+    delete res.data['status'];
     dispatch({
       type: UPDATE_PROFILE,
-      payload: res.data
+      payload: res.data.profile
     });
 
     dispatch(setAlert(edit ? 'Profile Updated' : 'Profile Created', 'success'));
@@ -42,88 +56,92 @@ export const createProfile = (formData, history, edit = false) => async (
       history.push('/homesite');
     }
   } catch (err) {
-    const errors = err.response.data.errors;
+    const error = err.response.data;
 
-    if (errors) {
-      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+    if (error.status === 500 || error.status === 503) {
+      dispatch(
+        setAlert(
+          'Ups... Something went wrong. Please try again later',
+          'danger'
+        )
+      );
     }
-
     dispatch({
       type: PROFILE_ERROR,
-      payload: { msg: err.msg, status: err.status }
+      payload: { status: error.status, msg: error.msg }
     });
   }
 };
+
 // Get followers of current user
+// --> DONE
 export const getFollowRelationship = (username) => async (dispatch) => {
   try {
     const res = await socialGraphService.get(`/follow/${username}`);
+    delete res.data['status'];
     dispatch({
       type: GET_FOLLOWS,
       payload: res.data.following
     });
   } catch (err) {
+    const error = err.response.data;
+    if (error.status === 500 || error.status === 503) {
+      dispatch(
+        setAlert(
+          'Ups... Something went wrong. Please try again later',
+          'danger'
+        )
+      );
+    }
     dispatch({
-      type: PROFILE_ERROR,
-      payload: { msg: err.message, status: err.status }
+      type: FOLLOWS_ERROR,
+      payload: { status: error.status, msg: error.msg }
     });
   }
 };
 
-export const createFollowRelationship = (user) => async (dispatch) => {
-  const body = { username: user };
+// Create a follower relationship
+// --> DONE
+export const createFollowRelationship = (username) => async (dispatch) => {
   try {
-    const res = await socialGraphService.post('/follow', body);
-    dispatch(getFollowRelationship(user));
-  } catch (err) {
-    console.log(err.msg);
-  }
-};
-
-export const deleteFollowRelationship = (username) => async (dispatch) => {
-  try {
-    const res = await socialGraphService.delete(`/follow/${username}`);
+    await socialGraphService.post(`/follow/${username}`);
     dispatch(getFollowRelationship(username));
   } catch (err) {
-    console.log(err);
+    const error = err.response.data;
+    if (error.status === 500 || error.status === 503) {
+      dispatch(
+        setAlert(
+          'Ups... Something went wrong. Please try again later',
+          'danger'
+        )
+      );
+    }
+    dispatch({
+      type: FOLLOWS_ERROR,
+      payload: { status: error.status, msg: error.msg }
+    });
   }
 };
 
-//Get specific profile
-/*export async function getProfile(user) {
+// unfollow a profile
+// --> DONE
+export const deleteFollowRelationship = (username) => async (dispatch) => {
   try {
-    const res = await socialGraphService
-      .get('/profiles', {
-        username: user
-      })
-      .then((res) => {
-        console.log('Profile retrieved');
-      });
-    return res;
+    await socialGraphService.delete(`/follow/${username}`);
+    dispatch(getFollowRelationship(username));
   } catch (err) {
-    console.log(err);
-  }
-}*/
-
-/*export const getFollowersOfProfile = (user) => async (dispatch) => {
-  try {
-    const res = await socialGraphService.post('/follow/followers', {
-      body: {
-        user: user
-      }
-    });
-
-    console.log(res);
-
+    const error = err.response.data;
+    if (error.status === 500 || error.status === 503) {
+      dispatch(
+        setAlert(
+          'Ups... Something went wrong. Please try again later',
+          'danger'
+        )
+      );
+    }
     dispatch({
-      type: GET_FOLLOWERS_OF_PROFILE,
-      payload: res.data
-    });
-  } catch (err) {
-    console.log(err);
-    dispatch({
-      type: PROFILE_ERROR,
-      payload: { msg: err.message, status: err.status }
+      type: FOLLOWS_ERROR,
+      payload: { status: error.status, msg: error.msg }
     });
   }
-};*/
+};

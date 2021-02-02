@@ -28,14 +28,43 @@ paths:
         required: true
       responses:
         201:
-          description: Profile created / updated
+          description: Profile created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Profile'
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 201
+                  profile:
+                    $ref: '#/components/schemas/Profile'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 401
+                  msg:
+                    type: string
+                    example: Unauthorized - Token is not valid
         500:
           description: Internal server error
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 500
+                  msg:
+                    type: string
+                    example: Internal Server Error
       security:
         - authentication: []
     get:
@@ -49,15 +78,41 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Profile'
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  profiles:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Profile'
         404:
           description: No profiles found
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 404
+                  msg:
+                    type: string
+                    example: No profiles found
         500:
           description: Internal server error
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 500
+                  msg:
+                    type: string
+                    example: Internal Server Error
     delete:
       tags:
         - profile
@@ -66,10 +121,30 @@ paths:
       responses:
         200:
           description: All profiles removed
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  msg:
+                    type: string
+                    example: All profiles removed
         500:
           description: Internal server error
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 500
+                  msg:
+                    type: string
+                    example: Internal Server Error
   /profiles/me:
     get:
       tags:
@@ -82,13 +157,53 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Profile'
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  profile:
+                    type: object
+                    $ref: '#/components/schemas/Profile'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 401
+                  msg:
+                    type: string
+                    example: Unauthorized - Token is not valid
         404:
           description: No profile found
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 404
+                  msg:
+                    type: string
+                    example: No profile found
         500:
           description: Internal server error
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 500
+                  msg:
+                    type: string
+                    example: Internal Server Error
       security:
         - authentication: []
   /profiles/{username}:
@@ -102,6 +217,7 @@ paths:
           name: username
           schema:
             type: string
+            example: Hugo
           required: true
           description: the username of a profile
       responses:
@@ -110,33 +226,70 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Profile'
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  profile:
+                    type: object
+                    $ref: '#/components/schemas/Profile'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 401
+                  msg:
+                    type: string
+                    example: Unauthorized - Token is not valid
         404:
           description: No profile found
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 404
+                  msg:
+                    type: string
+                    example: No profile found
         500:
           description: Internal server error
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 500
+                  msg:
+                    type: string
+                    example: Internal Server Error
       security:
         - authentication: []
 
-  /follow:
+  /follow/{username}:
     post:
       tags:
         - followerRelation
       summary: Create a new follow relationship between two profiles
       description: a relationship will be created betweent two existing moody profiles.
-      requestBody:
-        description: Profile I want to follow
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                  example: Sepp
-        required: false
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+            example: Birgit
+          required: true
+          description: the username of a profile
       responses:
         201:
           description: Follow relationship created
@@ -144,14 +297,41 @@ paths:
             application/json:
               schema:
                 type: object
-                example: { 'relationship': 'follows' }
+                properties:
+                  status:
+                    type: number
+                    example: 201
+                  relationship:
+                    type: string 
+                    example: follows
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 401
+                  msg:
+                    type: string
+                    example: Unauthorized - Token is not valid
         500:
           description: Internal server error
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 500
+                  msg:
+                    type: string
+                    example: Internal Server Error
       security:
         - authentication: []
-
-  /follow/{username}:
     get:
       tags:
         - followerRelation
@@ -162,6 +342,7 @@ paths:
           name: username
           schema:
             type: string
+            example: Birgit
           required: true
           description: the username of a profile
       responses:
@@ -170,10 +351,40 @@ paths:
           content:
             application/json:
               schema:
-                type: boolean
+                type: object
+                properties:
+                  status:
+                    type: number 
+                    example: 200
+                  following:
+                    type: boolean  
+                    example: true
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 401
+                  msg:
+                    type: string
+                    example: Unauthorized - Token is not valid
         500:
           description: Internal server error
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 500
+                  msg:
+                    type: string
+                    example: Internal Server Error
       security:
         - authentication: []
     delete:
@@ -186,6 +397,7 @@ paths:
           name: username
           schema:
             type: string
+            example: Birgit
           required: true
           description: the username of a profile
       responses:
@@ -195,10 +407,52 @@ paths:
             application/json:
               schema:
                 type: object
-                example: { 'relationship': 'unfollows' }
+                properties:
+                  status:
+                    type: number
+                    example: 201
+                  relationship:
+                    type: string 
+                    example: unfollows
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 401
+                  msg:
+                    type: string
+                    example: Unauthorized - Token is not valid
+        404:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 404
+                  msg:
+                    type: string
+                    example: Relationship does not exist
         500:
           description: Internal server error
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 500
+                  msg:
+                    type: string
+                    example: Internal Server Error
       security:
         - authentication: []
   /messages:
@@ -223,14 +477,43 @@ paths:
         required: true
       responses:
         201:
-          description: Message created
+          description: Profile created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Message'
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 201
+                  message:
+                    $ref: '#/components/schemas/Message'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 401
+                  msg:
+                    type: string
+                    example: Unauthorized - Token is not valid
         500:
           description: Internal server error
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 500
+                  msg:
+                    type: string
+                    example: Internal Server Error
       security:
         - authentication: []
     get:
@@ -244,15 +527,41 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Message'
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  messages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Message'
         404:
-          description: No messages found
-          content: {}
+          description: No profiles found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 404
+                  msg:
+                    type: string
+                    example: No messages found
         500:
           description: Internal server error
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 500
+                  msg:
+                    type: string
+                    example: Internal Server Error
       security:
         - authentication: []
     delete:
@@ -262,11 +571,31 @@ paths:
       description: all existing messages are deleted (for testing purpose only)
       responses:
         200:
-          description: All messages removed
-          content: {}
+          description: All profiles removed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  msg:
+                    type: string
+                    example: All messages removed
         500:
           description: Internal server error
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 500
+                  msg:
+                    type: string
+                    example: Internal Server Error
       security:
         - authentication: []
   /messages/my:
@@ -281,15 +610,54 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Message'
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  messages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Message'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 401
+                  msg:
+                    type: string
+                    example: Unauthorized - Token is not valid
         404:
           description: No messages found
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 404
+                  msg:
+                    type: string
+                    example: No messages found
         500:
           description: Internal server error
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 500
+                  msg:
+                    type: string
+                    example: Internal Server Error
       security:
         - authentication: []
   /messages/iFollow:
@@ -304,17 +672,127 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Message'
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  messages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Message'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 401
+                  msg:
+                    type: string
+                    example: Unauthorized - Token is not valid
         404:
-          description: No message found
-          content: {}
+          description: No messages found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 404
+                  msg:
+                    type: string
+                    example: No messages found
         500:
           description: Internal server error
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 500
+                  msg:
+                    type: string
+                    example: Internal Server Error
       security:
         - authentication: []
+  /messages/{username}:
+    get:
+      tags:
+        - message
+      summary: Get messages from a specific user
+      description: Fetching all messages posted by a specific user
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+            example: Birgit
+          required: true
+          description: the username of a profile
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  messages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Message'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 401
+                  msg:
+                    type: string
+                    example: Unauthorized - Token is not valid
+        404:
+          description: No messages found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 404
+                  msg:
+                    type: string
+                    example: No messages found
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 500
+                  msg:
+                    type: string
+                    example: Internal Server Error
+      security:
+        - authentication: []
+
 
   /search/messages:
     get:
@@ -335,15 +813,54 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Message'
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  messages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Message'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 401
+                  msg:
+                    type: string
+                    example: Unauthorized - Token is not valid
         404:
           description: No messages found
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 404
+                  msg:
+                    type: string
+                    example: No messages found
         500:
           description: Internal server error
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 500
+                  msg:
+                    type: string
+                    example: Internal Server Error
       security:
         - authentication: []
 components:
@@ -368,9 +885,6 @@ components:
             - male
             - female
             - transgender
-        background:
-          type: string
-          example: none
         privacy:
           type: boolean
           example: false
@@ -396,7 +910,7 @@ components:
           example: 🤢
         author:
           type: string
-          example: Sepp
+          example: Hugo
         timestamp:
           type: string
           format: date-time

@@ -5,6 +5,9 @@ info:
   version: 1.0.0
 servers:
   - url: /api
+tags:
+  - name: search
+    description: Searching form profiles
 
 paths:
   /search/profiles:
@@ -26,15 +29,54 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Profile'
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  profiles:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Profile'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 401
+                  msg:
+                    type: string
+                    example: Unauthorized - Token is not valid
         404:
           description: No profiles found
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 404
+                  msg:
+                    type: string
+                    example: No profiles found
         500:
           description: Internal server error
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 500
+                  msg:
+                    type: string
+                    example: Internal Server Error
       security:
         - authentication: []
 components:
@@ -59,9 +101,6 @@ components:
             - male
             - female
             - transgender
-        background:
-          type: string
-          example: none
         privacy:
           type: string
           example: public
